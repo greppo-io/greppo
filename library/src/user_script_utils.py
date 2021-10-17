@@ -1,5 +1,6 @@
 import ast
 import io
+import logging
 import secrets
 from _ast import Assign
 from _ast import Attribute
@@ -35,7 +36,6 @@ class Transformer(ast.NodeTransformer):
             if node_kwargs.arg == "name":
                 input_name = node_kwargs.value.value
                 input_name = self.hex_token_generator(nbytes=4) + "_" + input_name
-                print("input name to be set ", input_name)
                 node_kwargs.value.value = input_name
                 break
 
@@ -131,10 +131,8 @@ async def script_task(
     """
     async task that runs a user_script in a Greppo context (`gpo_send_data`) and generates payload for front-end
     consumption.
-
-    TOOD print logging should be fixed to use a proper logger, and silence stdout (or pipe stdout elsewhere)
     """
-    print("Loading Greppo App at: " + script_name)
+    logging.info("Loading Greppo App at: " + script_name)
 
     with redirect_stdout(io.StringIO()) as loop_out:
         payload = run_script(
@@ -143,10 +141,10 @@ async def script_task(
             hex_token_generator=hex_token_generator,
         )
 
-    print("-------------")
-    print("stdout from process")
-    print("===")
-    print(loop_out.getvalue())
-    print("===")
+    logging.info("-------------")
+    logging.info("stdout from process")
+    logging.info("===")
+    logging.info(loop_out.getvalue())
+    logging.info("===")
 
     return payload

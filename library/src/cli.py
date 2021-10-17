@@ -1,3 +1,5 @@
+import logging
+
 import click
 from greppo_server import GreppoApp
 from greppo_server import GreppoServer
@@ -18,7 +20,7 @@ def wrap_and_run_script(command, path_to_script: str):
 
         server.run()
     else:
-        print("Command {} not supported".format(command))
+        logging.error("Command {} not supported".format(command))
 
 
 if __name__ == "__main__":

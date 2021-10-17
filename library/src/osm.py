@@ -5,6 +5,8 @@ Modified version of github.com/rossant/smopy .
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
+import logging
+
 import numpy as np
 
 # -----------------------------------------------------------------------------
@@ -158,7 +160,7 @@ class Map(object):
         self.z = self.get_allowed_zoom(z)
         if z > self.z:
             if self.verbose:
-                print(
+                logging.info(
                     "Lowered zoom level to keep map size reasonable. "
                     "(z = %d)" % self.z
                 )

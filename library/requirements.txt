@@ -1,3 +1,5 @@
+anyio==3.3.4
+asgiref==3.4.1
 attrs==21.2.0
 certifi==2021.10.8
 click==8.0.3
@@ -5,6 +7,9 @@ click-plugins==1.1.1
 cligj==0.7.2
 Fiona==1.8.20
 geopandas==0.10.2
+-e git+ssh://git@github.com/greppo-io/greppo.git@f32b37808d77714633f6118ff60ce9aeef673fa0#egg=greppo_py&subdirectory=library
+h11==0.12.0
+idna==3.3
 iniconfig==1.1.1
 munch==2.5.0
 numpy==1.21.2
@@ -19,4 +24,7 @@ python-dateutil==2.8.2
 pytz==2021.3
 Shapely==1.7.1
 six==1.16.0
+sniffio==1.2.0
+starlette==0.16.0
 toml==0.10.2
+uvicorn==0.15.0

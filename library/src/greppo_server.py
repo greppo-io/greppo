@@ -1,5 +1,5 @@
+import logging
 from functools import partial
-from queue import Queue
 
 import uvicorn
 from greppo import GreppoApp
@@ -22,9 +22,9 @@ async def api_endpoint(user_script: str, request: Request):
     input_updates = {}
     try:
         input_updates = await request.json()
-        print("Got input update: ", input_updates)
+        logging.debug("Got input update: ", input_updates)
     except Exception:
-        print("Unable to parse request body: ", await request.body())
+        logging.error("Unable to parse request body: ", await request.body())
 
     payload = await script_task(script_name=user_script, input_updates=input_updates)
 

@@ -1,5 +1,6 @@
 import dataclasses
 import json
+import logging
 import uuid
 from typing import Any
 from typing import List
@@ -140,7 +141,7 @@ class GreppoAppProxy(object):
             dataclasses.asdict(i) for i in self.registered_inputs
         ]
 
-        print("--- len component info: ", len(app_output["component_info"]))
+        logging.info("Len component info: ", len(app_output["component_info"]))
 
         return app_output
 
