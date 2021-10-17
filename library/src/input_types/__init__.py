@@ -5,8 +5,6 @@ from .bar_chart import BarChartComponentInfo
 from .bar_chart import Dataset
 from .draw_feature import DrawFeature
 from .draw_feature import DrawFeatureComponentInfo
-from .layer_control import LayerControl
-from .layer_control import LayerControlComponentInfo
 from .line_chart import LineChart
 from .line_chart import LineChartComponentInfo
 from .multiselect import Multiselect

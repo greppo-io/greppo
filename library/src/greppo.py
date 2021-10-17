@@ -10,7 +10,6 @@ from input_types import BarChart
 from input_types import ComponentInfo
 from input_types import DrawFeature
 from input_types import GreppoInputs
-from input_types import LayerControl
 from input_types import LineChart
 from input_types import Multiselect
 from input_types import Number
@@ -28,7 +27,6 @@ class GreppoApp(object):
         self.select = Select
         self.multiselect = Multiselect
         self.draw_feature = DrawFeature
-        self.layer_control = LayerControl
         self.bar_chart = BarChart
         self.line_chart = LineChart
 
@@ -62,11 +60,6 @@ class GreppoAppProxy(object):
         draw_feature = DrawFeature(**kwargs)
         self.register_input(draw_feature)
         return draw_feature
-
-    def layer_control(self, **kwargs):
-        layer_control = LayerControl(**kwargs)
-        self.register_input(layer_control)
-        return layer_control
 
     def bar_chart(self, **kwargs):
         bar_chart = BarChart(**kwargs)
