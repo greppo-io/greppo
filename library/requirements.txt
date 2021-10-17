@@ -7,10 +7,13 @@ click-plugins==1.1.1
 cligj==0.7.2
 Fiona==1.8.20
 geopandas==0.10.2
--e git+ssh://git@github.com/greppo-io/greppo.git@f32b37808d77714633f6118ff60ce9aeef673fa0#egg=greppo_py&subdirectory=library
+-e git+ssh://git@github.com/greppo-io/greppo.git@967b6acd5173b38f9b8d5d54bd0a032c2165d25a#egg=greppo_py&subdirectory=library
 h11==0.12.0
 idna==3.3
 iniconfig==1.1.1
+Jinja2==3.0.2
+MarkupSafe==2.0.1
+meta==1.0.2
 munch==2.5.0
 numpy==1.21.2
 packaging==21.0

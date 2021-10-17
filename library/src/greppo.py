@@ -20,19 +20,40 @@ from layers.overlay_layer import OverlayLayer
 
 
 class GreppoApp(object):
+    """
+    The main Greppo class that is the entry point for user scripts. User scripts will use this class via a module
+    import variable `gpo`.
+
+    This class provides an interface around available frontend component elements. The methods simply point to the
+    backend representation of those frontend component elements (ie. `Number` is the backend class that a user script
+    can access via `self.number`.
+    """
+
     def __init__(self, title: str = "Untitled App"):
         self.title: str = title
 
-        # UX component proxy methods
-        self.number = Number
         self.select = Select
         self.multiselect = Multiselect
         self.draw_feature = DrawFeature
         self.bar_chart = BarChart
         self.line_chart = LineChart
 
+    # UX component proxy methods
+    @staticmethod
+    def number():
+        """
+        Interactive Number value rendered on the frontend.
+        """
+        return Number
+
+
 
 class GreppoAppProxy(object):
+    """
+    Proxy object that mirrors the `GreppoApp` class. Adds additional methods that user scripts don't need to know about.
+    These methods are used by a Greppo server to obtain an output from the user script that is then rendered by the
+    frontend.
+    """
     def __init__(self):
         # Map component data
         self.base_layers: List[BaseLayer] = []

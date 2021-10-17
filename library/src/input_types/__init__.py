@@ -16,7 +16,7 @@ from .select import SelectComponentInfo
 
 # TODO add interface to inputs
 GreppoInputs = Union[
-    Number, Select, Multiselect, DrawFeature, LayerControl, BarChart, LineChart
+    Number, Select, Multiselect, DrawFeature, BarChart, LineChart
 ]
 GreppoInputsNames = [i.proxy_name() for i in GreppoInputs.__args__]
 
@@ -25,7 +25,6 @@ ComponentInfo = Union[
     SelectComponentInfo,
     MultiselectComponentInfo,
     DrawFeatureComponentInfo,
-    LayerControlComponentInfo,
     BarChartComponentInfo,
     LineChartComponentInfo,
 ]
