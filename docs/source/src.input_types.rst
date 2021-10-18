@@ -20,14 +20,6 @@ src.input\_types.draw\_feature module
    :undoc-members:
    :show-inheritance:
 
-src.input\_types.layer\_control module
---------------------------------------
-
-.. automodule:: src.input_types.layer_control
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 src.input\_types.line\_chart module
 -----------------------------------
 

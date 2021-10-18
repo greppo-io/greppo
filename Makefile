@@ -44,7 +44,7 @@ run-unit-tests:
 .PHONY: build-html-docs
 build-docs:
 	# Sphinx should be installed before doing this
-	sphinx-apidoc -f -o docs/source/ src
+	cd library && sphinx-apidoc -f -o ../docs/source/ src
 	cd docs && make html
 
 .PHONY: clean
