@@ -1,1 +1,1 @@
-recursive-include static/*
+recursive-include src/greppo/static *

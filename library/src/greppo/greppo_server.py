@@ -1,4 +1,6 @@
 import logging
+import os
+from distutils.sysconfig import get_python_lib
 from functools import partial
 
 import uvicorn
@@ -31,6 +33,16 @@ async def api_endpoint(user_script: str, request: Request):
     return JSONResponse(payload)
 
 
+def get_static_dir_path():
+    dist_path = get_python_lib() + '/greppo'
+    if os.path.isfile(dist_path):
+      BASE_DIR = dist_path
+    else:
+      BASE_DIR = os.path.dirname(__file__)
+
+    return BASE_DIR + "/static/"
+
+
 class GreppoServer(object):
     def __init__(self, gr_app: GreppoApp, user_script: str):
         self.gr_app = gr_app
@@ -42,7 +54,7 @@ class GreppoServer(object):
                 "/api", partial(api_endpoint, self.user_script), methods=["GET", "POST"]
             ),
             WebSocketRoute("/ws", websocket_endpoint),
-            Mount("/", app=StaticFiles(directory="static", html=True), name="static"),
+            Mount("/", app=StaticFiles(directory=get_static_dir_path(), html=True), name="static"),
         ]
 
         middleware = [
