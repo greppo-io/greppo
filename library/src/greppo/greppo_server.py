@@ -13,7 +13,7 @@ from starlette.routing import Route
 from starlette.routing import WebSocketRoute
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-from user_script_utils import script_task
+from .user_script_utils import script_task
 
 templates = Jinja2Templates(directory="templates")
 

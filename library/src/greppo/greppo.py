@@ -5,18 +5,18 @@ import uuid
 from typing import Any
 from typing import List
 
-import osm
+from greppo import osm
 from geopandas import GeoDataFrame as gdf
-from input_types import BarChart
-from input_types import ComponentInfo
-from input_types import DrawFeature
-from input_types import GreppoInputs
-from input_types import LineChart
-from input_types import Multiselect
-from input_types import Number
-from input_types import Select
-from layers.base_layer import BaseLayer
-from layers.overlay_layer import OverlayLayer
+from .input_types import BarChart
+from .input_types import ComponentInfo
+from .input_types import DrawFeature
+from .input_types import GreppoInputs
+from .input_types import LineChart
+from .input_types import Multiselect
+from .input_types import Number
+from .input_types import Select
+from .layers.base_layer import BaseLayer
+from .layers.overlay_layer import OverlayLayer
 
 
 class GreppoApp(object):
@@ -45,7 +45,6 @@ class GreppoApp(object):
         Interactive Number value rendered on the frontend.
         """
         return Number
-
 
 
 class GreppoAppProxy(object):

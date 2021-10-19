@@ -1,8 +1,8 @@
 import logging
 
 import click
-from greppo_server import GreppoApp
-from greppo_server import GreppoServer
+from .greppo import GreppoApp
+from .greppo_server import GreppoServer
 
 
 @click.command()

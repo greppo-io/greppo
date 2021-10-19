@@ -13,7 +13,7 @@ from contextlib import redirect_stdout
 from typing import Any
 
 from greppo import GreppoApp, GreppoAppProxy
-from input_types import GreppoInputsNames
+from .input_types import GreppoInputsNames
 
 
 class Transformer(ast.NodeTransformer):
