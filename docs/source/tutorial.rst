@@ -1,18 +1,21 @@
-Greppo's Mental Model
-=====================
+Tutorial
+========
 
-Greppo's Mental Model is easy and simple. We thought about this a lot while
-trying to decide how to get out of your, the developer's way, and make it simple
-to build a geo-spatial app and quickly.
+Greppo's interface is simple and is designed with the intention of getting out of the users way. We want to make it easy
+to build a geo-spatial app quickly.
 
-Greppo thus focuses on two things,
+Greppo focuses on two ideas,
 
-#. Use native python code and other libraries you already use for analysis.
-#. Use "magic" methods to make it work. This way Greppo is more or less out of your way
-   and doesn't add to your mental bandwidth of things to remember or take care of.
+#. Use native python code and other standard libraries for analysis.
+#. Use simple macros to prepare a user code for execution within Greppo.
 
-With this in mind, the following code snippets with bulleted explanations illustrate the two points. The entire code as
-a single file is here <TODO>.
+The first idea ensures as much freedom as possible in terms of compatability with libraries commonly used for data
+science and geo-spatial analysis. The second is to keep Greppo in the background and only surface a small interface
+for the user to work with. Both ideas keep the mental bandwidth of using a new library low and focus on simple and
+intuitive UX.
+
+With this in mind, the following code snippets breaks down a common user-script to illustrate the two ideas. The entire
+code as a single file is here <TODO> and to run the code before looking at the explanation, simply run `` <TODO>.
 
 #. Imports
 

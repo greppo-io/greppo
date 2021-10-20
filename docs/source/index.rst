@@ -12,9 +12,9 @@ Check out the :doc:`usage` section for further information, and :doc:`install <i
 the project.
 
 .. toctree::
-    usage
+    tutorial
+    api_guide
     installation
-    modules
     :maxdepth: 2
     :caption: Contents:
 
