@@ -24,10 +24,8 @@ run-unit-tests:
 	pytest library/tests/unit_tests
 
 # Sphinx should be installed before doing this
-# cd library && sphinx-apidoc -f -o ../docs/source/ src
 .PHONY: build-docs
 build-docs:	
-	cd library && sphinx-apidoc -f -o ../docs/source/ src
 	cd docs && make html
 
 .PHONY: clean

@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream:docs/source/tutorial.rst
-Tutorial
-========
-=======
-Mental Model
+Mental model
 ============
->>>>>>> Stashed changes:docs/source/mental-model.rst
 
 Greppo's interface is simple and is designed with the intention of getting out of the users way. We want to make it easy
 to build a geo-spatial app quickly.
