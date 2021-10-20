@@ -18,3 +18,11 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+# Rebuild Sphinx documentation on changes, with live-reload in the browser.
+# This will start a server at http://127.0.0.1:8000 and start watching for changes 
+# in the docs/ directory. When a change is detected in docs/, the documentation is 
+# rebuilt and any open browser windows are reloaded automatically. 
+# KeyboardInterrupt (ctrl+c) will stop the server.
+livehtml:
+	sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
