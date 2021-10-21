@@ -19,8 +19,11 @@ project = "Greppo"
 copyright = "2021, Adithya Krishnan, Sarma Tangirala"
 author = "Adithya Krishnan, Sarma Tangirala"
 
-# The full version, including alpha/beta/rc tags
-release = '0.0.1'
+# The short X.Y version.
+version = '0.0.1'
+# The full version, including alpha/beta/rc tags.
+release = 'test'
+
 
 # -- General configuration ---------------------------------------------------
 
@@ -38,6 +41,15 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# The file extensions of source files. Sphinx considers the files with this 
+# suffix as sources. The value can be a dictionary mapping file extensions 
+# to file types. For example:
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
+
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -47,7 +59,27 @@ exclude_patterns = []
 #html_theme = "alabaster"
 html_theme = "furo"
 
+# The “title” for HTML documentation generated with Sphinx’s own templates. 
+# This is appended to the <title> tag of individual pages, and used in the 
+# navigation bar as the “topmost” element. 
+# It defaults to '<project> v<revision> documentation'.
+html_title = 'Greppo'
+html_short_title = 'Greppo - documentation'
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+# Logo
+html_logo = "logo.png"
+html_favicon = "favicon.png"
+# custom css
+html_css_files = [
+    'custom.css',
+]
+
+# Navigation with keyboard keys
+html_theme_options = {
+    "navigation_with_keys": True,
+}
