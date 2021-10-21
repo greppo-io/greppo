@@ -1,15 +1,18 @@
 # Greppo
 
-## Welcome to Greppo's documentation!
+## Welcome to Greppo's documentation
 
-**Greppo** is a Python library that makes it easy for Data Scientists to quickly
-build geo-spatial apps using Python and GeoPandas constructs. The library
-provides front-end components driven by simple Greppo interfaces.
+**Greppo** is a Python library that makes it easy for Data Scientists to quickly build geo-spatial apps natively in Python. You do not need any fonr-end or back-end experience to start using this. Out-of-the-box, the library provides front-end components and APIs to connect to the back-end.
 
-{code}`greppo.line_chart(df.read_csv('path/to/csv'))`
+**Greppo** focuses on:
 
-Check out the [Quickstart](quickstart) section for further information, and [link](installation) to get started with using
-the project.
+1. Optimizing for simple and fast UX. A user-experience that anyone with simple knowledge of python can use.
+2. Rich UI features. The components provide minimal, interactive and beautiful visualization interfaces.
+3. Readily provides APIs. Connection to the UI elements to your python script are taken care out-of-the-box.
+
+To know more about Greppo and its internal workings, and how to maximse its use, check out [Greppo's mental model](mental-model)
+
+Check out the [Installation](installation) and [Quickstart](quickstart) sections to get started instantly.
 
 ```{toctree}
 :hidden:
@@ -17,7 +20,6 @@ the project.
 installation
 quickstart
 demo
-modules
 ```
 
 ```{toctree}
