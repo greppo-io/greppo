@@ -3,13 +3,13 @@ import asyncio
 import pathlib
 import unittest
 
-from input_types import GreppoInputsNames
+from greppo.input_types import GreppoInputsNames
 from meta.asttools import cmp_ast
 from meta.asttools import print_ast
-from user_script_utils import append_send_data_method
-from user_script_utils import RenameGreppoAppTransformer
-from user_script_utils import script_task
-from user_script_utils import Transformer
+from greppo.user_script_utils import append_send_data_method
+from greppo.user_script_utils import RenameGreppoAppTransformer
+from greppo.user_script_utils import script_task
+from greppo.user_script_utils import Transformer
 
 
 def hex_token_generator(nbytes):

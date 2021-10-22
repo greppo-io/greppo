@@ -12,7 +12,7 @@ from _ast import Store
 from contextlib import redirect_stdout
 from typing import Any
 
-from greppo import GreppoApp, GreppoAppProxy
+from greppo import GreppoAppProxy
 from .input_types import GreppoInputsNames
 
 

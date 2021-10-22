@@ -16,6 +16,7 @@ class ChartData:
     datasets: list[Dataset]
 
 
+# TODO doesn't handle multiple datasets.
 @dataclass
 class LineChart:
     def __init__(
@@ -34,7 +35,7 @@ class LineChart:
 
         # background is defaulted
         dataset = Dataset(
-            label="this should be name", data=y, backgroundColor="#000000"
+            label=description, data=y, backgroundColor="#000000"
         )
         self.chartdata = ChartData(labels=x, datasets=[dataset])
 

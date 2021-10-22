@@ -25,8 +25,8 @@ async def api_endpoint(user_script: str, request: Request):
     try:
         input_updates = await request.json()
         logging.debug("Got input update: ", input_updates)
-    except Exception:
-        logging.error("Unable to parse request body: ", await request.body())
+    except Exception as e:
+        logging.debug("Unable to parse request body: ", await request.body(), e)
 
     payload = await script_task(script_name=user_script, input_updates=input_updates)
 

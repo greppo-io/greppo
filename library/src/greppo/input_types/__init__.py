@@ -2,7 +2,6 @@ from typing import Union
 
 from .bar_chart import BarChart
 from .bar_chart import BarChartComponentInfo
-from .bar_chart import Dataset
 from .draw_feature import DrawFeature
 from .draw_feature import DrawFeatureComponentInfo
 from .line_chart import LineChart
