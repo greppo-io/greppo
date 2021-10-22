@@ -7,6 +7,8 @@ import {
     uniAngleRight,
     uniAngleLeft,
     uniAngleDown,
+    uniApps,
+    uniInfoCircle,
 } from "vue-unicons/dist/icons";
 
 Unicon.add([
@@ -16,5 +18,7 @@ Unicon.add([
     uniAngleRight,
     uniAngleLeft,
     uniAngleDown,
+    uniApps,
+    uniInfoCircle,
 ]);
 Vue.use(Unicon);

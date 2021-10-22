@@ -35,7 +35,7 @@
 
                 <!-- Center Container  -->
                 <div class="flex flex-col w-full h-screen">
-                    <div class="h-full">
+                    <div class="h-full relative">
                         <!-- Center Container Content  -->
                         <center-container
                             v-if="getComponentStatus.mapComponent"
@@ -43,6 +43,74 @@
                             :isFullScreen="isFullScreen"
                             @toggle-fullscreen="toggleFullScreen"
                         />
+
+                        <div
+                            class="absolute top-0 right-3 bg-white bg-opacity-70 rounded-b-md px-2 py-1"
+                            style="z-index: 1500;"
+                        >
+                            <div class="flex flex-row items-center">
+                                <div class="text-center text-gray-700">
+                                    <!-- <p class="text-xs">Made with,</p> -->
+                                    <a
+                                        class="flex flex-row mt-1 items-center"
+                                        href="https://greppo.io"
+                                        target="_blank"
+                                        ><img
+                                            src="../assets/logo_bw.svg"
+                                            class="mx-1"
+                                            width="20px"
+                                        />
+                                        <p class="text-base mx-1">Greppo</p>
+                                    </a>
+                                </div>
+                                <div class="ml-2">
+                                    <button
+                                        class="flex items-end relative hover:bg-gray-200 rounded "
+                                        @click="dropdownInfo = !dropdownInfo"
+                                    >
+                                        <unicon
+                                            name="info-circle"
+                                            fill="gray"
+                                            class="m-1"
+                                            width="20px"
+                                        ></unicon>
+                                    </button>
+                                    <div
+                                        v-show="dropdownInfo"
+                                        @click="dropdownInfo = false"
+                                        class="fixed inset-0 h-screen w-screen z-10"
+                                    ></div>
+                                    <div
+                                        v-show="dropdownInfo"
+                                        class="absolute top-12 right-0 w-48 bg-white bg-opacity-80 rounded-md overflow-hidden shadow-lg z-20"
+                                    >
+                                        <a
+                                            href="#"
+                                            class="block px-4 py-3 font-medium text-gray-800 border-b"
+                                            >Made with Greppo
+                                        </a>
+                                        <a
+                                            href="https://docs.greppo.io/"
+                                            target="_blank"
+                                            class="block px-4 py-3 text-sm text-gray-800 hover:bg-gray-200"
+                                            >Documentation</a
+                                        >
+                                        <a
+                                            href="https://greppo.io/"
+                                            target="_blank"
+                                            class="block px-4 py-3 text-sm text-gray-800 hover:bg-gray-200"
+                                            >Website - greppo.io</a
+                                        >
+                                        <a
+                                            href="https://github.com/greppo-io/greppo"
+                                            target="_blank"
+                                            class="block px-4 py-3 text-sm text-gray-800 border-t hover:bg-gray-200"
+                                            >GitHub Repository</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -90,6 +158,7 @@ export default {
             isFullScreen: false,
             teleport: true,
             pageOnly: false,
+            dropdownInfo: false,
         };
     },
     methods: {
@@ -140,9 +209,8 @@ export default {
 .sidebar-control {
     z-index: 1100;
 }
-.sidebar-width {    
+.sidebar-width {
     width: 33vw;
     min-width: 340px;
 }
-
 </style>

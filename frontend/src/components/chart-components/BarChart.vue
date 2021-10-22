@@ -1,5 +1,5 @@
 <template>
-    <div class="my-5">
+    <div class="my-10">
         <p class="text-xl">{{ title }}</p>
         <p class="text-base">{{ description }}</p>
         <p class="text-sm" v-if="highlightStatus">

@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full">
+    <div class="h-full w-full">        
         <!-- The center container will have the map components and the mail control of the application. -->
         <l-map ref="lmap" :center="center" :zoom="zoom">
             <base-layer v-if="getComponentStatus.baseLayer" />
@@ -109,14 +109,13 @@ export default {
             "getDefaultDrawFeatures",
             "getComponentStatus",
         ]),
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.$refs.lmap.mapObject.attributionControl
-                .setPrefix('<a href="https://greppo.io">Greppo</a>')
-                .addAttribution('<a href="https://leafletjs.com">Leaflet</a>');
-        });
-    },
+    },   
+    // mounted() {
+    //     this.$nextTick(() => {
+    //         this.$refs.lmap.mapObject.attributionControl
+    //             .setPosition('bottomleft');
+    //     });
+    // }, 
 };
 </script>
 
@@ -132,7 +131,7 @@ export default {
     box-shadow: 0px 0px 3px 1.5px rgba(0, 0, 0, 0.2) !important;
 }
 .leaflet-control-attribution {
-    font-size: 14px !important;
+    font-size: 12px !important;
     letter-spacing: 0.03em;
     font-weight: 400;
     padding: 3px 6px;
@@ -143,8 +142,4 @@ export default {
     width: 30px;
     height: 30px;
 }
-/* .leaflet-container a {
-    color: #666666;
-    text-decoration: none;
-} */
 </style>
