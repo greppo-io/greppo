@@ -9,8 +9,6 @@ all: clean
 serve-dev:
 	npm run --prefix ./frontend serve & python ./tests/test_server/test.py &
 
-# @cd frontend ; npm run build
-
 .PHONY: build-frontend
 build-frontend:	
 	cd frontend && npm run build
@@ -23,10 +21,17 @@ build-package:
 run-unit-tests:
 	pytest library/tests/unit_tests
 
-# Sphinx should be installed before doing this
 .PHONY: build-docs
 build-docs:	
 	cd docs && make html
+
+.PHONY: live-build-docs
+build-docs:	
+	cd docs && make livehtml
+
+.PHONY: serve-docs
+serve-docs:	
+	cd docs/build/html && open ./index.html
 
 .PHONY: clean
 clean:
