@@ -2,11 +2,7 @@
 
 **A Python framework for building (geo)spatial web-applications.**
 
-Greppo is an open-source Python framework that makes it easy to build applications. It provides a toolkit for data-scientists to quickly integrate data, algorithms, visualizations and UI for interactivity.
-
-It provides a platform to prototype your applications, quick and easy.
-
-No front- or back-end experience required. Greppo takes care of that.
+Greppo is an open-source Python framework that makes it easy to build applications. It provides a toolkit for to quickly integrate data, algorithms, visualizations and UI for interactivity.
 
 ---
 
@@ -60,7 +56,7 @@ Do you have questions? Ideas? Want to share your project? Join us on discord [In
 
 ## License
 
-Greppo is licensed under the License.
+Greppo is licensed under GNU GPL v3.
 
 ## Links
 
