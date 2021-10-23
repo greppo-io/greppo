@@ -1,46 +1,71 @@
-# Greppo
+# Hey there, this is <a href="https://greppo.io/" style="color: #F5325B;"><img src="./docs/source/logo.png" height="28"> Greppo</a>...
 
-## The library
+**A Python framework for building (geo)spatial web-applications.**
 
-Integrates the frontend code with the backend library.
+Greppo is an open-source Python framework that makes it easy to build applications. It provides a toolkit for data-scientists to quickly integrate data, algorithms, visualizations and UI for interactivity.
 
-## Development
+It provides a platform to prototype your applications, quick and easy.
 
-- Install pre-commit, requirements
-```
-pre-commit install
-pip install -r requirements.txt
-```
+No front- or back-end experience required. Greppo takes care of that.
 
-- Install Lib
-```
-pip install -e .
-```
+---
 
-- Run commands
-```shell
-uvicorn cli.py:app
+**Documentation**: [docs.greppo.io](https://docs.greppo.io)
 
-# or
-python test_app.py
-```
+---
 
-### Run backend server
-
-Assuming your node/JS environment is already initialized with the required packages installed.
+## Installation
 
 ```shell
-
-$make backend_server
-
+$ pip install geppo
 ```
 
-### Run front server
+We suggest you use a virtual environment to manage your packages for this project. For more infromation you can follow the [Installation Guide](https://docs.greppo.io).
 
-Assuming your python environment is already running with the required packages.
+## A simple example
+
+**app.py**
+
+```python
+from greppo import app
+
+data_gdf = gpd.read_file("geospatial_data.geojson")
+
+app.overlay_layer(
+    data_gdf,
+    title="Geospatial data",
+    description="Data that is loaded as a geopandas geodataframe",
+    style={"fillColor": "#F5325B"},
+    visible=True,
+)
+
+app.base_layer(
+    name="Open Street Map",
+    visible=True,
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    subdomains=None,
+    attribution='&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+)
+```
+
+Then run the aplication using the `greppo` cli command:
 
 ```shell
-
-$make frontend_server
-
+greppo serve app.py
 ```
+
+## Support & Community
+
+Do you have questions? Ideas? Want to share your project? Join us on discord [Invite Link](https://discord.gg/RNJBjgh8gz).
+
+## License
+
+Greppo is licensed under the License.
+
+## Links
+
+* Website: https://greppo.io
+* Documentation: https://docs.greppo.io
+* PyPI Releases: https://pypi.org/project/greppo/
+* Source Code: https://github.com/pallets/flask
+* Community Chat: https://discord.gg/RNJBjgh8gz

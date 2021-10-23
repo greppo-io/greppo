@@ -1,8 +1,8 @@
 <template>
-    <div class="my-10">
-        <p class="text-xl">{{ title }}</p>
-        <p class="text-base">{{ description }}</p>
-        <p class="text-sm" v-if="highlightStatus">
+    <div class="my-10 mx-2">
+        <p class="text-xl my-1">{{ title }}</p>
+        <p class="text-base my-1">{{ description }}</p>
+        <p class="text-sm my-1" v-if="highlightStatus">
             Selected: {{ selectedData.dataLabel }},
             {{ selectedData.dataValue }} of {{ selectedData.datasetLabel }}
             <button

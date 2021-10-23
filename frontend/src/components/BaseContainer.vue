@@ -16,6 +16,7 @@
                         <!-- Left Side Bar Content  -->
                         <left-container />
                     </div>
+                    <!-- Left Side Bar Control  -->
                     <div
                         @click="toggleLeftContainer"
                         class="sidebar-control h-8 w-4 bg-gray-700 mt-2 -mr-4 absolute top-0 right-0 flex items-center rounded-tr rounded-br justify-center cursor-pointer"
@@ -50,7 +51,7 @@
                         >
                             <div class="flex flex-row items-center">
                                 <div class="text-center text-gray-700">
-                                    <!-- <p class="text-xs">Made with,</p> -->
+                                    <p style="font-size: 0.70em;">made with</p>
                                     <a
                                         class="flex flex-row mt-1 items-center"
                                         href="https://greppo.io"
@@ -82,7 +83,7 @@
                                     ></div>
                                     <div
                                         v-show="dropdownInfo"
-                                        class="absolute top-12 right-0 w-48 bg-white bg-opacity-80 rounded-md overflow-hidden shadow-lg z-20"
+                                        class="absolute top-14 right-0 w-48 bg-white bg-opacity-70 rounded-md overflow-hidden shadow-lg z-20"
                                     >
                                         <a
                                             href="#"
