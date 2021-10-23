@@ -57,7 +57,7 @@
                                         href="https://greppo.io"
                                         target="_blank"
                                         ><img
-                                            src="../assets/logo_bw.svg"
+                                            src="../assets/logo.svg"
                                             class="mx-1"
                                             width="20px"
                                         />
