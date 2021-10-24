@@ -21,18 +21,6 @@ build-package:
 run-unit-tests:
 	pytest library/tests/unit_tests
 
-.PHONY: build-docs
-build-docs:	
-	cd docs && make html
-
-.PHONY: live-build-docs
-live-build-docs:	
-	cd docs && make livehtml
-
-.PHONY: serve-docs
-serve-docs:	
-	cd docs/build/html && open ./index.html
-
 .PHONY: clean
 clean:
 	echo "To be implemented..."
