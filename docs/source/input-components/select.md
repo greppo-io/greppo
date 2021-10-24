@@ -2,7 +2,7 @@
 Select UI component that allows a user to pick one value from a list of values as a dropdown menu.
 
 ## Parameters
-`name` Str value serving as a unique identifier.
+`name` Str value serving as a unique identifier for this UI component.
 
 `options` List of possible values to select from. Value type is `[int, float, str, bool]`.
 

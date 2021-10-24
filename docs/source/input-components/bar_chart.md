@@ -2,7 +2,7 @@
 2-D Bar Chart is a UI component for rendering data.
 
 ## Parameters
-`input_name` Str value serving as a unique identifier.
+`name` Str value serving as a unique identifier for this UI component.
 
 `title` - Title string rendered on the UI.
 
@@ -17,7 +17,7 @@
 from greppo import app
 
 app.bar_chart(
-    input_name="A bar chart",
+    name="A bar chart",
     title="Test title",
     description="A simple bar chart",
     x = ['1', '2', '3', '4'],
