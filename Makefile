@@ -26,7 +26,7 @@ build-docs:
 	cd docs && make html
 
 .PHONY: live-build-docs
-build-docs:	
+live-build-docs:	
 	cd docs && make livehtml
 
 .PHONY: serve-docs
