@@ -16,6 +16,9 @@ from greppo import GreppoAppProxy
 from .input_types import GreppoInputsNames
 
 
+logger = logging.getLogger('user_script_utils')
+
+
 class Transformer(ast.NodeTransformer):
     def __init__(self, input_updates, hex_token_generator):
         super().__init__()
@@ -141,10 +144,12 @@ async def script_task(
             hex_token_generator=hex_token_generator,
         )
 
-    logging.info("-------------")
-    logging.info("stdout from process")
-    logging.info("===")
-    logging.info(loop_out.getvalue())
-    logging.info("===")
+    logger.setLevel(logging.DEBUG)
+
+    logger.info("-------------")
+    logger.info("stdout from process")
+    logger.info("===")
+    logger.info(loop_out.getvalue())
+    logger.info("===")
 
     return payload
