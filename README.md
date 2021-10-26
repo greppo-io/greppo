@@ -57,10 +57,6 @@ To view the app that is being served, enter this address of the localhost `127.0
 
 <img src="./assets/app.png" style="border-radius: 0.5rem;">
 
-## Demo
-
-https://github.com/greppo-io/greppo/blob/545654ef63a4279d3edbe80986d708fb10d58018/assets/demo.mp4
-
 ## Support & Community
 
 Do you have questions? Ideas? Want to share your project? Join us on discord [Invite Link](https://discord.gg/RNJBjgh8gz).
