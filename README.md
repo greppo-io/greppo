@@ -59,7 +59,7 @@ To view the app that is being served, enter this address of the localhost `127.0
 
 ## Demo
 
-https://github.com/greppo-io/greppo/blob/main/assets/demo.mp4
+https://github.com/greppo-io/greppo/blob/545654ef63a4279d3edbe80986d708fb10d58018/assets/demo.mp4
 
 ## Support & Community
 
