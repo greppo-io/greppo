@@ -1,4 +1,4 @@
-# Hey there, this is <a href="https://greppo.io/" style="color: #F5325B;"><img src="https://github.com/greppo-io/greppo-docs/blob/main/source/logo.png" height="28"> Greppo</a>...
+# Hey there, this is <a href="https://greppo.io/" style="color: #F5325B;"><img src="./assets/logo.png" height="28"> Greppo</a>...
 
 **A Python framework for building (geo)spatial web-applications.**
 
@@ -20,18 +20,21 @@ We suggest you use a virtual environment to manage your packages for this projec
 
 ## A simple example
 
-**app.py**
-
 ```python
+# inside app.py
+
 from greppo import app
+import geopandas as gpd
 
 data_gdf = gpd.read_file("geospatial_data.geojson")
 
+buildings_gdf = gpd.read_file("./data/buildings.geojson")
+
 app.overlay_layer(
-    data_gdf,
-    title="Geospatial data",
-    description="Data that is loaded as a geopandas geodataframe",
-    style={"fillColor": "#F5325B"},
+    buildings_gdf,
+    title="Buildings",
+    description="Buildings in a neighbourhood in Amsterdam",
+    style={"fillColor": "#F87979"},
     visible=True,
 )
 
@@ -49,6 +52,12 @@ Then run the aplication using the `greppo` cli command:
 ```shell
 greppo serve app.py
 ```
+
+To view the app that is being served, enter this address of the localhost `127.0.0.1:8000/` in your web browser.
+
+<img src="./assets/app.png" style="border-radius: 0.5rem;">
+
+## Demo
 
 ## Support & Community
 
