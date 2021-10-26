@@ -59,6 +59,8 @@ To view the app that is being served, enter this address of the localhost `127.0
 
 ## Demo
 
+https://github.com/greppo-io/greppo/blob/main/assets/demo.mp4
+
 ## Support & Community
 
 Do you have questions? Ideas? Want to share your project? Join us on discord [Invite Link](https://discord.gg/RNJBjgh8gz).
