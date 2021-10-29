@@ -1,5 +1,6 @@
 import ast
 import io
+import json
 import logging
 import secrets
 from _ast import Assign
@@ -10,7 +11,7 @@ from _ast import Load
 from _ast import Name
 from _ast import Store
 from contextlib import redirect_stdout
-from typing import Any
+from typing import Any, Dict
 
 from greppo import GreppoAppProxy
 from .input_types import GreppoInputsNames
@@ -96,12 +97,52 @@ def append_send_data_method(code):
     return code
 
 
+class ReplaceGpoVariableWithValueTransformer(ast.NodeTransformer):
+    def __init__(self, input_updates: Dict[str, Any], hex_token_generator):
+        super().__init__()
+
+        self.input_updates = input_updates
+
+        self.hex_token_generator = hex_token_generator
+
+        self.greppo_input_calls = []
+
+    def visit_Call(self, node):
+        if not hasattr(node.func, "attr"):
+            return node
+
+        if node.func.attr not in GreppoInputsNames:
+            return node
+
+        # ==== Find name value within gpo variable ctr and replace with update value.
+        name, value = None, None
+        for node_kwargs in node.keywords:
+            if node_kwargs.arg == "name":
+                name = node_kwargs.value.value
+                input_name = self.hex_token_generator(nbytes=4) + "_" + name
+                node_kwargs.value.value = input_name
+
+            if node_kwargs.arg in ["value", "default"]:
+                value_ast = node_kwargs.value
+                value = ast.literal_eval(value_ast)
+
+        # Save node ast with updated name for eval to register the input for the front-end.
+        self.greppo_input_calls.append(ast.unparse(node))
+
+        # `name` and `value` can't be be none, all gpo variables require them in the ctr.
+        replacement_value = self.input_updates.get(name, value)
+
+        value_node = ast.parse(json.dumps(replacement_value)).body[0].value
+
+        return value_node
+
+
 def run_script(script_name, input_updates, hex_token_generator):
     with open(script_name) as f:
         lines = f.read()
         user_code = ast.parse(lines, script_name)
 
-        transformer = Transformer(
+        transformer = ReplaceGpoVariableWithValueTransformer(
             input_updates=input_updates, hex_token_generator=hex_token_generator
         )
         transformer.visit(user_code)
@@ -118,8 +159,15 @@ def run_script(script_name, input_updates, hex_token_generator):
 
         ast.fix_missing_locations(user_code)
 
+        gpo_app = GreppoAppProxy()
+
+        locals_copy = locals().copy()
+        locals_copy['app'] = gpo_app
+        for greppo_input_call in transformer.greppo_input_calls:
+            exec(greppo_input_call, globals(), locals_copy)
+
         # TODO maybe have a fresh locals obj?
-        locals()[hash_prefix + "_app"] = GreppoAppProxy()
+        locals()[hash_prefix + "_app"] = gpo_app
 
         exec(compile(user_code, script_name, "exec"), globals(), locals())
 

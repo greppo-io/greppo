@@ -1,4 +1,5 @@
 ## Development
+`pip install pre-commit`
 `pre-commit install`
 `pip install -r requirements.txt`
 `pip install -e .`

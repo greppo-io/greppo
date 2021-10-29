@@ -6,7 +6,7 @@ import unittest
 from greppo.input_types import GreppoInputsNames
 from meta.asttools import cmp_ast
 from meta.asttools import print_ast
-from greppo.user_script_utils import append_send_data_method
+from greppo.user_script_utils import append_send_data_method, ReplaceGpoVariableWithValueTransformer
 from greppo.user_script_utils import RenameGreppoAppTransformer
 from greppo.user_script_utils import script_task
 from greppo.user_script_utils import Transformer
@@ -20,8 +20,8 @@ def hex_token_generator(nbytes):
 
 class TestUserScriptUtils(unittest.TestCase):
     def test_transformer_for_number_input(self):
-        transformer = Transformer(
-            input_updates={}, hex_token_generator=hex_token_generator
+        transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates={}, hex_token_generator=hex_token_generator,
         )
         user_code = ast.parse(
             'number_1 = gpo.number(value=10, name="Number input 1")', "<test>"
@@ -30,17 +30,15 @@ class TestUserScriptUtils(unittest.TestCase):
         transformer.visit(user_code)
 
         expected_user_code = ast.parse(
-            "number_1 = "
-            'gpo.number(value=10, name="somehex1_Number input 1", input_updates={})',
+            "number_1 = 10",
             "<test>",
         )
 
         self.assertTrue(cmp_ast(user_code, expected_user_code))
 
     def test_transformer_for_number_input_with_input_update(self):
-        transformer = Transformer(
-            input_updates={"Number input 1": 10},
-            hex_token_generator=hex_token_generator,
+        transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates={"Number input 1": 11}, hex_token_generator=hex_token_generator,
         )
         user_code = ast.parse(
             'number_1 = gpo.number(value=10, name="Number input 1")', "<test>"
@@ -49,16 +47,15 @@ class TestUserScriptUtils(unittest.TestCase):
         transformer.visit(user_code)
 
         expected_user_code = ast.parse(
-            "number_1 = "
-            'gpo.number(value=10, name="somehex1_Number input 1", input_updates={"Number input 1": 10})',
+            "number_1 = 11",
             "<test>",
         )
 
         self.assertTrue(cmp_ast(user_code, expected_user_code))
 
     def test_transformer_for_multiselect_no_input_update(self):
-        transformer = Transformer(
-            input_updates={}, hex_token_generator=hex_token_generator
+        transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates={}, hex_token_generator=hex_token_generator,
         )
         user_code = ast.parse(
             'multiselect1=gpo.multiselect(name="Second selector", options=[1, "True", "France"], default=["a"])'
@@ -67,17 +64,15 @@ class TestUserScriptUtils(unittest.TestCase):
         transformer.visit(user_code)
 
         expected_user_code = ast.parse(
-            'multiselect1 = '
-            'gpo.multiselect(name="somehex1_Second selector", options=[1, "True", "France"], default=["a"], '
-            'input_updates={})',
+            'multiselect1 = ["a"]',
             "<test>",
         )
 
         self.assertTrue(cmp_ast(user_code, expected_user_code))
 
     def test_transformer_for_multiselect_with_input_update(self):
-        transformer = Transformer(
-            input_updates={"Second selector": ["b"]}, hex_token_generator=hex_token_generator
+        transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates={"Second selector": ["b"]}, hex_token_generator=hex_token_generator,
         )
         user_code = ast.parse(
             'multiselect1=gpo.multiselect(name="Second selector", options=[1, "True", "France"], default=["a"])'
@@ -86,9 +81,7 @@ class TestUserScriptUtils(unittest.TestCase):
         transformer.visit(user_code)
 
         expected_user_code = ast.parse(
-            'multiselect1 = '
-            'gpo.multiselect(name="somehex1_Second selector", options=[1, "True", "France"], default=["a"], '
-            'input_updates={"Second selector": ["b"]})',
+            'multiselect1 = ["b"]',
             "<test>",
         )
 
@@ -96,8 +89,8 @@ class TestUserScriptUtils(unittest.TestCase):
 
     def test_transformer_for_multiselect_with_input_update_empty_value(self):
         # TODO this should be fixed, we cannot have an empty value for multiselect input.
-        transformer = Transformer(
-            input_updates={"Second selector": ""}, hex_token_generator=hex_token_generator
+        transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates={"Second selector": ""}, hex_token_generator=hex_token_generator,
         )
         user_code = ast.parse(
             'multiselect1=gpo.multiselect(name="Second selector", options=[1, "True", "France"], default=["a"])'
@@ -106,17 +99,15 @@ class TestUserScriptUtils(unittest.TestCase):
         transformer.visit(user_code)
 
         expected_user_code = ast.parse(
-            'multiselect1 = '
-            'gpo.multiselect(name="somehex1_Second selector", options=[1, "True", "France"], default=["a"], '
-            'input_updates={"Second selector": ""})',
+            'multiselect1 = ""',
             "<test>",
         )
 
         self.assertTrue(cmp_ast(user_code, expected_user_code))
 
     def test_transformer_for_all_inputs_no_arg_check(self):
-        transformer = Transformer(
-            input_updates={}, hex_token_generator=hex_token_generator
+        transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates={}, hex_token_generator=hex_token_generator,
         )
 
         input_names = GreppoInputsNames
@@ -127,11 +118,12 @@ class TestUserScriptUtils(unittest.TestCase):
                 transformer.visit(user_code)
 
                 expected_user_code = ast.parse(
-                    "select1 = gpo.{}(input_updates={{}})".format(
-                        input_name
-                    ),
+                    "select1 = null",
                     "<test>",
                 )
+
+                print_ast(user_code)
+                print_ast(expected_user_code)
 
                 self.assertTrue(cmp_ast(user_code, expected_user_code))
 
@@ -179,7 +171,7 @@ class TestRunUserScript(unittest.TestCase):
 
     def test_user_script_works(self):
         dir_path = pathlib.Path(__file__).parent.resolve()
-        user_script_path = dir_path.joinpath("user_script_2.py")
+        user_script_path = dir_path.joinpath("user_script_4.py")
 
         payload = asyncio.run(
             script_task(
@@ -193,15 +185,17 @@ class TestRunUserScript(unittest.TestCase):
             "base_layer_info": [],
             "overlay_layer_data": [],
             "component_info": [
-                {"id": "somehex1", "name": "x", "type": "Number", "value": "3"},
                 {
                     "id": "somehex1",
-                    "name": "Number input 1",
-                    "type": "Number",
-                    "value": "1",
+                    "name": "Filter building",
+                    "type": "Multiselect",
+                    "options": ["apartments", "retail", "house"],
+                    "value": ["house"],
                 },
             ],
         }
+
+        print(payload)
 
         self.assertEqual(payload, expected_payload)
 

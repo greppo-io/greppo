@@ -20,9 +20,11 @@ app.base_layer(
 
 building_gdf = gpd.read_file("tests/data/buildings.geojson")
 
-filter_select = app.multiselect(name="Filter building", options=["apartments", "retail", "house"], default=["house"])
+filter_select = app.multiselect(
+    name="Filter building", options=["apartments", "retail", "house"], default=["house"]
+)
 
-filter_gdf = building_gdf[building_gdf.building == filter_select.get_value()[0]]
+filter_gdf = building_gdf[building_gdf.building == filter_select[0]]
 
 app.overlay_layer(
     filter_gdf,
