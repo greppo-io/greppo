@@ -5,8 +5,9 @@ import uuid
 from typing import Any
 from typing import List
 
-from greppo import osm
 from geopandas import GeoDataFrame as gdf
+from greppo import osm
+
 from .input_types import BarChart
 from .input_types import ComponentInfo
 from .input_types import DrawFeature
@@ -53,6 +54,7 @@ class GreppoAppProxy(object):
     These methods are used by a Greppo server to obtain an output from the user script that is then rendered by the
     frontend.
     """
+
     def __init__(self):
         # Map component data
         self.base_layers: List[BaseLayer] = []
@@ -123,6 +125,9 @@ class GreppoAppProxy(object):
         self.inputs = inputs
 
     def register_input(self, discovered_input: GreppoInputs):
+        """
+        BarChart and LineChart are also registered with this `register_input` method. Maybe rename this method.
+        """
         component_info = discovered_input.convert_to_component_info()
         self.registered_inputs.append(component_info)
 

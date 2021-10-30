@@ -9,7 +9,6 @@ from meta.asttools import print_ast
 from greppo.user_script_utils import append_send_data_method, ReplaceGpoVariableWithValueTransformer
 from greppo.user_script_utils import RenameGreppoAppTransformer
 from greppo.user_script_utils import script_task
-from greppo.user_script_utils import Transformer
 
 
 def hex_token_generator(nbytes):

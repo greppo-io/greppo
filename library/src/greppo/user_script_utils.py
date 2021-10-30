@@ -14,54 +14,10 @@ from contextlib import redirect_stdout
 from typing import Any, Dict
 
 from greppo import GreppoAppProxy
-from .input_types import GreppoInputsNames
-
+from .input_types import GreppoInputsNames, GreppoChartNames
+from meta.asttools import print_ast
 
 logger = logging.getLogger('user_script_utils')
-
-
-class Transformer(ast.NodeTransformer):
-    def __init__(self, input_updates, hex_token_generator):
-        super().__init__()
-
-        self.input_updates = input_updates
-
-        self.hex_token_generator = hex_token_generator
-
-    def visit_Call(self, node):
-        if not hasattr(node.func, "attr"):
-            return node
-
-        if node.func.attr not in GreppoInputsNames:
-            return node
-
-        # ==== Find all names for gpo_inputs and set hex id
-        for node_kwargs in node.keywords:
-            if node_kwargs.arg == "name":
-                input_name = node_kwargs.value.value
-                input_name = self.hex_token_generator(nbytes=4) + "_" + input_name
-                node_kwargs.value.value = input_name
-                break
-
-        input_updates_ast = ast.parse(str(self.input_updates)).body[0]
-        if not hasattr(input_updates_ast, 'value'):
-            raise Exception("Cannot parse input_updates: {}", self.input_updates)
-
-        input_updates_keyword = keyword(
-            arg="input_updates", value=input_updates_ast.value
-        )
-
-        # ==== Add input updates to node
-        updated = False
-        for pos, k in enumerate(node.keywords):
-            if k.arg == "input_updates":
-                node.keywords[pos] = input_updates_keyword
-                updated = True
-                break
-        if not updated:
-            node.keywords.append(input_updates_keyword)
-
-        return node
 
 
 class RenameGreppoAppTransformer(ast.NodeTransformer):
@@ -137,18 +93,70 @@ class ReplaceGpoVariableWithValueTransformer(ast.NodeTransformer):
         return value_node
 
 
+class AddHexPrefixForCharts(ast.NodeTransformer):
+    def __init__(self, input_updates, hex_token_generator):
+        super().__init__()
+
+        self.input_updates = input_updates
+
+        self.hex_token_generator = hex_token_generator
+
+    def visit_Call(self, node):
+        if not hasattr(node.func, "attr"):
+            return node
+
+        if node.func.attr not in GreppoChartNames:
+            return node
+
+        # ==== Find all names for gpo_inputs and set hex id
+        for node_kwargs in node.keywords:
+            if node_kwargs.arg == "name":
+                input_name = node_kwargs.value.value
+                input_name = self.hex_token_generator(nbytes=4) + "_" + input_name
+                node_kwargs.value.value = input_name
+                break
+
+        input_updates_ast = ast.parse(str(self.input_updates)).body[0]
+        if not hasattr(input_updates_ast, 'value'):
+            raise Exception("Cannot parse input_updates: {}", self.input_updates)
+
+        input_updates_keyword = keyword(
+            arg="input_updates", value=input_updates_ast.value
+        )
+
+        # ==== Add input updates to node
+        updated = False
+        for pos, k in enumerate(node.keywords):
+            if k.arg == "input_updates":
+                node.keywords[pos] = input_updates_keyword
+                updated = True
+                break
+        if not updated:
+            node.keywords.append(input_updates_keyword)
+
+        return node
+
+
 def run_script(script_name, input_updates, hex_token_generator):
     with open(script_name) as f:
         lines = f.read()
         user_code = ast.parse(lines, script_name)
 
-        transformer = ReplaceGpoVariableWithValueTransformer(
+        replace_gpo_variable_with_value_transformer = ReplaceGpoVariableWithValueTransformer(
+            input_updates=input_updates, hex_token_generator=hex_token_generator
+        )
+        replace_gpo_variable_with_value_transformer.visit(user_code)
+        ast.fix_missing_locations(
+            user_code
+        )
+
+        transformer = AddHexPrefixForCharts(
             input_updates=input_updates, hex_token_generator=hex_token_generator
         )
         transformer.visit(user_code)
         ast.fix_missing_locations(
             user_code
-        )  # TODO double check why this happens with on node position copy
+        )
 
         user_code = append_send_data_method(user_code)
 
@@ -163,7 +171,7 @@ def run_script(script_name, input_updates, hex_token_generator):
 
         locals_copy = locals().copy()
         locals_copy['app'] = gpo_app
-        for greppo_input_call in transformer.greppo_input_calls:
+        for greppo_input_call in replace_gpo_variable_with_value_transformer.greppo_input_calls:
             exec(greppo_input_call, globals(), locals_copy)
 
         # TODO maybe have a fresh locals obj?
