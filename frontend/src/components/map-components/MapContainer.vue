@@ -1,6 +1,6 @@
 <template>
-    <div class="h-full w-full">        
-        <!-- The center container will have the map components and the mail control of the application. -->
+    <div class="h-full w-full">
+        <!-- The map container will have the map components and the mail control of the application. -->
         <l-map ref="lmap" :center="center" :zoom="zoom">
             <base-layer v-if="getComponentStatus.baseLayer" />
             <div v-if="getComponentStatus.overlayLayer">
@@ -63,10 +63,10 @@
 <script>
 import { LMap, LControlLayers, LControl } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
-import VectorLayer from "./map-components/VectorLayer";
-import BaseLayer from "./map-components/BaseLayer";
+import VectorLayer from "./VectorLayer";
+import BaseLayer from "./BaseLayer";
 import { mapGetters } from "vuex";
-import DrawFeature from "./map-components/DrawFeature.vue";
+import DrawFeature from "./DrawFeature.vue";
 
 export default {
     name: "CenterContainer",
@@ -109,13 +109,14 @@ export default {
             "getDefaultDrawFeatures",
             "getComponentStatus",
         ]),
-    },   
-    // mounted() {
-    //     this.$nextTick(() => {
-    //         this.$refs.lmap.mapObject.attributionControl
-    //             .setPosition('bottomleft');
-    //     });
-    // }, 
+    },
+    mounted() {
+        this.$nextTick(() => {
+            // this.$refs.lmap.mapObject.attributionControl
+            //     .setPosition('bottomleft');
+            this.resetViewHandler();
+        });
+    },
 };
 </script>
 
