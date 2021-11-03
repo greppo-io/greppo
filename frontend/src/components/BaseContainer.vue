@@ -184,24 +184,7 @@ export default {
     },
     computed: {
         ...mapGetters(["getStatus", "getComponentStatus"]),
-        // statusWatcher() {
-        //     try {
-        //         return this.getStatus;
-        //     } catch (error) {
-        //         return 0;
-        //     }
-        // },
-    },
-    watch: {
-        // TODO get the setView to apply the the zoom and center when the data and map is loaded.
-        // statusWatcher(newVal) {
-        //     if (this.getComponentStatus.mapComponent) {
-        //         if (newVal === 2) {
-        //             this.$refs.centercontainer.resetViewHandler();
-        //         }
-        //     }
-        // },
-    },
+    },    
 };
 </script>
 
