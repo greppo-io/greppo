@@ -202,10 +202,10 @@ async def script_task(
 
     logger.setLevel(logging.DEBUG)
 
-    logger.info("-------------")
-    logger.info("stdout from process")
-    logger.info("===")
-    logger.info(loop_out.getvalue())
-    logger.info("===")
+    # logger.info("-------------")
+    # logger.info("stdout from process")
+    # logger.info("===")
+    # logger.info(loop_out.getvalue())
+    # logger.info("===")
 
     return payload
