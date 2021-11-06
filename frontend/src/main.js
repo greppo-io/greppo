@@ -9,6 +9,10 @@ import "./components/utils/include-unicons.js";
 import VueFullscreen from "vue-fullscreen";
 Vue.use(VueFullscreen);
 
+// toggle-button : https://github.com/euvl/vue-js-toggle-button
+import { ToggleButton } from 'vue-js-toggle-button'
+Vue.component('ToggleButton', ToggleButton)
+
 Vue.config.productionTip = false;
 
 new Vue({

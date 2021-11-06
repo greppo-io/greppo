@@ -44,6 +44,7 @@ app.overlay_layer(
     visible=True,
 )
 
+text_1 = app.text(value='here is a text', name="Text input 1")
 select1 = app.select(name="First selector", options=["a", "b", "c"], default="a")
 multiselect1 = app.multiselect(
     name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"]

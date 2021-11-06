@@ -10,6 +10,8 @@ from .multiselect import Multiselect
 from .multiselect import MultiselectComponentInfo
 from .number import Number
 from .number import NumberComponentInfo
+from .text import Text
+from .text import TextComponentInfo
 from .select import Select
 from .select import SelectComponentInfo
 
@@ -17,11 +19,12 @@ from .select import SelectComponentInfo
 GreppoCharts = Union[BarChart, LineChart]
 GreppoChartNames = [i.proxy_name() for i in GreppoCharts.__args__]
 
-GreppoInputs = Union[Number, Select, Multiselect, DrawFeature]
+GreppoInputs = Union[Number, Text, Select, Multiselect, DrawFeature]
 GreppoInputsNames = [i.proxy_name() for i in GreppoInputs.__args__]
 
 ComponentInfo = Union[
     NumberComponentInfo,
+    TextComponentInfo,
     SelectComponentInfo,
     MultiselectComponentInfo,
     DrawFeatureComponentInfo,

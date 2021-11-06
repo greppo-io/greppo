@@ -38,7 +38,7 @@
                 <div class="flex flex-col w-full h-screen">
                     <div class="h-full relative">
                         <!-- Center Container Content  -->
-                        <center-container
+                        <map-container
                             v-if="getComponentStatus.mapComponent"
                             ref="centercontainer"
                             :isFullScreen="isFullScreen"
@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import CenterContainer from "./CenterContainer";
+import MapContainer from "./map-components/MapContainer";
 import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightContainer";
 import { mapGetters } from "vuex";
@@ -147,7 +147,7 @@ import LoadingScreen from "./functional-components/LoadingScreen.vue";
 export default {
     name: "BaseContainer",
     components: {
-        CenterContainer,
+        MapContainer,
         LeftContainer,
         RightContainer,
         LoadingScreen,
@@ -184,24 +184,7 @@ export default {
     },
     computed: {
         ...mapGetters(["getStatus", "getComponentStatus"]),
-        // statusWatcher() {
-        //     try {
-        //         return this.getStatus;
-        //     } catch (error) {
-        //         return 0;
-        //     }
-        // },
-    },
-    watch: {
-        // TODO get the setView to apply the the zoom and center when the data and map is loaded.
-        // statusWatcher(newVal) {
-        //     if (this.getComponentStatus.mapComponent) {
-        //         if (newVal === 2) {
-        //             this.$refs.centercontainer.resetViewHandler();
-        //         }
-        //     }
-        // },
-    },
+    },    
 };
 </script>
 

@@ -936,6 +936,8 @@ palette = {
         ],
     },
     "RdBu": {
+        "min": 3,
+        "max": 11,
         3: ["#ef8a62", "#f7f7f7", "#67a9cf"],
         4: ["#ca0020", "#f4a582", "#92c5de", "#0571b0"],
         5: ["#ca0020", "#f4a582", "#f7f7f7", "#92c5de", "#0571b0"],
@@ -1587,6 +1589,149 @@ palette = {
         ],
     },
 }
+
+
+
+# "YlGn": {
+#     "min": 3,
+#     "max": 9,        
+# },
+# "YlGnBu": {
+#     "min": 3,
+#     "max": 9,        
+# },
+# "GnBu": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "BuGn": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "PuBuGn": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "PuBu": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "BuPu": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "RdPu": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "PuRd": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "OrRd": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "YlOrRd": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "YlOrBr": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Purples": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Blues": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Greens": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Oranges": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Reds": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Greys": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "PuOr": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "BrBG": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "PRGn": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "PiYG": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "RdBu": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "RdGy": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "RdYlBu": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "Spectral": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "RdYlGn": {
+#     "min": 3,
+#     "max": 11,
+# },
+# "Accent": {
+#     "min": 3,
+#     "max": 8,
+# },
+# "Dark2": {
+#     "min": 3,
+#     "max": 8,
+# },
+# "Paired": {
+#     "min": 3,
+#     "max": 12,
+# },
+# "Pastel1": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Pastel2": {
+#     "min": 3,
+#     "max": 8,
+# },
+# "Set1": {
+#     "min": 3,
+#     "max": 9,
+# },
+# "Set2": { 
+#     "min": 3, 
+#     "max": 8, 
+# },
+# "Set3": { 
+#     "min": 3, 
+#     "max": 12,
+# },
 
 
 def getPalette(length: int, scheme: str = "Set1") -> str:

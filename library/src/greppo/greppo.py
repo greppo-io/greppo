@@ -19,6 +19,7 @@ from .input_types import LineChart
 from .input_types import Multiselect
 from .input_types import Number
 from .input_types import Select
+from .input_types import Text
 from .layers.base_layer import BaseLayer
 from .layers.overlay_layer import OverlayLayer
 from .layers.raster_layer import RasterLayer
@@ -51,6 +52,13 @@ class GreppoApp(object):
         """
         return Number
 
+    @staticmethod
+    def text():
+        """
+        Interactive Text value rendered on the frontend.
+        """
+        return Text
+
 
 class GreppoAppProxy(object):
     """
@@ -74,6 +82,11 @@ class GreppoAppProxy(object):
         number = Number(**kwargs)
         self.register_input(number)
         return number
+
+    def text(self, **kwargs):
+        text = Text(**kwargs)
+        self.register_input(text)
+        return text
 
     def select(self, **kwargs):
         select = Select(**kwargs)
