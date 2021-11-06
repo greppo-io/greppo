@@ -1,12 +1,15 @@
+import base64
 import dataclasses
 import json
 import logging
 import uuid
+from io import BytesIO
 from typing import Any
 from typing import List
 
 from geopandas import GeoDataFrame as gdf
 from greppo import osm
+from PIL import Image
 
 from .input_types import BarChart
 from .input_types import ComponentInfo
@@ -18,6 +21,7 @@ from .input_types import Number
 from .input_types import Select
 from .layers.base_layer import BaseLayer
 from .layers.overlay_layer import OverlayLayer
+from .layers.raster_layer import RasterLayer
 
 
 class GreppoApp(object):
@@ -59,6 +63,8 @@ class GreppoAppProxy(object):
         # Map component data
         self.base_layers: List[BaseLayer] = []
         self.overlay_layers: List[OverlayLayer] = []
+        self.raster_layers: List[RasterLayer] = []
+        self.raster_image_reference: List[bytes] = []
         self.registered_inputs: List[ComponentInfo] = []
 
         # Input updates
@@ -121,6 +127,26 @@ class GreppoAppProxy(object):
             OverlayLayer(id, data, title, description, style, visible, viewzoom)
         )
 
+    def raster_layer(self, file_path: str):
+        id = uuid.uuid4().hex
+
+        file_path = "/Users/vttangir/Downloads/rvrnbrt.TIF"
+        with Image.open(file_path) as img:
+            rgb_img = img
+            if img.mode != "RGB":
+                rgb_img = img.convert("RGB")
+
+            buffered = BytesIO()
+            rgb_img.save(buffered, format="PNG")
+
+            buffered.seek(0)
+            img_byte = buffered.getvalue()
+            img_str = "data:image/png;base64," + base64.b64encode(img_byte).decode()
+
+            self.raster_layers.append(RasterLayer(id, img_str))
+
+            self.raster_image_reference.append(buffered)
+
     def update_inputs(self, inputs: dict[str, Any]):
         self.inputs = inputs
 
@@ -141,6 +167,7 @@ class GreppoAppProxy(object):
         app_output = {
             "base_layer_info": [],
             "overlay_layer_data": [],
+            "raster_layer_data": [],
             "component_info": [],
         }
         for _base_layer in self.base_layers:
@@ -162,6 +189,14 @@ class GreppoAppProxy(object):
 
             app_output["overlay_layer_data"].append(s)
 
+        for _raster_layer in self.raster_layers:
+            s = {}
+            for k, v in _raster_layer.__dict__.items():
+                _v = v
+                s[k] = _v
+
+            app_output["raster_layer_data"].append(s)
+
         app_output["component_info"] = [
             dataclasses.asdict(i) for i in self.registered_inputs
         ]
@@ -169,6 +204,12 @@ class GreppoAppProxy(object):
         logging.info("Len component info: ", len(app_output["component_info"]))
 
         return app_output
+
+    def gpo_reference_data(self):
+        """ Only return one reference image for testing. """
+        if len(self.raster_image_reference) == 0:
+            return None
+        return self.raster_image_reference[0]
 
 
 app = GreppoApp()

@@ -53,6 +53,26 @@ def append_send_data_method(code):
     return code
 
 
+def append_raster_reference(code):
+    code.body.append(
+        Assign(
+            targets=[Name(ctx=Store(), id="gpo_raster_reference_payload")],
+            type_comment=None,
+            value=Call(
+                args=[],
+                func=Attribute(
+                    attr=GreppoAppProxy.gpo_reference_data.__name__,
+                    ctx=Load(),
+                    value=Name(ctx=Load(), id="app"),
+                ),
+                keywords=[],
+            ),
+        )
+    )
+
+    return code
+
+
 class ReplaceGpoVariableWithValueTransformer(ast.NodeTransformer):
     def __init__(self, input_updates: Dict[str, Any], hex_token_generator):
         super().__init__()
@@ -159,6 +179,7 @@ def run_script(script_name, input_updates, hex_token_generator):
         )
 
         user_code = append_send_data_method(user_code)
+        user_code = append_raster_reference(user_code)
 
         # Transform gpo for locals() injection
         hash_prefix = hex_token_generator(nbytes=4)
@@ -166,6 +187,10 @@ def run_script(script_name, input_updates, hex_token_generator):
         gpo_transformer.visit(user_code)
 
         ast.fix_missing_locations(user_code)
+
+        logger.debug('\n\n------ Code Transform ------\n')
+        logger.debug(ast.unparse(user_code))
+        logger.debug('\n----------------------------\n\n')
 
         gpo_app = GreppoAppProxy()
 
@@ -179,7 +204,9 @@ def run_script(script_name, input_updates, hex_token_generator):
 
         exec(compile(user_code, script_name, "exec"), globals(), locals())
 
-        return locals()["gpo_payload"]
+        raster_reference_payload = locals().get("gpo_raster_reference_payload", None)
+
+        return locals()["gpo_payload"], raster_reference_payload
 
 
 async def script_task(

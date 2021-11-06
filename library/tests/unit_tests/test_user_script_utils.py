@@ -192,7 +192,8 @@ class TestRunUserScript(unittest.TestCase):
                     "value": ["house"],
                 },
             ],
-        }
+            "raster_layer_data": [],
+        }, None
 
         print(payload)
 
