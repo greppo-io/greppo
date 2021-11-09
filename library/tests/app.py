@@ -44,7 +44,7 @@ app.overlay_layer(
     visible=True,
 )
 
-text_1 = app.text(value='here is a text', name="Text input 1")
+text_1 = app.text(value="here is a text", name="Text input 1")
 select1 = app.select(name="First selector", options=["a", "b", "c"], default="a")
 multiselect1 = app.multiselect(
     name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"]
@@ -55,10 +55,10 @@ Testing to implement the draw feature.
 
 The input should be a gdf.
 """
-# random_draw_features = gpd.read_file("tests/data/features.geojson")
-# draw_feature_input = app.draw_feature(
-#     name="Draw random features", features=random_draw_features
-# )
+random_draw_features = gpd.read_file("tests/data/features.geojson")
+draw_feature_input = app.draw_feature(
+    name="Draw random features", features=random_draw_features
+)
 
 
 y = []

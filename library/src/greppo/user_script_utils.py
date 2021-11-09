@@ -73,7 +73,7 @@ def append_raster_reference(code):
     return code
 
 
-class ReplaceGpoVariableWithValueTransformer(ast.NodeTransformer):
+class AddInputUpdatesToGpoVariableAndGetValueTransformer(ast.NodeTransformer):
     def __init__(self, input_updates: Dict[str, Any], hex_token_generator):
         super().__init__()
 
@@ -90,27 +90,31 @@ class ReplaceGpoVariableWithValueTransformer(ast.NodeTransformer):
         if node.func.attr not in GreppoInputsNames:
             return node
 
-        # ==== Find name value within gpo variable ctr and replace with update value.
-        name, value = None, None
+        # ==== Find name value for gpo variable and set name prefix
         for node_kwargs in node.keywords:
             if node_kwargs.arg == "name":
                 name = node_kwargs.value.value
                 input_name = self.hex_token_generator(nbytes=4) + "_" + name
                 node_kwargs.value.value = input_name
+                break
 
-            if node_kwargs.arg in ["value", "default"]:
-                value_ast = node_kwargs.value
-                value = ast.literal_eval(value_ast)
+        # ==== Add input_updates to the ctr.
+        input_updates_kwarg = keyword(
+            arg='input_updates',
+            value=ast.parse(json.dumps(self.input_updates)).body[0].value
+        )
+        node.keywords.append(input_updates_kwarg)
 
-        # Save node ast with updated name for eval to register the input for the front-end.
-        self.greppo_input_calls.append(ast.unparse(node))
+        # ==== Create new Call node for get_value
+        z = Call(args=[],
+                    func=Attribute(
+                        attr='get_value',
+                        ctx=Load(),
+                        value=node
+                    ),
+                    keywords=[])
 
-        # `name` and `value` can't be be none, all gpo variables require them in the ctr.
-        replacement_value = self.input_updates.get(name, value)
-
-        value_node = ast.parse(json.dumps(replacement_value)).body[0].value
-
-        return value_node
+        return z
 
 
 class AddHexPrefixForCharts(ast.NodeTransformer):
@@ -162,10 +166,10 @@ def run_script(script_name, input_updates, hex_token_generator):
         lines = f.read()
         user_code = ast.parse(lines, script_name)
 
-        replace_gpo_variable_with_value_transformer = ReplaceGpoVariableWithValueTransformer(
+        add_input_updates_to_gpo_variable_and_get_value_t = AddInputUpdatesToGpoVariableAndGetValueTransformer(
             input_updates=input_updates, hex_token_generator=hex_token_generator
         )
-        replace_gpo_variable_with_value_transformer.visit(user_code)
+        add_input_updates_to_gpo_variable_and_get_value_t.visit(user_code)
         ast.fix_missing_locations(
             user_code
         )
@@ -196,8 +200,6 @@ def run_script(script_name, input_updates, hex_token_generator):
 
         locals_copy = locals().copy()
         locals_copy['app'] = gpo_app
-        for greppo_input_call in replace_gpo_variable_with_value_transformer.greppo_input_calls:
-            exec(greppo_input_call, globals(), locals_copy)
 
         # TODO maybe have a fresh locals obj?
         locals()[hash_prefix + "_app"] = gpo_app
