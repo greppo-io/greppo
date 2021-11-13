@@ -10,6 +10,13 @@
                     :layerData="vectorData"
                 />
             </div>
+            <div v-if="getComponentStatus.rasterLayer">
+                <raster-layer
+                    v-for="rasterData in getRasterData"
+                    :key="rasterData.id"
+                    :rasterData="rasterData"
+                />
+            </div>
             <l-control-layers :collapsed="false" v-if="false" />
             <l-control class="leaflet-bar" position="topleft">
                 <a
@@ -64,6 +71,7 @@ import VectorLayer from "./VectorLayer";
 import BaseLayer from "./BaseLayer";
 import { mapGetters } from "vuex";
 import DrawFeature from "./DrawFeature.vue";
+import RasterLayer from "./RasterLayer.vue";
 
 export default {
     name: "CenterContainer",
@@ -74,6 +82,7 @@ export default {
         BaseLayer,
         VectorLayer,
         DrawFeature,
+        RasterLayer,
     },
     props: {
         isFullScreen: Boolean,
@@ -99,7 +108,12 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(["getVectorData", "getViewZoom", "getComponentStatus"]),
+        ...mapGetters([
+            "getVectorData",
+            "getRasterData",
+            "getViewZoom",
+            "getComponentStatus",
+        ]),
     },
     mounted() {
         this.$nextTick(() => {

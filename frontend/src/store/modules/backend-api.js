@@ -13,6 +13,7 @@ const state = {
     ComponentStatus: {
         baseLayer: false,
         overlayLayer: false,
+        rasterLayer: false,
         mapComponent: false,
         inputComponent: false,
         drawFeature: false,
@@ -32,6 +33,8 @@ const state = {
         featuresDrawn: [],
     },
     InputMutation: false,
+    RasterData: null,
+    RasterLayerInfo: null,
 };
 
 const getters = {
@@ -53,6 +56,8 @@ const getters = {
     },
     getInputMutation: (state) => state.InputMutation,
     getDrawFeatureData: (state) => state.DrawFeatureData,
+    getRasterData: (state) => state.RasterData,
+    getRasterLayerInfo: (state) => state.RasterLayerInfo,
 };
 
 const actions = {
@@ -118,17 +123,50 @@ const actions = {
         const responseBaseLayerInfo = response.data.base_layer_info;
         const responseVectorData = response.data.overlay_layer_data;
         const responseComponentInfo = response.data.component_info;
+        // const responseRasterData = response.data.raster_layer_data;
+        var overlayLayerInfo = [];
 
         if (responseBaseLayerInfo.length) {
             ComponentStatus.baseLayer = true;
             commit("commitBaseLayerInfo", responseBaseLayerInfo);
         }
 
+        const responseRasterData = [
+            {
+                id: "1qaz",
+                title: "raster 1",
+                description: "description raster 1",
+                url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",
+                png: "base64string",
+                visible: true,
+                bounds: [
+                    [40.712216, -74.22655],
+                    [40.773941, -74.12544],
+                ],
+            },
+        ];
+
+        if (responseRasterData.length) {
+            ComponentStatus.rasterLayer = true;
+            commit("commitRasterData", responseRasterData);
+
+            responseRasterData.forEach(function(layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.title,
+                    description: layerData.description,
+                    visible: layerData.visible,
+                    color: '#123123',
+                    type: 'raster',
+                });
+                
+            });            
+        }
+
         if (responseVectorData.length) {
             ComponentStatus.overlayLayer = true;
             commit("commitVectorData", responseVectorData);
-
-            let overlayLayerInfo = [];
+            
             let viewzoomInfo = [];
             responseVectorData.forEach(function(layerData) {
                 overlayLayerInfo.push({
@@ -137,13 +175,13 @@ const actions = {
                     description: layerData.description,
                     visible: layerData.visible,
                     color: layerData.style.fillColor,
+                    type: 'vector',
                 });
                 viewzoomInfo.push({
                     id: layerData.id,
                     viewzoom: layerData.viewzoom,
                 });
-            });
-            commit("commitOverlayLayerInfo", overlayLayerInfo);
+            });            
 
             // Commit zoom and view, 1st step just average the x,y and min of zoom.
             // TODO Next based on the visible layers.
@@ -154,6 +192,8 @@ const actions = {
             ];
             commit("commitViewZoom", viewzoom);
         }
+
+        commit("commitOverlayLayerInfo", overlayLayerInfo);
 
         if (responseComponentInfo.length) {
             ComponentStatus.inputComponent = true;
@@ -380,6 +420,12 @@ const mutations = {
     },
     commitDrawFeatureData: (state, data) => {
         state.DrawFeatureData = data;
+    },
+    commitRasterData: (state, data) => {
+        state.RasterData = data;
+    },
+    commitRasterLayerInfo: (state, data) => {
+        state.RasterLayerInfo = data;
     },
 };
 
