@@ -52,10 +52,7 @@
                     ></unicon>
                 </a>
             </l-control>
-            <draw-feature
-                v-if="getDrawFeatureState"
-                :defaultDrawFeature="getDefaultDrawFeatures"
-            />
+            <draw-feature v-if="getComponentStatus.drawFeature" />
         </l-map>
     </div>
 </template>
@@ -102,13 +99,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters([
-            "getVectorData",
-            "getViewZoom",
-            "getDrawFeatureState",
-            "getDefaultDrawFeatures",
-            "getComponentStatus",
-        ]),
+        ...mapGetters(["getVectorData", "getViewZoom", "getComponentStatus"]),
     },
     mounted() {
         this.$nextTick(() => {

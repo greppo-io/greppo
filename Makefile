@@ -9,6 +9,14 @@ all: clean
 serve-dev:
 	npm run --prefix ./frontend serve & python ./tests/test_server/test.py &
 
+.PHONY: serve-fe
+serve-fe:	
+	cd frontend && npm run serve
+
+.PHONY: serve-be
+serve-be:	
+	cd library && greppo serve tests/app.py
+
 .PHONY: build-frontend
 build-frontend:	
 	cd frontend && npm run build

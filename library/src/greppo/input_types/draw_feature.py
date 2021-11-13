@@ -14,11 +14,12 @@ class DrawFeature:
     def __init__(
         self,
         name: str,
-        features: gdf = default_gdf,
+        geometry: list,
+        features: gdf = default_gdf,        
         input_updates: dict[str, Any] = {}, 
     ):
         self.input_name = name
-        
+        self.geometry = geometry
         # TODO Check if it matches EPSG 4326/WSG84
         self.features = features 
 
@@ -34,11 +35,12 @@ class DrawFeature:
 
     def convert_to_component_info(self):
         _id, name = self.input_name.split("_")
-        _type = DrawFeature.__name__        
+        _type = DrawFeature.__name__     
+        _geometry = self.geometry
         _features = draw_feature_gdf_2_dict(self.get_value())
 
         return DrawFeatureComponentInfo(
-            id=_id, name=name, type=_type, features=_features
+            id=_id, name=name, type=_type, geometry=_geometry, features=_features
         )
 
     @classmethod
@@ -99,4 +101,5 @@ class DrawFeatureComponentInfo:
     id: str
     type: str
     name: str
+    geometry: list
     features: dict    
