@@ -28,13 +28,13 @@ app.base_layer(
 # data_gdf_1["Value"] = pd.Series(
 #     np.ones(len(data_gdf_1["code"])) * number_1, index=data_gdf_1.index
 # )
-# app.overlay_layer(
-#     data_gdf_1,
-#     title="Communes",
-#     description="Communes in Normandy, France",
-#     style={"fillColor": "#F87979"},
-#     visible=True,
-# )
+app.overlay_layer(
+    data_gdf_1,
+    title="Communes",
+    description="Communes in Normandy, France",
+    style={"fillColor": "#F87979"},
+    visible=True,
+)
 
 # data_gdf_2["MultiID"] = data_gdf_2["id"] * number_1
 # app.overlay_layer(
