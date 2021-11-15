@@ -5,7 +5,6 @@
             :teleport="teleport"
             :page-only="pageOnly"
         >
-            <loading-screen v-if="getStatus === 1" />
             <div class="flex bg-gray-50">
                 <!-- Left Side Bar  -->
                 <div class="flex relative">
@@ -44,6 +43,35 @@
                             :isFullScreen="isFullScreen"
                             @toggle-fullscreen="toggleFullScreen"
                         />
+
+                        <div
+                            class="absolute top-0 right-44 bg-white bg-opacity-70 rounded-b-md px-2 py-1"
+                            style="z-index: 1500;"
+                            v-if="getStatus === 1"
+                        >
+                            <div class="flex flex-row items-center">
+                                <div class="text-center text-gray-700">
+                                    <p style="font-size: 0.70em;">
+                                        hold on...
+                                    </p>
+                                    <div
+                                        class="flex flex-row mt-1 items-center"
+                                    >
+                                        <div
+                                            class="flex justify-center items-center"
+                                        >
+                                            <div
+                                                class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-red-600"
+                                            ></div>
+                                            <div
+                                                class="animate-ping absolute inline-flex h-12 w-12 rounded-full bg-red-400 opacity-75"
+                                            ></div>
+                                        </div>
+                                        <p class="text-base ml-2">Loading !</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div
                             class="absolute top-0 right-3 bg-white bg-opacity-70 rounded-b-md px-2 py-1"
@@ -142,7 +170,6 @@ import MapContainer from "./map-components/MapContainer";
 import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightContainer";
 import { mapGetters } from "vuex";
-import LoadingScreen from "./functional-components/LoadingScreen.vue";
 
 export default {
     name: "BaseContainer",
@@ -150,7 +177,6 @@ export default {
         MapContainer,
         LeftContainer,
         RightContainer,
-        LoadingScreen,
     },
     data() {
         return {
@@ -184,7 +210,7 @@ export default {
     },
     computed: {
         ...mapGetters(["getStatus", "getComponentStatus"]),
-    },    
+    },
 };
 </script>
 

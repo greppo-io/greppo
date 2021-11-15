@@ -119,32 +119,32 @@ const actions = {
 
     commitResponseData({ commit, state }, response) {
         var ComponentStatus = state.ComponentStatus;
+        console.log(response.data);
 
         const responseBaseLayerInfo = response.data.base_layer_info;
         const responseVectorData = response.data.overlay_layer_data;
         const responseComponentInfo = response.data.component_info;
-        // const responseRasterData = response.data.raster_layer_data;
+        const responseRasterData = response.data.raster_layer_data;
         var overlayLayerInfo = [];
 
         if (responseBaseLayerInfo.length) {
             ComponentStatus.baseLayer = true;
             commit("commitBaseLayerInfo", responseBaseLayerInfo);
         }
-
-        const responseRasterData = [
-            {
-                id: "1qaz",
-                title: "raster 1",
-                description: "description raster 1",
-                url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",
-                png: "base64string",
-                visible: true,
-                bounds: [
-                    [40.712216, -74.22655],
-                    [40.773941, -74.12544],
-                ],
-            },
-        ];
+        
+        // const responseRasterData = [        
+        //     {
+        //         id: "1qaz",
+        //         title: "raster 1",
+        //         description: "description raster 1",
+        //         url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",                
+        //         bounds: [
+        //             [40.712216, -74.22655],
+        //             [40.773941, -74.12544],
+        //         ],
+        //         visible: true,
+        //     },
+        // ];
 
         if (responseRasterData.length) {
             ComponentStatus.rasterLayer = true;
@@ -156,17 +156,16 @@ const actions = {
                     title: layerData.title,
                     description: layerData.description,
                     visible: layerData.visible,
-                    color: '#123123',
-                    type: 'raster',
+                    color: "#123123",
+                    type: "raster",
                 });
-                
-            });            
+            });
         }
 
         if (responseVectorData.length) {
             ComponentStatus.overlayLayer = true;
             commit("commitVectorData", responseVectorData);
-            
+
             let viewzoomInfo = [];
             responseVectorData.forEach(function(layerData) {
                 overlayLayerInfo.push({
@@ -175,13 +174,13 @@ const actions = {
                     description: layerData.description,
                     visible: layerData.visible,
                     color: layerData.style.fillColor,
-                    type: 'vector',
+                    type: "vector",
                 });
                 viewzoomInfo.push({
                     id: layerData.id,
                     viewzoom: layerData.viewzoom,
                 });
-            });            
+            });
 
             // Commit zoom and view, 1st step just average the x,y and min of zoom.
             // TODO Next based on the visible layers.
