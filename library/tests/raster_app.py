@@ -31,4 +31,4 @@ multiselect1 = app.multiselect(
     name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"]
 )
 
-app.raster_layer(file_path="")
+app.raster_layer(file_path="rvrnbrt.TIF")

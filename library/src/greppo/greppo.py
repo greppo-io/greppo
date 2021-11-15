@@ -1,15 +1,20 @@
 import base64
 import dataclasses
+import io
 import json
 import logging
 import uuid
-from io import BytesIO
 from typing import Any
 from typing import List
 
+import rasterio
 from geopandas import GeoDataFrame as gdf
 from greppo import osm
 from PIL import Image
+from rasterio.io import MemoryFile
+from rasterio.warp import calculate_default_transform
+from rasterio.warp import reproject
+from rasterio.warp import Resampling
 
 from .input_types import BarChart
 from .input_types import ComponentInfo
@@ -143,22 +148,55 @@ class GreppoAppProxy(object):
     def raster_layer(self, file_path: str):
         id = uuid.uuid4().hex
 
-        file_path = "/Users/vttangir/Downloads/rvrnbrt.TIF"
-        with Image.open(file_path) as img:
-            rgb_img = img
-            if img.mode != "RGB":
-                rgb_img = img.convert("RGB")
+        src_dataset = rasterio.open(file_path)
+        dst_crs = "EPSG:4326"
 
-            buffered = BytesIO()
-            rgb_img.save(buffered, format="PNG")
+        transform, width, height = calculate_default_transform(
+            src_dataset.crs,
+            dst_crs,
+            src_dataset.width,
+            src_dataset.height,
+            *src_dataset.bounds
+        )
 
-            buffered.seek(0)
-            img_byte = buffered.getvalue()
-            img_str = "data:image/png;base64," + base64.b64encode(img_byte).decode()
+        dst_bands = []
+        for band_n_1 in range(src_dataset.count):
+            src_band = rasterio.band(src_dataset, band_n_1 + 1)
+            dst_band = reproject(src_band, dst_crs=dst_crs)
+            dst_bands.append(dst_band)
 
-            self.raster_layers.append(RasterLayer(id, img_str))
+        png_kwargs = src_dataset.meta.copy()
+        png_kwargs.update(
+            {
+                "crs": dst_crs,
+                "widht": width,
+                "height": height,
+                "driver": "PNG",
+                "dtype": rasterio.uint8,
+                "transform": transform,
+                "count": 3,
+            }
+        )
 
-            self.raster_image_reference.append(buffered)
+        with MemoryFile() as png_memfile:
+            with png_memfile.open(**png_kwargs) as dst_file:
+                for i_1, dst_band in enumerate(dst_bands):
+                    dst_file.write(dst_band[0][0], i_1 + 1)
+
+                    dst_file.write_colormap(
+                        i_1 + 1, {0: (255, 0, 0, 255), 255: (0, 0, 0, 255)}
+                    )
+
+                self.raster_image_reference.append(png_memfile.read())
+
+            img_str = (
+                "data:image/png;base64," + base64.b64encode(png_memfile.read()).decode()
+            )
+            self.raster_layers.append(
+                RasterLayer(
+                    id, img_str, transform * (0, 0), transform * (width, height)
+                )
+            )
 
     def update_inputs(self, inputs: dict[str, Any]):
         self.inputs = inputs
