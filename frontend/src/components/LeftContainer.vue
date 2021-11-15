@@ -19,7 +19,7 @@
 
         <layer-control v-show="true" />
 
-        <draw-feature-control v-if="getDrawFeatureState" />
+        <draw-feature-control v-if="getComponentStatus.drawFeature" />
 
         <div v-for="component in getInputComponentInfo" :key="component.id">
             <input-control :data="component" />
@@ -48,7 +48,7 @@ export default {
     computed: mapGetters([
         "getInputComponentInfo",
         "getInputMutation",
-        "getDrawFeatureState",
+        "getComponentStatus",
     ]),
 };
 </script>

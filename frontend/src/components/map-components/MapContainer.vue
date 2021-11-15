@@ -10,6 +10,13 @@
                     :layerData="vectorData"
                 />
             </div>
+            <div v-if="getComponentStatus.rasterLayer">
+                <raster-layer
+                    v-for="rasterData in getRasterData"
+                    :key="rasterData.id"
+                    :rasterData="rasterData"
+                />
+            </div>
             <l-control-layers :collapsed="false" v-if="false" />
             <l-control class="leaflet-bar" position="topleft">
                 <a
@@ -52,10 +59,7 @@
                     ></unicon>
                 </a>
             </l-control>
-            <draw-feature
-                v-if="getDrawFeatureState"
-                :defaultDrawFeature="getDefaultDrawFeatures"
-            />
+            <draw-feature v-if="getComponentStatus.drawFeature" />
         </l-map>
     </div>
 </template>
@@ -67,6 +71,7 @@ import VectorLayer from "./VectorLayer";
 import BaseLayer from "./BaseLayer";
 import { mapGetters } from "vuex";
 import DrawFeature from "./DrawFeature.vue";
+import RasterLayer from "./RasterLayer.vue";
 
 export default {
     name: "CenterContainer",
@@ -77,6 +82,7 @@ export default {
         BaseLayer,
         VectorLayer,
         DrawFeature,
+        RasterLayer,
     },
     props: {
         isFullScreen: Boolean,
@@ -104,9 +110,8 @@ export default {
     computed: {
         ...mapGetters([
             "getVectorData",
+            "getRasterData",
             "getViewZoom",
-            "getDrawFeatureState",
-            "getDefaultDrawFeatures",
             "getComponentStatus",
         ]),
     },

@@ -17,15 +17,29 @@
             :class="collapse ? 'max-h-0' : 'max-h-96'"
             class="overflow-hidden transition-all duration-500 pl-5 pt-2"
         >
-            <span class="text-gray-700">{{ getDefaultDrawFeatures.name }}</span>
+            <label class="block mb-3">
+                <span class="text-gray-700">Select the layer</span>
+                <select
+                    class="form-multiselect block w-full mt-1 rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                    v-model="modelValue"
+                >
+                    <option
+                        v-for="(option, index) in drawLayerOptions"
+                        :key="index"
+                        :value="option"
+                        >{{ option }}</option
+                    >
+                </select>
+            </label>
+            <span class="text-gray-700">Layer: {{ modelValue }}</span>
             <div
                 class="bg-gray-100 my-2 py-2 px-4 rounded-md max-h-72 overflow-auto"
             >
-                <div v-if="!getDrawnFeatures.length">
+                <div v-if="!activeFeaturesDrawn.length">
                     No features drawn.
                 </div>
                 <div
-                    v-for="(feature, index) in getDrawnFeatures"
+                    v-for="(feature, index) in activeFeaturesDrawn"
                     :key="index"
                     class="my-2"
                 >
@@ -47,7 +61,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import { eventHub } from "src/event-hub";
+
 export default {
     name: "DrawFeatureControl",
     data() {
@@ -55,7 +71,35 @@ export default {
             collapse: true,
         };
     },
-    computed: mapGetters(["getDrawnFeatures", "getDefaultDrawFeatures"]),
+    methods: {
+        ...mapActions(["activateDrawFeatureLayer"]),
+    },
+    computed: {
+        ...mapGetters(["getDrawFeatureData"]),
+        drawLayerOptions() {
+            var options = [];
+            this.getDrawFeatureData.forEach((element) => {
+                options.push(element.name);
+            });
+            return options;
+        },
+        activeFeaturesDrawn() {
+            return this.getDrawFeatureData.find(
+                (element) => element.active == true
+            ).featuresDrawn;
+        },
+        modelValue: {
+            get() {
+                return this.getDrawFeatureData.find(
+                    (element) => element.active == true
+                ).name;
+            },
+            set(newValue) {
+                this.activateDrawFeatureLayer(newValue);
+                eventHub.$emit("changeDrawFeatureLayer");
+            },
+        },
+    },
 };
 </script>
 

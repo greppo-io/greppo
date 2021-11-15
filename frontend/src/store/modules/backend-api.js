@@ -1,4 +1,5 @@
 import axios from "axios";
+import { eventHub } from "src/event-hub";
 
 const average = (array) => array.reduce((a, b) => a + b) / array.length;
 
@@ -12,7 +13,8 @@ const state = {
     ComponentStatus: {
         baseLayer: false,
         overlayLayer: false,
-        mapComponent: false,        
+        rasterLayer: false,
+        mapComponent: false,
         inputComponent: false,
         drawFeature: false,
     },
@@ -22,15 +24,17 @@ const state = {
     ViewZoom: [0, 0, 3],
     ChartEventData: null,
     InputComponentInfo: null,
-    DrawFeatureState: false,
-    // Draw features that are passsed from the backend.
-    DefaultDrawFeatures: {
+    DrawFeatureData: {
+        id: "draw-feature-id",
         name: "Default features",
         features: [],
         mutation: false,
+        active: false,
+        featuresDrawn: [],
     },
-    DrawnFeatures: [],
     InputMutation: false,
+    RasterData: null,
+    RasterLayerInfo: null,
 };
 
 const getters = {
@@ -51,9 +55,9 @@ const getters = {
         return state.InputComponentInfo.find((element) => element.id == id);
     },
     getInputMutation: (state) => state.InputMutation,
-    getDrawFeatureState: (state) => state.DrawFeatureState,
-    getDefaultDrawFeatures: (state) => state.DefaultDrawFeatures,
-    getDrawnFeatures: (state) => state.DrawnFeatures,
+    getDrawFeatureData: (state) => state.DrawFeatureData,
+    getRasterData: (state) => state.RasterData,
+    getRasterLayerInfo: (state) => state.RasterLayerInfo,
 };
 
 const actions = {
@@ -80,16 +84,32 @@ const actions = {
             }
         });
 
-        if (state.DefaultDrawFeatures.mutation) {
-            postData[state.DefaultDrawFeatures.name] = state.DrawnFeatures;
+        // TODO change this to the new post draw feature
+        // if (state.draw-feature.mutation) {
+        //     postData[state.draw-feature.name] = state.draw-feature;
+        // }
+        function mapDrawFeature(feature) {
+            return {
+                id: feature.id,
+                type: feature.type,
+                latlngs: feature.latlngs,
+            };
         }
+
+        state.DrawFeatureData.forEach((drawFeature) => {
+            if (drawFeature.mutation) {
+                postData[drawFeature.name] = drawFeature.featuresDrawn.map(
+                    mapDrawFeature
+                );
+            }
+        });
 
         axios
             .post(process.env.VUE_APP_API, postData)
             .then(function(response) {
                 dispatch("commitResponseData", response);
                 commit("commitInputMutation", false);
-                commit("commitDrawFeatureMutation", false);
+                eventHub.$emit("reInitializeDrawFeature");
             })
             .catch(function(error) {
                 // TODO Frontend error logging
@@ -103,17 +123,50 @@ const actions = {
         const responseBaseLayerInfo = response.data.base_layer_info;
         const responseVectorData = response.data.overlay_layer_data;
         const responseComponentInfo = response.data.component_info;
+        // const responseRasterData = response.data.raster_layer_data;
+        var overlayLayerInfo = [];
 
         if (responseBaseLayerInfo.length) {
             ComponentStatus.baseLayer = true;
             commit("commitBaseLayerInfo", responseBaseLayerInfo);
         }
 
+        const responseRasterData = [
+            {
+                id: "1qaz",
+                title: "raster 1",
+                description: "description raster 1",
+                url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",
+                png: "base64string",
+                visible: true,
+                bounds: [
+                    [40.712216, -74.22655],
+                    [40.773941, -74.12544],
+                ],
+            },
+        ];
+
+        if (responseRasterData.length) {
+            ComponentStatus.rasterLayer = true;
+            commit("commitRasterData", responseRasterData);
+
+            responseRasterData.forEach(function(layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.title,
+                    description: layerData.description,
+                    visible: layerData.visible,
+                    color: '#123123',
+                    type: 'raster',
+                });
+                
+            });            
+        }
+
         if (responseVectorData.length) {
             ComponentStatus.overlayLayer = true;
             commit("commitVectorData", responseVectorData);
-
-            let overlayLayerInfo = [];
+            
             let viewzoomInfo = [];
             responseVectorData.forEach(function(layerData) {
                 overlayLayerInfo.push({
@@ -122,16 +175,16 @@ const actions = {
                     description: layerData.description,
                     visible: layerData.visible,
                     color: layerData.style.fillColor,
+                    type: 'vector',
                 });
                 viewzoomInfo.push({
                     id: layerData.id,
                     viewzoom: layerData.viewzoom,
                 });
-            });
-            commit("commitOverlayLayerInfo", overlayLayerInfo);
+            });            
 
             // Commit zoom and view, 1st step just average the x,y and min of zoom.
-            // Next based on the visible layers.
+            // TODO Next based on the visible layers.
             const viewzoom = [
                 average(viewzoomInfo.map((a) => a.viewzoom[0])),
                 average(viewzoomInfo.map((a) => a.viewzoom[1])),
@@ -140,22 +193,34 @@ const actions = {
             commit("commitViewZoom", viewzoom);
         }
 
+        commit("commitOverlayLayerInfo", overlayLayerInfo);
+
         if (responseComponentInfo.length) {
             ComponentStatus.inputComponent = true;
 
-            commit("commitInputComponentInfo", responseComponentInfo);            
+            commit("commitInputComponentInfo", responseComponentInfo);
 
-            const index_draw = responseComponentInfo.findIndex(
-                (component) => component.type === "DrawFeature"
-            );
-            if (index_draw !== -1) {
+            var DrawFeatureData = [];
+            var activateDrawFeature = true;
+            responseComponentInfo.forEach((component) => {
+                if (component.type === "DrawFeature") {
+                    DrawFeatureData.push({
+                        id: component.id,
+                        name: component.name,
+                        geometry: component.geometry,
+                        features: component.features,
+                        mutation: false,
+                        active: activateDrawFeature,
+                        featuresDrawn: [],
+                    });
+                    if (activateDrawFeature) {
+                        activateDrawFeature = !activateDrawFeature;
+                    }
+                }
+            });
+            if (DrawFeatureData.length) {
                 ComponentStatus.drawFeature = true;
-                commit("commitDrawFeatureState", true);
-                commit("commitDefaultDrawFeatures", {
-                    name: responseComponentInfo[index_draw].name,
-                    features: responseComponentInfo[index_draw].features,
-                    mutation: false,
-                });
+                commit("commitDrawFeatureData", DrawFeatureData);
             }
         }
 
@@ -189,43 +254,111 @@ const actions = {
         commit("updateInputComponentData", data);
     },
 
-    addDrawnFeature({ commit, state }, newFeature) {
-        const featuresState = state.DrawnFeatures;
-        featuresState.push(newFeature);
-        commit("commitDrawnFeatures", featuresState);
-    },
-
-    editDrawnFeatures({ commit, state }, editFeatures) {
-        const featuresState = state.DrawnFeatures;
-        editFeatures.forEach((editElement) => {
-            const index = featuresState.findIndex(
-                (feature) => feature.id === editElement.id
-            );
-            if (index !== -1) {
-                featuresState[index].latlngs = editElement.latlngs;
+    activateDrawFeatureLayer({ commit, state }, layerName) {
+        var DrawFeatureData = state.DrawFeatureData;
+        DrawFeatureData.forEach((feature) => {
+            if (feature.name == layerName) {
+                feature.active = true;
+            } else {
+                feature.active = false;
             }
         });
-        commit("commitDrawnFeatures", featuresState);
+        commit("commitDrawFeatureData", DrawFeatureData);
     },
 
-    deleteDrawnFeatures({ commit, state }, deleteFeatures) {
-        const featuresState = state.DrawnFeatures;
-        deleteFeatures.forEach((editElement) => {
-            const index = featuresState.findIndex(
-                (feature) => feature.id === editElement.id
+    setDrawFeatureDrawn({ commit, state }, initialFeaturesDrawn) {
+        var DrawFeatureData = state.DrawFeatureData;
+        initialFeaturesDrawn.forEach((featuresDrawn) => {
+            const indexDrawFeature = DrawFeatureData.findIndex(
+                (drawFeature) => drawFeature.id === featuresDrawn.drawFeatureID
             );
-            if (index !== -1) {
-                featuresState.splice(index, 1);
+            if (indexDrawFeature !== -1) {
+                DrawFeatureData[indexDrawFeature].featuresDrawn =
+                    featuresDrawn.featuresDrawn;
             }
         });
-        commit("commitDrawnFeatures", featuresState);
+        commit("commitDrawFeatureData", DrawFeatureData);
     },
 
-    setDrawFeatureMutation({ commit, state }, mutationState) {
-        commit("commitDrawFeatureMutation", mutationState);
-        if (!state.InputMutation) {
-            commit("commitInputMutation", true);
+    addDrawFeature({ commit, state }, { newFeature, drawFeatureID }) {
+        var DrawFeatureData = state.DrawFeatureData;
+        const indexDrawFeature = DrawFeatureData.findIndex(
+            (drawFeature) => drawFeature.id === drawFeatureID
+        );
+        if (indexDrawFeature !== -1) {
+            DrawFeatureData[indexDrawFeature].featuresDrawn.push(newFeature);
+            if (!DrawFeatureData[indexDrawFeature].mutation) {
+                DrawFeatureData[indexDrawFeature].mutation = true;
+            }
+            if (!state.InputMutation) {
+                commit("commitInputMutation", true);
+            }
         }
+
+        commit("commitDrawFeatureData", DrawFeatureData);
+    },
+
+    editDrawFeature({ commit, state }, { editFeatures, drawFeatureID }) {
+        var DrawFeatureData = state.DrawFeatureData;
+        const indexDrawFeature = DrawFeatureData.findIndex(
+            (drawFeature) => drawFeature.id === drawFeatureID
+        );
+        if (indexDrawFeature !== -1) {
+            editFeatures.forEach((editFeature) => {
+                const featureDrawnIndex = DrawFeatureData[
+                    indexDrawFeature
+                ].featuresDrawn.findIndex(
+                    (featureDrawn) => featureDrawn.id === editFeature.id
+                );
+                if (featureDrawnIndex !== -1) {
+                    DrawFeatureData[indexDrawFeature].featuresDrawn[
+                        featureDrawnIndex
+                    ].latlngs = editFeature.latlngs;
+                    DrawFeatureData[indexDrawFeature].featuresDrawn[
+                        featureDrawnIndex
+                    ].layer = editFeature.layer;
+                }
+            });
+
+            if (!DrawFeatureData[indexDrawFeature].mutation) {
+                DrawFeatureData[indexDrawFeature].mutation = true;
+            }
+            if (!state.InputMutation) {
+                commit("commitInputMutation", true);
+            }
+        }
+        commit("commitDrawFeatureData", DrawFeatureData);
+    },
+
+    deleteDrawFeature({ commit, state }, { deleteFeatures, drawFeatureID }) {
+        var DrawFeatureData = state.DrawFeatureData;
+        const indexDrawFeature = DrawFeatureData.findIndex(
+            (drawFeature) => drawFeature.id === drawFeatureID
+        );
+
+        if (indexDrawFeature !== -1) {
+            deleteFeatures.forEach((deleteFeature) => {
+                const featureDrawnIndex = DrawFeatureData[
+                    indexDrawFeature
+                ].featuresDrawn.findIndex(
+                    (featureDrawn) => featureDrawn.id === deleteFeature.id
+                );
+                if (featureDrawnIndex !== -1) {
+                    DrawFeatureData[indexDrawFeature].featuresDrawn.splice(
+                        featureDrawnIndex,
+                        1
+                    );
+                }
+            });
+
+            if (!DrawFeatureData[indexDrawFeature].mutation) {
+                DrawFeatureData[indexDrawFeature].mutation = true;
+            }
+            if (!state.InputMutation) {
+                commit("commitInputMutation", true);
+            }
+        }
+        commit("commitDrawFeatureData", DrawFeatureData);
     },
 };
 
@@ -285,17 +418,14 @@ const mutations = {
     commitInputComponentInfo: (state, data) => {
         state.InputComponentInfo = data;
     },
-    commitDrawFeatureState: (state, data) => {
-        state.DrawFeatureState = data;
+    commitDrawFeatureData: (state, data) => {
+        state.DrawFeatureData = data;
     },
-    commitDefaultDrawFeatures: (state, data) => {
-        state.DefaultDrawFeatures = data;
+    commitRasterData: (state, data) => {
+        state.RasterData = data;
     },
-    commitDrawFeatureMutation: (state, data) => {
-        state.DefaultDrawFeatures.mutation = data;
-    },
-    commitDrawnFeatures: (state, data) => {
-        state.DrawnFeatures = data;
+    commitRasterLayerInfo: (state, data) => {
+        state.RasterLayerInfo = data;
     },
 };
 

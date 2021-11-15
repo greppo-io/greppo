@@ -169,19 +169,19 @@ class GreppoAppProxy(object):
         png_kwargs.update(
             {
                 "crs": dst_crs,
-                "widht": width,
+                "width": width,
                 "height": height,
                 "driver": "PNG",
                 "dtype": rasterio.uint8,
                 "transform": transform,
-                "count": 3,
+                "count": src_dataset.count,
             }
         )
 
         with MemoryFile() as png_memfile:
             with png_memfile.open(**png_kwargs) as dst_file:
                 for i_1, dst_band in enumerate(dst_bands):
-                    dst_file.write(dst_band[0][0], i_1 + 1)
+                    dst_file.write(dst_band[0][0] * 100, i_1 + 1)
 
                     dst_file.write_colormap(
                         i_1 + 1, {0: (255, 0, 0, 255), 255: (0, 0, 0, 255)}
