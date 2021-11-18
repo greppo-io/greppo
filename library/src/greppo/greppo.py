@@ -1,20 +1,19 @@
 import base64
+import copy
 import dataclasses
-import io
 import json
 import logging
 import uuid
 from typing import Any
 from typing import List
 
+import numpy as np
 import rasterio
 from geopandas import GeoDataFrame as gdf
 from greppo import osm
-from PIL import Image
 from rasterio.io import MemoryFile
 from rasterio.warp import calculate_default_transform
 from rasterio.warp import reproject
-from rasterio.warp import Resampling
 
 from .input_types import BarChart
 from .input_types import ComponentInfo
@@ -142,8 +141,7 @@ class GreppoAppProxy(object):
         bnds = [miny, minx, maxy, maxx]
         viewzoom = [(miny + maxy) / 2, (minx + maxx) / 2, osm.Map(bnds).z]
         self.overlay_layers.append(
-            OverlayLayer(id, data, title, description,
-                         style, visible, viewzoom)
+            OverlayLayer(id, data, title, description, style, visible, viewzoom)
         )
 
     def raster_layer(self, file_path: str, title: str, description: str, visible: bool):
@@ -166,6 +164,15 @@ class GreppoAppProxy(object):
             dst_band = reproject(src_band, dst_crs=dst_crs)
             dst_bands.append(dst_band)
 
+        if src_dataset.count != 3:
+            for i in range(len(dst_bands), src_dataset.count):
+                dst_bands.append(rasterio.band(src_dataset, 1))
+
+        alpha = np.where(dst_bands[0][0] > 1e8, 0, 1)
+        alpha_band = list(copy.deepcopy(dst_bands[0]))
+        alpha_band[0] = alpha.astype("uint8")
+        dst_bands.append(tuple(alpha_band))
+
         png_kwargs = src_dataset.meta.copy()
         png_kwargs.update(
             {
@@ -175,14 +182,14 @@ class GreppoAppProxy(object):
                 "driver": "PNG",
                 "dtype": rasterio.uint8,
                 "transform": transform,
-                "count": src_dataset.count,
+                "count": len(dst_bands),
             }
         )
 
         with MemoryFile() as png_memfile:
             with png_memfile.open(**png_kwargs) as dst_file:
                 for i_1, dst_band in enumerate(dst_bands):
-                    dst_file.write(dst_band[0][0] * 100, i_1 + 1)
+                    dst_file.write(dst_band[0][0], i_1 + 1)
 
                     dst_file.write_colormap(
                         i_1 + 1, {0: (255, 0, 0, 255), 255: (0, 0, 0, 255)}
@@ -191,16 +198,14 @@ class GreppoAppProxy(object):
                 self.raster_image_reference.append(png_memfile.read())
 
             url = (
-                "data:image/png;base64," +
-                base64.b64encode(png_memfile.read()).decode()
+                "data:image/png;base64," + base64.b64encode(png_memfile.read()).decode()
             )
             (bounds_bottom, bounds_right) = transform * (0, 0)
             (bounds_top, bounds_left) = transform * (width, height)
             bounds = [[bounds_left, bounds_bottom], [bounds_right, bounds_top]]
+
             self.raster_layers.append(
-                RasterLayer(
-                    id, title, description, url, bounds, visible
-                )
+                RasterLayer(id, title, description, url, bounds, visible)
             )
 
     def update_inputs(self, inputs: dict[str, Any]):
