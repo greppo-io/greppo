@@ -26,6 +26,7 @@ class LineChart:
         description: Optional[str],
         x,  # TODO needs typing
         y,
+        backgroundColor: str = "#000000",
         input_updates: dict[str, Any] = {},
     ):
         self.input_name = name
@@ -34,9 +35,7 @@ class LineChart:
         self.input_updates = input_updates
 
         # background is defaulted
-        dataset = Dataset(
-            label=description, data=y, backgroundColor="#000000"
-        )
+        dataset = Dataset(label=description, data=y, backgroundColor=backgroundColor)
         self.chartdata = ChartData(labels=x, datasets=[dataset])
 
     def get_value(self):

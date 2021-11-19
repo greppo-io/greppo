@@ -63,17 +63,17 @@ The input should be a gdf.
 
 line_feature = gpd.read_file("tests/data/line.geojson")
 draw_feature_line = app.draw_feature(
-    name="Draw line features", features=line_feature, geometry=['LineString']
+    name="Draw line features", features=line_feature, geometry=["LineString"]
 )
 
 point_feature = gpd.read_file("tests/data/point.geojson")
 draw_feature_point = app.draw_feature(
-    name="Draw point features", features=point_feature, geometry=['Point', 'LineString']
+    name="Draw point features", features=point_feature, geometry=["Point", "LineString"]
 )
 
 polygon_feature = gpd.read_file("tests/data/polygon.geojson")
 draw_feature_polygon = app.draw_feature(
-    name="Draw polygon features", features=polygon_feature, geometry=['Polygon']
+    name="Draw polygon features", features=polygon_feature, geometry=["Polygon"]
 )
 
 y = []
@@ -86,6 +86,7 @@ app.line_chart(
     description="some_chart",
     x=[i for i in range(10)],
     y=y,
+    backgroundColor="rgb(255, 99, 132)",
 )
 
 y = []
@@ -98,4 +99,5 @@ app.bar_chart(
     description="some_chart",
     x=[i for i in range(10)],
     y=y,
+    backgroundColor="rgb(200, 50, 150)",
 )
