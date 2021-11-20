@@ -1,8 +1,10 @@
 <template>
-    <div class="block my-5">
+    <div
+        class="block my-5 border-2 rounded"
+        :class="collapse ? 'border-white' : 'border-gray-100'"
+    >
         <div
-            :class="collapse ? 'bg-gray-100' : 'bg-white'"
-            class="flex flex-row justify-between items-center cursor-pointer rounded px-3 py-3 transition-all duration-500"
+            class="flex flex-row justify-between items-center cursor-pointer bg-gray-100 rounded px-3 py-3 transition-all duration-500"
             @click="collapse = !collapse"
         >
             <p>Draw feature control</p>
@@ -15,7 +17,7 @@
         </div>
         <div
             :class="collapse ? 'max-h-0' : 'max-h-96'"
-            class="overflow-hidden transition-all duration-500 pl-5 pt-2"
+            class="overflow-hidden transition-all duration-500 pl-5 pt-2 pr-2"
         >
             <label class="block mb-3">
                 <span class="text-gray-700">Select the layer</span>
@@ -68,7 +70,7 @@ export default {
     name: "DrawFeatureControl",
     data() {
         return {
-            collapse: true,
+            collapse: false,
         };
     },
     methods: {
