@@ -59,7 +59,7 @@ Do you have questions? Ideas? Want to share your project? Join us on discord [In
 
 ## License
 
-Greppo is licensed under GNU GPL v3.
+Greppo is licensed under Apache V2.
 
 ## Links
 
