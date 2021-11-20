@@ -21,7 +21,7 @@ class DrawFeature:
         self.input_name = name
         self.geometry = geometry
         # TODO Check if it matches EPSG 4326/WSG84
-        self.features = features 
+        self.features = features.explode(ignore_index=True)
 
         self.input_updates = input_updates 
 

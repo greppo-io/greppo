@@ -118,8 +118,7 @@ const actions = {
     },
 
     commitResponseData({ commit, state }, response) {
-        var ComponentStatus = state.ComponentStatus;
-        console.log(response.data);
+        var ComponentStatus = state.ComponentStatus;        
 
         const responseBaseLayerInfo = response.data.base_layer_info;
         const responseVectorData = response.data.overlay_layer_data;
