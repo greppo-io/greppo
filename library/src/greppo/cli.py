@@ -9,8 +9,8 @@ from .greppo_server import GreppoServer
 @click.command()
 @click.argument("command")
 @click.argument("path_to_script")
-@click.argument("host")
-@click.argument("port")
+@click.argument("host", default="0.0.0.0")
+@click.argument("port", default="8080")
 def wrap_and_run_script(command, path_to_script, host, port):
     """Run a Greppo COMMAND with PATH_TO_SCRIPT_NAME
 
