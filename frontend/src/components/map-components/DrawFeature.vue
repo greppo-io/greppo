@@ -178,6 +178,7 @@ export default {
 
         eventHub.$on("reInitializeDrawFeature", () => {
             this.initializeDrawFeatureDrawn();
+            this.mountActiveDrawFeature();
         });        
 
         const map = this.$parent.$parent.$refs.lmap.mapObject;
