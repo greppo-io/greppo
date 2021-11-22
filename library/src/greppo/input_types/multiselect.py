@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from typing import List
 from typing import Union
 
 
@@ -11,8 +12,8 @@ class Multiselect:
     def __init__(
         self,
         name: str,
-        options: list[SELECT_TYPES],
-        default: list[SELECT_TYPES],
+        options: List[SELECT_TYPES],
+        default: List[SELECT_TYPES],
         input_updates: dict[str, Any] = {},
     ):
         self.input_name = name
@@ -53,4 +54,4 @@ class MultiselectComponentInfo:
     value: Union[
         int, float, str, bool
     ]  # This can represent the default user supplied value
-    options: list[Any]
+    options: List[Any]

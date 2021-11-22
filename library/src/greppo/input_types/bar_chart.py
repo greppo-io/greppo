@@ -1,18 +1,19 @@
 from dataclasses import dataclass
 from typing import Any
+from typing import List
 
 
 @dataclass
 class Dataset:
     label: str
     backgroundColor: str
-    data: list[Any]
+    data: List[Any]
 
 
 @dataclass
 class ChartData:
-    labels: list[Any]
-    datasets: list[Dataset]
+    labels: List[Any]
+    datasets: List[Dataset]
 
 
 # TODO doesn't handle multiple datasets.
@@ -23,8 +24,8 @@ class BarChart:
         name: str,
         title: str,
         description: str,
-        x: list,
-        y: list,
+        x: List,
+        y: List,
         backgroundColor: str = "#000000",
         input_updates: dict[str, Any] = {},
     ):

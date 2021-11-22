@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from typing import List
 from typing import Optional
 
 
@@ -7,13 +8,13 @@ from typing import Optional
 class Dataset:
     label: str
     backgroundColor: str
-    data: list[Any]
+    data: List[Any]
 
 
 @dataclass
 class ChartData:
-    labels: list[Any]
-    datasets: list[Dataset]
+    labels: List[Any]
+    datasets: List[Dataset]
 
 
 # TODO doesn't handle multiple datasets.
