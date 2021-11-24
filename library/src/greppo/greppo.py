@@ -25,6 +25,7 @@ from .input_types import Number
 from .input_types import Select
 from .input_types import Text
 from .layers.base_layer import BaseLayer
+from .layers.image_layer import ImageLayer
 from .layers.overlay_layer import OverlayLayer
 from .layers.raster_layer import RasterLayer
 
@@ -76,6 +77,7 @@ class GreppoAppProxy(object):
         self.base_layers: List[BaseLayer] = []
         self.overlay_layers: List[OverlayLayer] = []
         self.raster_layers: List[RasterLayer] = []
+        self.image_layers: List[ImageLayer] = []
         self.raster_image_reference: List[bytes] = []
         self.registered_inputs: List[ComponentInfo] = []
 
@@ -208,6 +210,26 @@ class GreppoAppProxy(object):
                 RasterLayer(id, title, description, url, bounds, visible)
             )
 
+    def image_layer(self, file_path: str, title: str, description: str, visible: bool):
+        id = uuid.uuid4().hex
+
+        file_ext = file_path.split(".")[-1]
+        assert file_ext in [
+            "png",
+            "jpg",
+            "jpeg",
+        ], "Image input extension should be png, jpg or jpeg for image_layer"
+
+        src_dataset = rasterio.open(file_path)
+
+        url = "data:image/png;base64," + base64.b64encode(src_dataset.read()).decode()
+
+        bounds = [[0, 0], [100, 100]]
+
+        self.image_layers.append(
+            ImageLayer(id, title, description, url, bounds, visible)
+        )
+
     def update_inputs(self, inputs: dict[str, Any]):
         self.inputs = inputs
 
@@ -257,6 +279,14 @@ class GreppoAppProxy(object):
                 s[k] = _v
 
             app_output["raster_layer_data"].append(s)
+
+        for _image_layer in self.image_layers:
+            s = {}
+            for k, v in _image_layer.__dict__.items():
+                _v = v
+                s[k] = _v
+
+            app_output["image_layer_data"].append(s)
 
         app_output["component_info"] = [
             dataclasses.asdict(i) for i in self.registered_inputs
