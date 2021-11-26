@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from typing import Dict
 from typing import Union
 
 import numpy as np
@@ -8,9 +9,7 @@ import pandas as pd
 
 @dataclass
 class Text:
-    def __init__(
-        self, name: str, value: str, input_updates: dict[str, Any] = {}
-    ):
+    def __init__(self, name: str, value: str, input_updates: Dict[str, Any] = {}):
         self.input_name = name
         self.value = value
 

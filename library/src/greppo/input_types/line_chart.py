@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from typing import Dict
 from typing import List
 from typing import Optional
 
@@ -28,7 +29,7 @@ class LineChart:
         x,  # TODO needs typing
         y,
         backgroundColor: str = "#000000",
-        input_updates: dict[str, Any] = {},
+        input_updates: Dict[str, Any] = {},
     ):
         self.input_name = name
         self.title = title

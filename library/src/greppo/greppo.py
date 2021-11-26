@@ -5,6 +5,7 @@ import json
 import logging
 import uuid
 from typing import Any
+from typing import Dict
 from typing import List
 
 import numpy as np
@@ -230,7 +231,7 @@ class GreppoAppProxy(object):
             ImageLayer(id, title, description, url, bounds, visible)
         )
 
-    def update_inputs(self, inputs: dict[str, Any]):
+    def update_inputs(self, inputs: Dict[str, Any]):
         self.inputs = inputs
 
     def register_input(self, discovered_input: GreppoInputs):
@@ -251,6 +252,7 @@ class GreppoAppProxy(object):
             "base_layer_info": [],
             "overlay_layer_data": [],
             "raster_layer_data": [],
+            "image_layer_data": [],
             "component_info": [],
         }
         for _base_layer in self.base_layers:

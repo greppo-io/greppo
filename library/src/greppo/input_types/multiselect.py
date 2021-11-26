@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from typing import Dict
 from typing import List
 from typing import Union
 
@@ -14,7 +15,7 @@ class Multiselect:
         name: str,
         options: List[SELECT_TYPES],
         default: List[SELECT_TYPES],
-        input_updates: dict[str, Any] = {},
+        input_updates: Dict[str, Any] = {},
     ):
         self.input_name = name
         self.options = options

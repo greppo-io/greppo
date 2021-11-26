@@ -1,5 +1,7 @@
+import logging
 from dataclasses import dataclass
 from typing import Any
+from typing import Dict
 from typing import Union
 
 import numpy as np
@@ -9,7 +11,7 @@ import pandas as pd
 @dataclass
 class Number:
     def __init__(
-        self, name: str, value: Union[int, float], input_updates: dict[str, Any] = {}
+        self, name: str, value: Union[int, float], input_updates: Dict[str, Any] = {}
     ):
         self.input_name = name
         self.value = value

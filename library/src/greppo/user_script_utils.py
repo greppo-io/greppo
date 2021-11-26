@@ -10,12 +10,13 @@ from _ast import keyword
 from _ast import Load
 from _ast import Name
 from _ast import Store
+from ast import Str
 from contextlib import redirect_stdout
 from typing import Any, Dict
 
 from greppo import GreppoAppProxy
 from .input_types import GreppoInputsNames, GreppoChartNames
-from meta.asttools import print_ast
+from meta.asttools import print_ast, dump_python_source
 
 logger = logging.getLogger('user_script_utils')
 
@@ -93,9 +94,19 @@ class AddInputUpdatesToGpoVariableAndGetValueTransformer(ast.NodeTransformer):
         # ==== Find name value for gpo variable and set name prefix
         for node_kwargs in node.keywords:
             if node_kwargs.arg == "name":
-                name = node_kwargs.value.value
+                string_container = node_kwargs.value  ## 3.6 uses an object called Str that has `s` instead of `value`.
+                if type(string_container) == Str:
+                    name = string_container.s
+                else:
+                    name = string_container.value
+
                 input_name = self.hex_token_generator(nbytes=4) + "_" + name
-                node_kwargs.value.value = input_name
+
+                if type(string_container) == Str:
+                    node_kwargs.value.s = input_name
+                else:
+                    node_kwargs.value.value = input_name
+
                 break
 
         # ==== Add input_updates to the ctr.
@@ -135,9 +146,19 @@ class AddHexPrefixForCharts(ast.NodeTransformer):
         # ==== Find all names for gpo_inputs and set hex id
         for node_kwargs in node.keywords:
             if node_kwargs.arg == "name":
-                input_name = node_kwargs.value.value
+                string_container = node_kwargs.value  ## 3.6 uses an object called Str that has `s` instead of `value`.
+                if type(string_container) == Str:
+                    input_name = string_container.s
+                else:
+                    input_name = string_container.value
+
                 input_name = self.hex_token_generator(nbytes=4) + "_" + input_name
-                node_kwargs.value.value = input_name
+
+                if type(string_container) == Str:
+                    node_kwargs.value.s = input_name
+                else:
+                    node_kwargs.value.value = input_name
+
                 break
 
         input_updates_ast = ast.parse(str(self.input_updates)).body[0]
@@ -192,9 +213,9 @@ def run_script(script_name, input_updates, hex_token_generator):
 
         ast.fix_missing_locations(user_code)
 
-        logger.debug('\n\n------ Code Transform ------\n')
-        logger.debug(ast.unparse(user_code))
-        logger.debug('\n----------------------------\n\n')
+        #logger.debug('\n\n------ Code Transform ------\n')
+        #logger.debug(dump_python_source(user_code))
+        #logger.debug('\n----------------------------\n\n')
 
         gpo_app = GreppoAppProxy()
 
@@ -213,7 +234,7 @@ def run_script(script_name, input_updates, hex_token_generator):
 
 async def script_task(
     script_name: str,
-    input_updates: dict[str, Any],
+    input_updates: Dict[str, Any],
     hex_token_generator=secrets.token_hex,
 ):
     """
