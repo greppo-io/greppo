@@ -16,7 +16,7 @@ Greppo is an open-source Python framework that makes it easy to build applicatio
 $ pip install greppo
 ```
 
-We suggest you use a virtual environment to manage your packages for this project. For more infromation you can follow the [Installation Guide](https://docs.greppo.io).
+We suggest you use a virtual environment to manage your packages for this project. For more infromation and troubleshooting visit the [Installation Guide](https://docs.greppo.io).
 
 ## A simple example
 
