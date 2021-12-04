@@ -32,6 +32,29 @@ async def api_endpoint(user_script: str, request: Request):
     return JSONResponse(payload)
 
 
+def gen_ws_api_endpoint(user_script):
+    async def ws_api_endpoint(websocket):
+        await websocket.accept()
+
+        input_updates = {}
+        try:
+            input_updates = await websocket.receive_json()
+            logging.debug("Got input update: ", input_updates)
+        except Exception as e:
+            logging.debug(
+                "Unable to parse request body: ", await websocket.get_text(), e
+            )
+
+        payload, _ = await script_task(
+            script_name=user_script, input_updates=input_updates
+        )
+        await websocket.send_json(payload)
+
+        await websocket.close()
+
+    return ws_api_endpoint
+
+
 async def raster_api_endpoint(user_script: str, request: Request):
     input_updates = {}
     try:
@@ -72,7 +95,7 @@ class GreppoServer(object):
                 partial(raster_api_endpoint, self.user_script),
                 methods=["GET", "POST"],
             ),
-            WebSocketRoute("/ws", websocket_endpoint),
+            WebSocketRoute("/wsapi", gen_ws_api_endpoint(self.user_script)),
             Mount(
                 "/",
                 app=StaticFiles(directory=get_static_dir_path(), html=True),
@@ -98,9 +121,3 @@ class GreppoServer(object):
 
     def close(self):
         pass
-
-
-async def websocket_endpoint(websocket):
-    await websocket.accept()
-    await websocket.send_text("Hello, websocket!")
-    await websocket.close()
