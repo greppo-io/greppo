@@ -4,7 +4,11 @@
 
 Greppo is an open-source Python framework that makes it easy to build applications. It provides a toolkit for to quickly integrate data, algorithms, visualizations and UI for interactivity.
 
-**Documentation**: [docs.greppo.io](https://docs.greppo.io)
+<img src="./assets/docs.svg" style=""> **Documentation**: [docs.greppo.io](https://docs.greppo.io)
+
+<img src="./assets/globe.svg" style=""> **Website**: https://greppo.io
+
+<img src="./assets/chat.svg" style=""> **Discord Community**: https://discord.gg/RNJBjgh8gz
 
 ## Installation
 
@@ -12,7 +16,7 @@ Greppo is an open-source Python framework that makes it easy to build applicatio
 $ pip install greppo
 ```
 
-We suggest you use a virtual environment to manage your packages for this project. For more infromation you can follow the [Installation Guide](https://docs.greppo.io).
+We suggest you use a virtual environment to manage your packages for this project. For more infromation and troubleshooting visit the [Installation Guide](https://docs.greppo.io).
 
 ## A simple example
 
@@ -60,11 +64,3 @@ Do you have questions? Ideas? Want to share your project? Join us on discord [In
 ## License
 
 Greppo is licensed under Apache V2.
-
-## Links
-
-* Website: https://greppo.io
-* Documentation: https://docs.greppo.io
-* PyPI Releases: https://pypi.org/project/greppo/
-* Source Code: https://github.com/pallets/flask
-* Community Chat: https://discord.gg/RNJBjgh8gz
