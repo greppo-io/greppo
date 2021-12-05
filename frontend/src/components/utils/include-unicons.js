@@ -9,6 +9,7 @@ import {
     uniAngleDown,
     uniApps,
     uniInfoCircle,
+    uniSearchPlus
 } from "vue-unicons/dist/icons";
 
 Unicon.add([
@@ -20,5 +21,6 @@ Unicon.add([
     uniAngleDown,
     uniApps,
     uniInfoCircle,
+    uniSearchPlus
 ]);
 Vue.use(Unicon);

@@ -17,6 +17,13 @@
                     :rasterData="rasterData"
                 />
             </div>
+            <div v-if="getComponentStatus.imageLayer">
+                <image-layer
+                    v-for="imageData in getImageData"
+                    :key="imageData.id"
+                    :imageData="imageData"
+                />
+            </div>
             <l-control-layers :collapsed="false" v-if="false" />
             <l-control class="leaflet-bar" position="topleft">
                 <a
@@ -72,6 +79,8 @@ import BaseLayer from "./BaseLayer";
 import { mapGetters } from "vuex";
 import DrawFeature from "./DrawFeature.vue";
 import RasterLayer from "./RasterLayer.vue";
+import ImageLayer from "./ImageLayer.vue";
+import { eventHub } from "src/event-hub";
 
 export default {
     name: "CenterContainer",
@@ -83,6 +92,7 @@ export default {
         VectorLayer,
         DrawFeature,
         RasterLayer,
+        ImageLayer,
     },
     props: {
         isFullScreen: Boolean,
@@ -111,6 +121,7 @@ export default {
         ...mapGetters([
             "getVectorData",
             "getRasterData",
+            "getImageData",
             "getViewZoom",
             "getComponentStatus",
         ]),
@@ -120,6 +131,11 @@ export default {
             // this.$refs.lmap.mapObject.attributionControl
             //     .setPosition('bottomleft');
             this.resetViewHandler();
+        });
+    },
+    created() {
+        eventHub.$on("fitOverlayBounds", (layerBounds) => {
+            this.$refs.lmap.mapObject.fitBounds(layerBounds);
         });
     },
 };

@@ -14,6 +14,7 @@ const state = {
         baseLayer: false,
         overlayLayer: false,
         rasterLayer: false,
+        imageLayer: false,
         mapComponent: false,
         inputComponent: false,
         drawFeature: false,
@@ -34,7 +35,8 @@ const state = {
     },
     InputMutation: false,
     RasterData: null,
-    RasterLayerInfo: null,
+    ImageData: null,
+    // RasterLayerInfo: null,
 };
 
 const getters = {
@@ -57,7 +59,8 @@ const getters = {
     getInputMutation: (state) => state.InputMutation,
     getDrawFeatureData: (state) => state.DrawFeatureData,
     getRasterData: (state) => state.RasterData,
-    getRasterLayerInfo: (state) => state.RasterLayerInfo,
+    getImageData: (state) => state.ImageData,
+    // getRasterLayerInfo: (state) => state.RasterLayerInfo,
 };
 
 const actions = {
@@ -118,25 +121,27 @@ const actions = {
     },
 
     commitResponseData({ commit, state }, response) {
-        var ComponentStatus = state.ComponentStatus;        
+        var ComponentStatus = state.ComponentStatus;
 
+        console.log(response.data);
         const responseBaseLayerInfo = response.data.base_layer_info;
         const responseVectorData = response.data.overlay_layer_data;
         const responseComponentInfo = response.data.component_info;
         const responseRasterData = response.data.raster_layer_data;
+        const responseImageData = response.data.image_layer_data;
         var overlayLayerInfo = [];
 
         if (responseBaseLayerInfo.length) {
             ComponentStatus.baseLayer = true;
             commit("commitBaseLayerInfo", responseBaseLayerInfo);
         }
-        
-        // const responseRasterData = [        
+
+        // const responseRasterData = [
         //     {
         //         id: "1qaz",
         //         title: "raster 1",
         //         description: "description raster 1",
-        //         url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",                
+        //         url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",
         //         bounds: [
         //             [40.712216, -74.22655],
         //             [40.773941, -74.12544],
@@ -155,8 +160,27 @@ const actions = {
                     title: layerData.title,
                     description: layerData.description,
                     visible: layerData.visible,
+                    bounds: layerData.bounds,
                     color: "#123123",
                     type: "raster",
+                });
+            });
+        }
+
+        if (responseImageData.length) {
+            ComponentStatus.imageLayer = true;
+            ComponentStatus.overlayLayer = true;
+            commit("commitImageData", responseImageData);
+
+            responseImageData.forEach(function(layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.title,
+                    description: layerData.description,
+                    visible: layerData.visible,
+                    bounds: layerData.bounds,
+                    color: "#123123",
+                    type: "image",
                 });
             });
         }
@@ -422,9 +446,12 @@ const mutations = {
     commitRasterData: (state, data) => {
         state.RasterData = data;
     },
-    commitRasterLayerInfo: (state, data) => {
-        state.RasterLayerInfo = data;
+    commitImageData: (state, data) => {
+        state.ImageData = data;
     },
+    // commitRasterLayerInfo: (state, data) => {
+    //     state.RasterLayerInfo = data;
+    // },
 };
 
 export default {

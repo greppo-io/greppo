@@ -8,11 +8,21 @@
             <div class="flex-grow">
                 <p class="text-lg">{{ layerData.title }}</p>
             </div>
-            <div class="flex-none mt-2 pl-4">                
+            <div class="flex-none pl-4">
+                <button @click="zoomToOverlay" class="mr-2">
+                    <unicon
+                        name="search-plus"
+                        fill="black"
+                        width="19px"
+                        height="19px"
+                        class="align-middle"
+                    ></unicon>
+                </button>
+
                 <toggle-button
                     v-model="modelValue"
                     :color="this.layerData.color"
-                    :labels="{ checked: 'On', unchecked: 'Off' }"                    
+                    :labels="{ checked: 'On', unchecked: 'Off' }"
                 />
             </div>
         </div>
@@ -22,20 +32,24 @@
 
 <script>
 import { mapActions } from "vuex";
+import { eventHub } from "src/event-hub";
 
 export default {
     name: "OverlayLayerControl",
     props: {
         layerData: Object,
-    },    
+    },
     data() {
         return {
             visible: false,
         };
     },
     methods: {
-        ...mapActions(["setOverlayLayerVisibility"]),      
-    },    
+        ...mapActions(["setOverlayLayerVisibility"]),
+        zoomToOverlay() {
+            eventHub.$emit("fitOverlayBounds", this.layerData.bounds);
+        },
+    },
     computed: {
         cssVars() {
             return {

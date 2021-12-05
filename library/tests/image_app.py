@@ -9,8 +9,8 @@ app.base_layer(
 )
 
 app.image_layer(
-    file_path="tests/data/San_Francisco_Peninsula_by_Sentinel-2_2019-03-11.jpg",
-    title="SFO Arial",
-    description="SFO Arial Map",
+    file_path="tests/data/AAA.jpg",
+    title="Arial",
+    description="Drone Arial Map",
     visible=True,
 )

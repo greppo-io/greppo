@@ -25,7 +25,7 @@
                     getComponentStatus.baseLayer &&
                     getComponentStatus.overlayLayer
                         ? 'mb-5'
-                        : ''
+                        : 'mb-3'
                 "
                 v-if="getComponentStatus.baseLayer"
             >

@@ -144,7 +144,8 @@ class GreppoAppProxy(object):
         bnds = [miny, minx, maxy, maxx]
         viewzoom = [(miny + maxy) / 2, (minx + maxx) / 2, osm.Map(bnds).z]
         self.overlay_layers.append(
-            OverlayLayer(id, data, title, description, style, visible, viewzoom)
+            OverlayLayer(id, data, title, description,
+                         style, visible, viewzoom)
         )
 
     def raster_layer(self, file_path: str, title: str, description: str, visible: bool):
@@ -201,7 +202,8 @@ class GreppoAppProxy(object):
                 self.raster_image_reference.append(png_memfile.read())
 
             url = (
-                "data:image/png;base64," + base64.b64encode(png_memfile.read()).decode()
+                "data:image/png;base64," +
+                base64.b64encode(png_memfile.read()).decode()
             )
             (bounds_bottom, bounds_right) = transform * (0, 0)
             (bounds_top, bounds_left) = transform * (width, height)
@@ -223,9 +225,12 @@ class GreppoAppProxy(object):
 
         src_dataset = rasterio.open(file_path)
 
-        url = "data:image/png;base64," + base64.b64encode(src_dataset.read()).decode()
+        url = "data:image/png;base64," + \
+            base64.b64encode(src_dataset.read()).decode()
 
         bounds = [[0, 0], [100, 100]]
+        bounds = [[14.760840184106792, 77.97900023926854],
+                  [14.763995704693206, 77.98389492733145]]
 
         self.image_layers.append(
             ImageLayer(id, title, description, url, bounds, visible)
