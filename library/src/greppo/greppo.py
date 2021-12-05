@@ -4,6 +4,7 @@ import dataclasses
 import json
 import logging
 import uuid
+from io import BytesIO
 from typing import Any
 from typing import Dict
 from typing import List
@@ -12,6 +13,7 @@ import numpy as np
 import rasterio
 from geopandas import GeoDataFrame as gdf
 from greppo import osm
+from PIL import Image
 from rasterio.io import MemoryFile
 from rasterio.warp import calculate_default_transform
 from rasterio.warp import reproject
@@ -144,8 +146,7 @@ class GreppoAppProxy(object):
         bnds = [miny, minx, maxy, maxx]
         viewzoom = [(miny + maxy) / 2, (minx + maxx) / 2, osm.Map(bnds).z]
         self.overlay_layers.append(
-            OverlayLayer(id, data, title, description,
-                         style, visible, viewzoom)
+            OverlayLayer(id, data, title, description, style, visible, viewzoom)
         )
 
     def raster_layer(self, file_path: str, title: str, description: str, visible: bool):
@@ -202,8 +203,7 @@ class GreppoAppProxy(object):
                 self.raster_image_reference.append(png_memfile.read())
 
             url = (
-                "data:image/png;base64," +
-                base64.b64encode(png_memfile.read()).decode()
+                "data:image/png;base64," + base64.b64encode(png_memfile.read()).decode()
             )
             (bounds_bottom, bounds_right) = transform * (0, 0)
             (bounds_top, bounds_left) = transform * (width, height)
@@ -216,21 +216,25 @@ class GreppoAppProxy(object):
     def image_layer(self, file_path: str, title: str, description: str, visible: bool):
         id = uuid.uuid4().hex
 
-        file_ext = file_path.split(".")[-1]
+        file_ext = file_path.split(".")[-1].lower()
         assert file_ext in [
             "png",
             "jpg",
             "jpeg",
         ], "Image input extension should be png, jpg or jpeg for image_layer"
 
-        src_dataset = rasterio.open(file_path)
+        buffered = BytesIO()
+        image = Image.open(file_path)
+        image.save(buffered, format="JPEG")
+        image_string = base64.b64encode(buffered.getvalue()).decode()
 
-        url = "data:image/png;base64," + \
-            base64.b64encode(src_dataset.read()).decode()
+        url = "data:image/png;base64," + image_string
 
         bounds = [[0, 0], [100, 100]]
-        bounds = [[14.760840184106792, 77.97900023926854],
-                  [14.763995704693206, 77.98389492733145]]
+        bounds = [
+            [14.760840184106792, 77.97900023926854],
+            [14.763995704693206, 77.98389492733145],
+        ]
 
         self.image_layers.append(
             ImageLayer(id, title, description, url, bounds, visible)
