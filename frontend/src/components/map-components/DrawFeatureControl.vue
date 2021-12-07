@@ -12,7 +12,11 @@
                 :class="collapse ? 'rotate-0' : 'rotate-180'"
                 class="fill-current h-6 w-6 transform transition-transform duration-500"
             >
-                <unicon name="angle-down" fill="black"></unicon>
+                <unicon
+                    :class="collapse ? 'animate-bounce' : ''"
+                    name="angle-down"
+                    fill="black"
+                ></unicon>
             </span>
         </div>
         <div
@@ -70,7 +74,7 @@ export default {
     name: "DrawFeatureControl",
     data() {
         return {
-            collapse: false,
+            collapse: true,
         };
     },
     methods: {

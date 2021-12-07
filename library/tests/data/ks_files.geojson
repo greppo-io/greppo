@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "file": "AAA.jpg", "title": "Arial 1", "description": "Drone arial image 1" }, "geometry": null },
+{ "type": "Feature", "properties": { "file": "AAA.jpg", "title": "Arial 2", "description": "Drone arial image 2" }, "geometry": null },
+{ "type": "Feature", "properties": { "file": "AAA.jpg", "title": "Arial 3", "description": "Drone arial image 3" }, "geometry": null },
+{ "type": "Feature", "properties": { "file": "AAA.jpg", "title": "Arial 4", "description": "Drone arial image 4" }, "geometry": null }
+]
+}

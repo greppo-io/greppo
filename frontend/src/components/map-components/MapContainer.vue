@@ -1,7 +1,7 @@
 <template>
     <div class="h-full w-full">
         <!-- The map container will have the map components and the mail control of the application. -->
-        <l-map ref="lmap" :center="center" :zoom="zoom">
+        <l-map ref="lmap" :center="center" :zoom="zoom" maxZoom="25">
             <base-layer v-if="getComponentStatus.baseLayer" />
             <div v-if="getComponentStatus.overlayLayer">
                 <vector-layer
