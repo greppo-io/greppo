@@ -85,7 +85,7 @@ class GreppoServer(object):
         self.gr_app = gr_app
         self.user_script = user_script
 
-    def run(self, host="127.0.0.1", port=8000):
+    def run(self, host="0.0.0.0", port=8080):
         routes = [
             Route(
                 "/api", partial(api_endpoint, self.user_script), methods=["GET", "POST"]
@@ -108,11 +108,9 @@ class GreppoServer(object):
                 CORSMiddleware,
                 allow_origins=[
                     "http://localhost:8080",
-                    "http://127.0.0.1:8080",
-                    "http://localhost:8000",
+                    "http://0.0.0.0:8080",
                     "http://localhost:8081",
-                    "http://localhost:8090",
-                    "http://127.0.0.1:8000",                    
+                    "http://0.0.0.0:8081",
                 ],
                 allow_methods=["GET", "POST"],
             )

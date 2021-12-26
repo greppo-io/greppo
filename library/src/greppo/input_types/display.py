@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 @dataclass
-class Text:
+class Display:
     def __init__(self, name: str, value: str, input_updates: Dict[str, Any] = {}):
         self.input_name = name
         self.value = value
@@ -20,19 +20,19 @@ class Text:
 
     def convert_to_component_info(self):
         _id, name = self.input_name.split("_")
-        _type = Text.__name__
+        _type = Display.__name__
         value = str(self.get_value())
 
-        return TextComponentInfo(id=_id, name=name, type=_type, value=value)
+        return DisplayComponentInfo(id=_id, name=name, type=_type, value=value)
 
     @classmethod
     def proxy_name(cls):
-        return "text"
+        return "display"
 
     def __add__(self, other):
         if type(other) in [str]:
             return self.get_value() + other
-        elif type(other) is Text:
+        elif type(other) is Display:
             return self.get_value() + other.get_value()
         else:
             raise Exception("Operation Not Supported for type: " + str(type(other)))
@@ -44,7 +44,7 @@ class Text:
             return self.get_value() * other
         elif type(other) in [list, str, np.array, np.ndarray, pd.Series]:
             return other * self.get_value()
-        elif type(other) is Text:
+        elif type(other) is Display:
             return self.get_value() * other.get_value()
         else:
             raise Exception("Operation Not Supported for type: " + str(type(other)))
@@ -59,7 +59,7 @@ class Text:
 
 
 @dataclass
-class TextComponentInfo:
+class DisplayComponentInfo:
     id: str
     name: str
     type: str

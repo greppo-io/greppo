@@ -27,6 +27,7 @@ from .input_types import Multiselect
 from .input_types import Number
 from .input_types import Select
 from .input_types import Text
+from .input_types import Display
 from .layers.base_layer import BaseLayer
 from .layers.image_layer import ImageLayer
 from .layers.overlay_layer import OverlayLayer
@@ -45,7 +46,7 @@ class GreppoApp(object):
 
     def __init__(self, title: str = "Untitled App"):
         self.title: str = title
-
+        self.display = Display
         self.select = Select
         self.multiselect = Multiselect
         self.draw_feature = DrawFeature
@@ -86,6 +87,11 @@ class GreppoAppProxy(object):
 
         # Input updates
         self.inputs = {}
+
+    def display(self, **kwargs):
+        display = Display(**kwargs)
+        self.register_input(display)
+        return display
 
     def number(self, **kwargs):
         number = Number(**kwargs)
