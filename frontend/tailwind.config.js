@@ -6,6 +6,21 @@ module.exports = {
             transitionProperty: {
                 height: "height",
             },
+            typography: {
+                sm: {
+                    css: {
+                        code: {
+                            fontSize: "1em",
+                        },
+                        pre: {
+                            "overflow-x": "auto",
+                        },
+                        h2: {
+                            marginTop: "1.4em",
+                        },
+                    },
+                },
+            },
         },
     },
     variants: {
@@ -15,5 +30,6 @@ module.exports = {
         require("@tailwindcss/forms")({
             strategy: "class",
         }),
+        require("@tailwindcss/typography"),
     ],
 };

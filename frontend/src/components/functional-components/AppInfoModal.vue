@@ -23,48 +23,8 @@
                 </div>
 
                 <div class="py-3 pl-3 pr-4 p overflow-x-hidden overflow-y-auto">
-                    <div v-if="getAppInfo.description">
-                        <VueShowdown
-                            :markdown="getAppInfo.description"
-                            class="block markdown-section"
-                        />
-                    </div>
-                    <div v-else>
-                        <p>A geospatial data app built using Greppo.</p>
-                        <p>For information on using greppo, visit: greppo.io</p>
-                    </div>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores cum dolore magni porro voluptates similique tenetur debitis, commodi quae, itaque nam dolorem quaerat soluta alias ab corrupti libero animi ex.</p>
-                    
+                    <VueShowdown :markdown="getAppDescription" class="prose" />
                 </div>
-
-                <!-- <div
-                    class="pt-2 pb-1.5 pr-3 flex justify-end items-center w-full"
-                >
-                    <button
-                        type="button"
-                        @click="closeModal"
-                        class="py-1.5 px-4 font-semibold border border-black rounded hover:bg-black hover:text-white"
-                    >
-                        Close
-                    </button>
-                </div> -->
             </div>
         </div>
     </div>
@@ -83,6 +43,13 @@ export default {
     },
     computed: {
         ...mapGetters(["getAppInfo"]),
+        getAppDescription() {
+            if (this.getAppInfo.description) {
+                return this.getAppInfo.description;
+            } else {
+                return "## Geospatial app \n A geospatial application built using Greppo. \n For more information, check out: \n - Documentation at [docs.greppo.io](https://docs.greppo.io) \n - Website at [greppo.io](https://greppo.io) \n - GitHub repo at [github.com/greppo-io](https://github.com/greppo-io/greppo)";
+            }
+        },
     },
 };
 </script>
