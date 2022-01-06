@@ -128,14 +128,18 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            // this.$refs.lmap.mapObject.attributionControl
-            //     .setPosition('bottomleft');
+            this.$refs.lmap.mapObject.attributionControl
+                .setPosition('bottomleft');
             this.resetViewHandler();
         });
     },
     created() {
         eventHub.$on("fitOverlayBounds", (layerBounds) => {
             this.$refs.lmap.mapObject.fitBounds(layerBounds);
+        });
+
+        eventHub.$on("resetMapContainerSize", () => {
+            setTimeout(() => this.$refs.lmap.mapObject.invalidateSize(), 10);
         });
     },
 };

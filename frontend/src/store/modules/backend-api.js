@@ -19,6 +19,15 @@ const state = {
         inputComponent: false,
         drawFeature: false,
     },
+    AppInfo: {
+        modal: false,
+        title: null,
+        description: null,
+    },
+    ErrorModal: {
+        status: false,
+        message: "",
+    },
     VectorData: null,
     BaseLayerInfo: null,
     OverlayLayerInfo: null,
@@ -41,6 +50,9 @@ const state = {
 
 const getters = {
     getStatus: (state) => state.Status,
+    getAppInfo: (state) => state.AppInfo,
+    getInfoModal: (state) => state.InfoModal,
+    getErrorModal: (state) => state.ErrorModal,
     getComponentStatus: (state) => state.ComponentStatus,
     getVectorData: (state) => state.VectorData,
     getBaseLayerInfo: (state) => state.BaseLayerInfo,
@@ -64,6 +76,31 @@ const getters = {
 };
 
 const actions = {
+    setAppInfo({ commit, state }, dataAppInfo) {
+        var AppInfo = state.AppInfo;
+        if ("modal" in dataAppInfo) {
+            AppInfo.modal = dataAppInfo.modal;
+        }
+        if ("title" in dataAppInfo) {
+            AppInfo.title = dataAppInfo.title;
+        }
+        if ("description" in dataAppInfo) {
+            AppInfo.description = dataAppInfo.description;
+        }
+        commit("commitAppInfo", AppInfo);
+    },
+
+    setErrorModal({ commit, state }, dataErrorModal) {
+        var ErrorModal = state.ErrorModal;
+        if ("status" in dataErrorModal) {
+            ErrorModal.status = dataErrorModal.status;
+        }
+        if ("message" in dataErrorModal) {
+            ErrorModal.message = dataErrorModal.message;
+        }
+        commit("commitErrorModal", ErrorModal);
+    },
+
     async getAPI({ commit, dispatch }) {
         try {
             const response = await axios.get(process.env.VUE_APP_API);
@@ -120,7 +157,7 @@ const actions = {
             });
     },
 
-    commitResponseData({ commit, state }, response) {
+    commitResponseData({ commit, state, dispatch }, response) {
         var ComponentStatus = state.ComponentStatus;
 
         console.log(response.data);
@@ -237,6 +274,14 @@ const actions = {
                     });
                     if (activateDrawFeature) {
                         activateDrawFeature = !activateDrawFeature;
+                    }
+                }
+                if (component.type === "Display") {
+                    if (component.name === "title") {
+                        dispatch("setAppInfo", { title: component.value });
+                    }
+                    if (component.name === "description") {
+                        dispatch("setAppInfo", { description: component.value });
                     }
                 }
             });
@@ -390,6 +435,12 @@ const mutations = {
     },
     commitComponentStatus: (state, data) => {
         state.ComponentStatus = data;
+    },
+    commitAppInfo: (state, data) => {
+        state.AppInfo = data;
+    },
+    commitErrorModal: (state, data) => {
+        state.ErrorModal = data;
     },
     commitVectorData: (state, data) => {
         state.VectorData = data;

@@ -14,15 +14,18 @@ from .text import Text
 from .text import TextComponentInfo
 from .select import Select
 from .select import SelectComponentInfo
+from .display import Display
+from .display import DisplayComponentInfo
 
 # TODO add interface to inputs
 GreppoCharts = Union[BarChart, LineChart]
 GreppoChartNames = [i.proxy_name() for i in GreppoCharts.__args__]
 
-GreppoInputs = Union[Number, Text, Select, Multiselect, DrawFeature]
+GreppoInputs = Union[Display, Number, Text, Select, Multiselect, DrawFeature]
 GreppoInputsNames = [i.proxy_name() for i in GreppoInputs.__args__]
 
 ComponentInfo = Union[
+    DisplayComponentInfo,
     NumberComponentInfo,
     TextComponentInfo,
     SelectComponentInfo,
