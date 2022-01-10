@@ -9,7 +9,7 @@ import pandas as pd
 
 @dataclass
 class Display:
-    def __init__(self, name: str, value: str):
+    def __init__(self, name: str, value: str, input_updates: Dict[str, Any] = {}):
         self.input_name = name
         self.value = value
 
