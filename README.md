@@ -12,6 +12,8 @@ Greppo is an open-source Python framework that makes it easy to build applicatio
 
 <img src="./assets/chat.svg" style=""> **Discord Community**: https://discord.gg/RNJBjgh8gz
 
+If you run into any problems, ping us on Discord, Twitter or open an issue on GitHub.
+
 ## Installation
 
 ```shell
@@ -19,6 +21,8 @@ $ pip install greppo
 ```
 
 We suggest you use a virtual environment to manage your packages for this project. For more infromation and troubleshooting visit the [Installation Guide](https://docs.greppo.io).
+
+**Windows users**: Installation of Fiona (one of Greppo's dependencies) on Windows machines usually doesn't work by default. A manual installation with e.g. [wheel files by Christoph Gohlke](https://www.lfd.uci.edu/~gohlke/pythonlibs/) the  would be a work around.
 
 ## A simple example
 
@@ -55,7 +59,7 @@ Then run the aplication using the `greppo` cli command:
 greppo serve app.py
 ```
 
-To view the app that is being served, enter this address of the localhost `127.0.0.1:8000/` in your web browser.
+To view the app that is being served, enter this address of the localhost `localhost:8080/` in your web browser. (Note: the port of `8080` might be different depending on other programs you're running. Check the port indicated in the command line interface.)
 
 <img src="./assets/app.png" style="border-radius: 0.5rem;">
 
