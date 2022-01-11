@@ -1,5 +1,7 @@
 # Hey there, this is <a href="https://greppo.io/" style="color: #F5325B;"><img src="./assets/logo.png" height="28"> Greppo</a>...
 
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/RNJBjgh8gz) ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fgreppo_io)
+
 **A Python framework for building geospatial web-applications.**
 
 Greppo is an open-source Python framework that makes it easy to build applications. It provides a toolkit for to quickly integrate data, algorithms, visualizations and UI for interactivity.
