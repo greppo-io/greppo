@@ -13,11 +13,10 @@ app.base_layer(
 )
 
 app.base_layer(
-    name="Open Street Map",
-    visible=False,
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    subdomains=None,
-    attribution='&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    provider="OpenStreetMap Mapnik",    
+)
+app.base_layer(
+    provider="CartoDB Positron",    
 )
 
 data_gdf = gpd.read_file("tests/data/us-states.geojson")

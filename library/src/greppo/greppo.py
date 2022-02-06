@@ -7,11 +7,12 @@ import uuid
 from io import BytesIO
 from typing import Any
 from typing import Dict
-from typing import List
+from typing import List, Union
 
 import numpy as np
 import rasterio
 from geopandas import GeoDataFrame as gdf
+import xyzservices
 from greppo import osm
 from PIL import Image
 from rasterio.io import MemoryFile
@@ -82,6 +83,7 @@ class GreppoAppProxy(object):
         self.overlay_layers: List[OverlayLayer] = []
         self.raster_layers: List[RasterLayer] = []
         self.image_layers: List[ImageLayer] = []
+        # TODO Cleanup raster temp
         self.raster_image_reference: List[bytes] = []
         self.registered_inputs: List[ComponentInfo] = []
 
@@ -130,16 +132,44 @@ class GreppoAppProxy(object):
 
     def base_layer(
         self,
-        name: str,
-        visible: bool,
-        url: str,
-        subdomains: List[str],
-        attribution: str,
+        provider: Union[str, xyzservices.TileProvider] = '',
+        name: str = '',
+        visible: bool = False,
+        url: str = '',
+        attribution: str = '',
+        subdomains: Union[str, List[str]] = '',        
+        # min_zoom: int = 0,
+        # max_zoom: int = 18,
+        # bounds: List[List[int]] = [],
     ):
         id = uuid.uuid4().hex
-        self.base_layers.append(
-            BaseLayer(id, name, visible, url, subdomains, attribution)
-        )
+        tile_provider = None
+
+        if provider and isinstance(provider, str):
+            try:
+                tile_provider = xyzservices.providers.query_name(provider)
+            except ValueError:
+                raise ValueError(
+                    f"No matching provider found for: '{provider}'.")
+
+        if isinstance(provider, xyzservices.TileProvider):
+            tile_provider = provider
+
+        if tile_provider is not None:
+            name = name if name else tile_provider.name.replace(
+                ".", " - ")
+            url = url if url else tile_provider.build_url(fill_subdomain=False)
+            attribution = attribution if attribution else tile_provider.attribution if 'attribution' in tile_provider else tile_provider.html_attribution
+            subdomains = subdomains if subdomains else tile_provider.subdomains if 'subdomains' in tile_provider else ''
+            self.base_layers.append(
+                BaseLayer(id, name, visible, url, subdomains, attribution)
+            )
+        else:
+            if not name: raise ValueError("If 'provider' is not passed for 'base_layer', please pass in 'name'.")
+            if not url: raise ValueError("If 'provider' is not passed for 'base_layer', please pass in 'url'.")
+            self.base_layers.append(
+                BaseLayer(id, name, visible, url, subdomains, attribution)
+            )
 
     def overlay_layer(
         self, data: gdf, title: str, description: str, style: dict, visible: bool
@@ -152,7 +182,8 @@ class GreppoAppProxy(object):
         bnds = [miny, minx, maxy, maxx]
         viewzoom = [(miny + maxy) / 2, (minx + maxx) / 2, osm.Map(bnds).z]
         self.overlay_layers.append(
-            OverlayLayer(id, data, title, description, style, visible, viewzoom)
+            OverlayLayer(id, data, title, description,
+                         style, visible, viewzoom)
         )
 
     def raster_layer(self, file_path: str, title: str, description: str, visible: bool):
@@ -209,7 +240,8 @@ class GreppoAppProxy(object):
                 self.raster_image_reference.append(png_memfile.read())
 
             url = (
-                "data:image/png;base64," + base64.b64encode(png_memfile.read()).decode()
+                "data:image/png;base64," +
+                base64.b64encode(png_memfile.read()).decode()
             )
             (bounds_bottom, bounds_right) = transform * (0, 0)
             (bounds_top, bounds_left) = transform * (width, height)
