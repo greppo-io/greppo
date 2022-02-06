@@ -12,7 +12,6 @@ from typing import List, Union
 import numpy as np
 import rasterio
 from geopandas import GeoDataFrame as gdf
-import xyzservices
 from greppo import osm
 from PIL import Image
 from rasterio.io import MemoryFile
@@ -29,7 +28,7 @@ from .input_types import Number
 from .input_types import Select
 from .input_types import Text
 from .input_types import Display
-from .layers.base_layer import BaseLayer
+from .layers.base_layer import BaseLayerComponent, BaseLayer
 from .layers.image_layer import ImageLayer
 from .layers.overlay_layer import OverlayLayer
 from .layers.raster_layer import RasterLayer
@@ -132,44 +131,11 @@ class GreppoAppProxy(object):
 
     def base_layer(
         self,
-        provider: Union[str, xyzservices.TileProvider] = '',
-        name: str = '',
-        visible: bool = False,
-        url: str = '',
-        attribution: str = '',
-        subdomains: Union[str, List[str]] = '',        
-        # min_zoom: int = 0,
-        # max_zoom: int = 18,
-        # bounds: List[List[int]] = [],
+        **kwargs
     ):
-        id = uuid.uuid4().hex
-        tile_provider = None
-
-        if provider and isinstance(provider, str):
-            try:
-                tile_provider = xyzservices.providers.query_name(provider)
-            except ValueError:
-                raise ValueError(
-                    f"No matching provider found for: '{provider}'.")
-
-        if isinstance(provider, xyzservices.TileProvider):
-            tile_provider = provider
-
-        if tile_provider is not None:
-            name = name if name else tile_provider.name.replace(
-                ".", " - ")
-            url = url if url else tile_provider.build_url(fill_subdomain=False)
-            attribution = attribution if attribution else tile_provider.attribution if 'attribution' in tile_provider else tile_provider.html_attribution
-            subdomains = subdomains if subdomains else tile_provider.subdomains if 'subdomains' in tile_provider else ''
-            self.base_layers.append(
-                BaseLayer(id, name, visible, url, subdomains, attribution)
-            )
-        else:
-            if not name: raise ValueError("If 'provider' is not passed for 'base_layer', please pass in 'name'.")
-            if not url: raise ValueError("If 'provider' is not passed for 'base_layer', please pass in 'url'.")
-            self.base_layers.append(
-                BaseLayer(id, name, visible, url, subdomains, attribution)
-            )
+        base_layer_component = BaseLayerComponent(**kwargs)
+        base_layer_dataclass = base_layer_component.convert_to_dataclass()
+        self.base_layers.append(base_layer_dataclass)
 
     def overlay_layer(
         self, data: gdf, title: str, description: str, style: dict, visible: bool
