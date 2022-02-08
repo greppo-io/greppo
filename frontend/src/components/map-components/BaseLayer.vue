@@ -1,7 +1,7 @@
 <template>
     <div>
         <l-tile-layer
-            v-for="layer in getBaseLayerInfo"
+            v-for="layer in getBaseLayerData"
             :key="layer.name"
             :name="layer.name"
             :visible="layer.visible"
@@ -20,6 +20,6 @@ export default {
     components: {
         LTileLayer,
     },
-    computed: mapGetters(["getBaseLayerInfo"]),
+    computed: mapGetters(["getBaseLayerData"]),
 };
 </script>
