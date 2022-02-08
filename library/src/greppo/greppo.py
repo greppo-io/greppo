@@ -29,7 +29,7 @@ from .input_types import Select
 from .input_types import Text
 from .input_types import Display
 from .layers.base_layer import BaseLayer
-from .layers.tile_layer import TileLayer
+from .layers.tile_layer import TileLayer, TileLayerComponent
 from .layers.image_layer import ImageLayer
 from .layers.overlay_layer import OverlayLayer
 from .layers.raster_layer import RasterLayer
@@ -82,7 +82,7 @@ class GreppoAppProxy(object):
         # Map component data
         self.base_layers: List[BaseLayer] = []
         self.tile_layers: List[TileLayer] = []
-        self.overlay_layers: List[OverlayLayer] = []        
+        self.overlay_layers: List[OverlayLayer] = []
         self.raster_layers: List[RasterLayer] = []
         self.image_layers: List[ImageLayer] = []
         self.raster_image_reference: List[bytes] = []
@@ -131,10 +131,15 @@ class GreppoAppProxy(object):
         self.register_input(line_chart)
         return line_chart
 
-    def ee_layer(self,**kwargs):
+    def ee_layer(self, **kwargs):
         ee_layer_component = EarthEngineLayerComponent(**kwargs)
         ee_layer_dataclass = ee_layer_component.convert_to_dataclass()
         self.tile_layers.append(ee_layer_dataclass)
+
+    def tile_layer(self, **kwargs):
+        tile_layer_component = TileLayerComponent(**kwargs)
+        tile_layer_dataclass = tile_layer_component.convert_to_dataclass()
+        self.tile_layers.append(tile_layer_dataclass)
 
     def base_layer(
         self,

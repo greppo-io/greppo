@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="getComponentStatus.baseLayer || getComponentStatus.overlayLayer"
+        v-if="getComponentStatus.baseLayer || getComponentStatus.overlayLayer || getComponentStatus.tileLayer"
         class="block my-5 border-2 rounded"
         :class="collapse ? 'border-white' : 'border-gray-100'"
     >
@@ -42,9 +42,9 @@
                 <div class="block overflow-auto max-h-72">
                     <span class="text-gray-700">Overlay layer control</span>
                     <overlay-layer-control
-                        v-for="vector in getOverlayLayerInfo"
-                        :key="vector.id"
-                        :layerData="vector"
+                        v-for="laterData in getOverlayLayerInfo"
+                        :key="laterData.id"
+                        :layerData="laterData"
                     />
                 </div>
             </div>

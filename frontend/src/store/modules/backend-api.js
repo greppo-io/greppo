@@ -12,6 +12,7 @@ const state = {
     Status: 1,
     ComponentStatus: {
         baseLayer: false,
+        tileLayer: false,
         overlayLayer: false,
         rasterLayer: false,
         imageLayer: false,
@@ -30,6 +31,7 @@ const state = {
     },
     VectorData: null,
     BaseLayerInfo: null,
+    TileLayerData: null,
     OverlayLayerInfo: null,
     ViewZoom: [0, 0, 3],
     ChartEventData: null,
@@ -56,6 +58,7 @@ const getters = {
     getComponentStatus: (state) => state.ComponentStatus,
     getVectorData: (state) => state.VectorData,
     getBaseLayerInfo: (state) => state.BaseLayerInfo,
+    getTileLayerData: (state) => state.TileLayerData,
     getOverlayLayerInfo: (state) => state.OverlayLayerInfo,
     getViewZoom: (state) => state.ViewZoom,
     getChartEventData: (state) => state.ChartEventData,
@@ -138,20 +141,19 @@ const actions = {
 
         state.DrawFeatureData.forEach((drawFeature) => {
             if (drawFeature.mutation) {
-                postData[drawFeature.name] = drawFeature.featuresDrawn.map(
-                    mapDrawFeature
-                );
+                postData[drawFeature.name] =
+                    drawFeature.featuresDrawn.map(mapDrawFeature);
             }
         });
 
         axios
             .post(process.env.VUE_APP_API, postData)
-            .then(function(response) {
+            .then(function (response) {
                 dispatch("commitResponseData", response);
                 commit("commitInputMutation", false);
                 eventHub.$emit("reInitializeDrawFeature");
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 // TODO Frontend error logging
                 console.log("Error in posting data.", error);
             });
@@ -162,6 +164,7 @@ const actions = {
 
         console.log(response.data);
         const responseBaseLayerInfo = response.data.base_layer_info;
+        const responseTileLayerData = response.data.tile_layer_info;
         const responseVectorData = response.data.overlay_layer_data;
         const responseComponentInfo = response.data.component_info;
         const responseRasterData = response.data.raster_layer_data;
@@ -191,7 +194,42 @@ const actions = {
             ComponentStatus.rasterLayer = true;
             commit("commitRasterData", responseRasterData);
 
-            responseRasterData.forEach(function(layerData) {
+            responseRasterData.forEach(function (layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.title,
+                    description: layerData.description,
+                    visible: layerData.visible,
+                    bounds: layerData.bounds,
+                    color: "#123123",
+                    type: "raster",
+                });
+            });
+        }
+
+        if (responseTileLayerData.length) {
+            ComponentStatus.tileLayer = true;
+            ComponentStatus.overlayLayer = true;
+            commit("commitTileLayerData", responseTileLayerData);
+
+            responseTileLayerData.forEach(function (layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.name,
+                    description: layerData.description,
+                    visible: true,
+                    bounds: [],
+                    color: "#123123",
+                    type: "tile",
+                });
+            });
+        }
+
+        if (responseRasterData.length) {
+            ComponentStatus.rasterLayer = true;
+            commit("commitRasterData", responseRasterData);
+
+            responseRasterData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
@@ -209,7 +247,7 @@ const actions = {
             ComponentStatus.overlayLayer = true;
             commit("commitImageData", responseImageData);
 
-            responseImageData.forEach(function(layerData) {
+            responseImageData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
@@ -227,7 +265,7 @@ const actions = {
             commit("commitVectorData", responseVectorData);
 
             let viewzoomInfo = [];
-            responseVectorData.forEach(function(layerData) {
+            responseVectorData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
@@ -281,7 +319,9 @@ const actions = {
                         dispatch("setAppInfo", { title: component.value });
                     }
                     if (component.name === "description") {
-                        dispatch("setAppInfo", { description: component.value });
+                        dispatch("setAppInfo", {
+                            description: component.value,
+                        });
                     }
                 }
             });
@@ -294,7 +334,8 @@ const actions = {
         if (
             ComponentStatus.baseLayer ||
             ComponentStatus.overlayLayer ||
-            ComponentStatus.drawFeature
+            ComponentStatus.drawFeature || 
+            ComponentStatus.tileLayer
         ) {
             ComponentStatus.mapComponent = true;
         }
@@ -447,6 +488,9 @@ const mutations = {
     },
     commitBaseLayerInfo: (state, data) => {
         state.BaseLayerInfo = data;
+    },
+    commitTileLayerData: (state, data) => {
+        state.TileLayerData = data;
     },
     commitOverlayLayerInfo: (state, data) => {
         state.OverlayLayerInfo = data;

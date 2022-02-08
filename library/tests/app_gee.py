@@ -25,6 +25,7 @@ ee.Initialize(credentials)
 # # Compute the trend of night-time lights.
 
 # # Adds a band containing image date as years since 1991.
+
 # def create_time_band(img):
 #     year = ee.Date(img.get('system:time_start')).get('year').subtract(1991)
 #     return ee.Image(year).byte().addBands(img)
@@ -43,10 +44,20 @@ ee.Initialize(credentials)
 # map_id_dict = ee.Image(ee_image_object).getMapId(vis_params)
 # ee_url = map_id_dict['tile_fetcher'].url_format
 
-app.base_layer(
-    name="stable lights trend",
-    visible=True,
-    url='https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/295c4c884593fb86efc53f1b1fc52ea1-6f0be59a58e33645503ec77b9d4e1a40/tiles/{z}/{x}/{y}',
-    subdomains=None,
-    attribution='Map Data &copy; <a href="https://earthengine.google.com/">Google Earth Engine</a>',
-)
+# app.base_layer(
+#     name="stable lights trend",
+#     visible=True,
+#     url='https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/295c4c884593fb86efc53f1b1fc52ea1-6f0be59a58e33645503ec77b9d4e1a40/tiles/{z}/{x}/{y}',
+#     subdomains=None,
+#     attribution='Map Data &copy; <a href="https://earthengine.google.com/">Google Earth Engine</a>',
+# )
+
+dem = ee.Image('USGS/SRTMGL1_003')
+ee_image_object = dem.updateMask(dem.gt(0))
+vis_params = {
+  'min': 0,
+  'max': 4000,
+  'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
+name = 'DEM'
+print(vis_params)
+app.ee_layer(ee_object=ee_image_object, vis_params=vis_params, name=name)

@@ -11,7 +11,7 @@ class EarthEngineLayerComponent:
         self,
         ee_object: Union[ee.Image, ee.ImageCollection, ee.FeatureCollection, ee.Feature, ee.Geometry],
         name: str = '',
-        visible: bool = False,
+        visible: bool = True,
         vis_params: Dict = {},
         opacity: float = 1.0,
         min_zoom: int = 0,
@@ -40,16 +40,16 @@ class EarthEngineLayerComponent:
                 **{"color": color, "fillColor": "00000000", "width": width}
             )
 
-            self.ee_image = image_fill.blend(image_outline)
+            self.ee_object_image = image_fill.blend(image_outline)
         elif isinstance(ee_object, ee.image.Image):
-            self.ee_image = ee_object
+            self.ee_object_image = ee_object
         elif isinstance(ee_object, ee.imagecollection.ImageCollection):
-            self.ee_image = ee_object.mosaic()
+            self.ee_object_image = ee_object.mosaic()
 
         self.vis_params = vis_params
 
     def convert_to_dataclass(self):
         id = uuid.uuid4().hex
-        map_id_dict = ee.Image(self.image).getMapId(self.vis_params)
+        map_id_dict = ee.Image(self.ee_object_image).getMapId(self.vis_params)
         url = map_id_dict["tile_fetcher"].url_format
         return TileLayer(id=id, url=url, name=self.name, visible=self.visible, opacity=self.opacity, min_zoom=self.min_zoom, max_zoom=self.max_zoom)
