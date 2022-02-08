@@ -62,7 +62,7 @@ vis_params = {
 name = 'DEM'
 print(vis_params)
 app.ee_layer(ee_object=ee_image_object,
-             vis_params=vis_params, name=name, visible=True)
+             vis_params=vis_params, name=name)
 
 
 data_gdf_1 = gpd.read_file("tests/data/buildings.geojson")
@@ -86,3 +86,6 @@ app.base_layer(
     subdomains=None,
     attribution='&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 )
+
+app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi',
+                   name='Weather Data', format='image/png', layers='nexrad-n0r-900913', transparent=True)

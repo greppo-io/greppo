@@ -30,6 +30,7 @@ from .input_types import Text
 from .input_types import Display
 from .layers.base_layer import BaseLayer
 from .layers.tile_layer import TileLayer, TileLayerComponent
+from .layers.wms_tile_layer import WMSTileLayer, WMSTileLayerComponent
 from .layers.image_layer import ImageLayer
 from .layers.overlay_layer import OverlayLayer
 from .layers.ee_layer import EarthEngineLayerComponent
@@ -81,6 +82,7 @@ class GreppoAppProxy(object):
         # Map component data
         self.base_layers: List[BaseLayer] = []
         self.tile_layers: List[TileLayer] = []
+        self.wms_tile_layers: List[WMSTileLayer] = []
         self.overlay_layers: List[OverlayLayer] = []
         self.image_layers: List[ImageLayer] = []
         self.raster_image_reference: List[bytes] = []
@@ -138,6 +140,11 @@ class GreppoAppProxy(object):
         tile_layer_component = TileLayerComponent(**kwargs)
         tile_layer_dataclass = tile_layer_component.convert_to_dataclass()
         self.tile_layers.append(tile_layer_dataclass)
+    
+    def wms_tile_layer(self, **kwargs):
+        wms_tile_layer_component = WMSTileLayerComponent(**kwargs)
+        wms_tile_layer_dataclass = wms_tile_layer_component.convert_to_dataclass()
+        self.wms_tile_layers.append(wms_tile_layer_dataclass)
 
     def base_layer(
         self,
@@ -292,6 +299,15 @@ class GreppoAppProxy(object):
                     _v = json.loads(v.to_json())
                 s[k] = _v
             app_output["tile_layer_data"].append(s)
+
+        for _wms_tile_layer in self.wms_tile_layers:
+            s = {}
+            for k, v in _wms_tile_layer.__dict__.items():
+                _v = v
+                if k == "data":
+                    _v = json.loads(v.to_json())
+                s[k] = _v
+            app_output["wms_tile_layer_data"].append(s)
 
         for _base_layer in self.base_layers:
             s = {}

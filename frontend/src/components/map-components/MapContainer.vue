@@ -10,6 +10,13 @@
                     :layerData="tileData"
                 />
             </div>
+            <div v-if="getComponentStatus.wmstileLayer">
+                <wms-tile-layer
+                    v-for="wmstileData in getWMSTileLayerData"
+                    :key="wmstileData.id"
+                    :layerData="wmstileData"
+                />
+            </div>
             <div v-if="getComponentStatus.vectorLayer">
                 <vector-layer
                     v-for="vectorData in getVectorLayerData"
@@ -77,6 +84,7 @@ import "leaflet/dist/leaflet.css";
 import VectorLayer from "./VectorLayer";
 import BaseLayer from "./BaseLayer";
 import TileLayer from "./TileLayer";
+import WMSTileLayer from "./WMSTileLayer";
 import { mapGetters } from "vuex";
 import DrawFeature from "./DrawFeature.vue";
 import ImageLayer from "./ImageLayer.vue";
@@ -93,6 +101,7 @@ export default {
         VectorLayer,
         DrawFeature,
         ImageLayer,
+        "wms-tile-layer": WMSTileLayer,
     },
     props: {
         isFullScreen: Boolean,
@@ -120,6 +129,7 @@ export default {
     computed: {
         ...mapGetters([
             "getTileLayerData",
+            "getWMSTileLayerData",
             "getVectorLayerData",
             "getImageLayerData",
             "getViewZoom",

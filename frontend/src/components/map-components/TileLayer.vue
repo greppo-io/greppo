@@ -4,6 +4,7 @@
         :url="layerData.url"
         :opcaity="layerData.opcaity"
         :subdomains="layerData.subdomains"
+        :attribution="layerData.attribution"
         :visible="getLayerVisibility.bind(this, layerData.id)()"
         layer-type="overlay"
     >

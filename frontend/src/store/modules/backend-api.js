@@ -13,6 +13,7 @@ const state = {
     ComponentStatus: {
         baseLayer: false,
         tileLayer: false,
+        wmstileLayer: false,
         vectorLayer: false,
         overlayLayer: false,
         imageLayer: false,
@@ -33,6 +34,7 @@ const state = {
     ImageLayerData: null,
     BaseLayerData: null,
     TileLayerData: null,
+    WMSTileLayerData: null,
     OverlayLayerInfo: null,
     ViewZoom: [0, 0, 3],
     ChartEventData: null,
@@ -57,6 +59,7 @@ const getters = {
     getVectorLayerData: (state) => state.VectorLayerData,
     getBaseLayerData: (state) => state.BaseLayerData,
     getTileLayerData: (state) => state.TileLayerData,
+    getWMSTileLayerData: (state) => state.WMSTileLayerData,
     getOverlayLayerInfo: (state) => state.OverlayLayerInfo,
     getViewZoom: (state) => state.ViewZoom,
     getChartEventData: (state) => state.ChartEventData,
@@ -161,12 +164,14 @@ const actions = {
         console.log(response.data);
         const responseBaseLayerData = response.data.base_layer_data;
         const responseTileLayerData = response.data.tile_layer_data;
+        const responseWMSTileLayerData = response.data.wms_tile_layer_data;
         const responseVectorLayerData = response.data.vector_layer_data;
         const responseImageLayerData = response.data.image_layer_data;
         const responseComponentInfo = response.data.component_info;        
         
         var overlayLayerInfo = [];
 
+        console.log(responseBaseLayerData)
         if (responseBaseLayerData.length) {
             ComponentStatus.baseLayer = true;
             commit("commitBaseLayerData", responseBaseLayerData);
@@ -183,7 +188,24 @@ const actions = {
                     title: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
-                    bounds: [],
+                    bounds: layerData.bounds,
+                    color: "#123123",
+                });
+            });
+        }        
+        
+        if (responseWMSTileLayerData.length) {
+            ComponentStatus.wmstileLayer = true;
+            ComponentStatus.overlayLayer = true;
+            commit("commitWMSTileLayerData", responseWMSTileLayerData);
+
+            responseWMSTileLayerData.forEach(function (layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.name,
+                    description: layerData.description,
+                    visible: layerData.visible,
+                    bounds: layerData.bounds,
                     color: "#123123",
                 });
             });
@@ -436,6 +458,9 @@ const mutations = {
     },
     commitTileLayerData: (state, data) => {
         state.TileLayerData = data;
+    },
+    commitWMSTileLayerData: (state, data) => {
+        state.WMSTileLayerData = data;
     },
     commitOverlayLayerInfo: (state, data) => {
         state.OverlayLayerInfo = data;
