@@ -1,7 +1,7 @@
 import axios from "axios";
 import { eventHub } from "src/event-hub";
 
-const average = (array) => array.reduce((a, b) => a + b) / array.length;
+// const average = (array) => array.reduce((a, b) => a + b) / array.length;
 
 // Status codes
 // 1: Created application
@@ -12,8 +12,10 @@ const state = {
     Status: 1,
     ComponentStatus: {
         baseLayer: false,
+        tileLayer: false,
+        wmstileLayer: false,
+        vectorLayer: false,
         overlayLayer: false,
-        rasterLayer: false,
         imageLayer: false,
         mapComponent: false,
         inputComponent: false,
@@ -28,10 +30,12 @@ const state = {
         status: false,
         message: "",
     },
-    VectorData: null,
-    BaseLayerInfo: null,
+    VectorLayerData: null,
+    ImageLayerData: null,
+    BaseLayerData: null,
+    TileLayerData: null,
+    WMSTileLayerData: null,
     OverlayLayerInfo: null,
-    ViewZoom: [0, 0, 3],
     ChartEventData: null,
     InputComponentInfo: null,
     DrawFeatureData: {
@@ -43,9 +47,6 @@ const state = {
         featuresDrawn: [],
     },
     InputMutation: false,
-    RasterData: null,
-    ImageData: null,
-    // RasterLayerInfo: null,
 };
 
 const getters = {
@@ -54,10 +55,11 @@ const getters = {
     getInfoModal: (state) => state.InfoModal,
     getErrorModal: (state) => state.ErrorModal,
     getComponentStatus: (state) => state.ComponentStatus,
-    getVectorData: (state) => state.VectorData,
-    getBaseLayerInfo: (state) => state.BaseLayerInfo,
+    getVectorLayerData: (state) => state.VectorLayerData,
+    getBaseLayerData: (state) => state.BaseLayerData,
+    getTileLayerData: (state) => state.TileLayerData,
+    getWMSTileLayerData: (state) => state.WMSTileLayerData,
     getOverlayLayerInfo: (state) => state.OverlayLayerInfo,
-    getViewZoom: (state) => state.ViewZoom,
     getChartEventData: (state) => state.ChartEventData,
     getLayerVisibility: (state) => (id) => {
         // To obtain the visibility of the specific layer passed as argument.
@@ -70,9 +72,7 @@ const getters = {
     },
     getInputMutation: (state) => state.InputMutation,
     getDrawFeatureData: (state) => state.DrawFeatureData,
-    getRasterData: (state) => state.RasterData,
-    getImageData: (state) => state.ImageData,
-    // getRasterLayerInfo: (state) => state.RasterLayerInfo,
+    getImageLayerData: (state) => state.ImageLayerData,
 };
 
 const actions = {
@@ -138,20 +138,19 @@ const actions = {
 
         state.DrawFeatureData.forEach((drawFeature) => {
             if (drawFeature.mutation) {
-                postData[drawFeature.name] = drawFeature.featuresDrawn.map(
-                    mapDrawFeature
-                );
+                postData[drawFeature.name] =
+                    drawFeature.featuresDrawn.map(mapDrawFeature);
             }
         });
 
         axios
             .post(process.env.VUE_APP_API, postData)
-            .then(function(response) {
+            .then(function (response) {
                 dispatch("commitResponseData", response);
                 commit("commitInputMutation", false);
                 eventHub.$emit("reInitializeDrawFeature");
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 // TODO Frontend error logging
                 console.log("Error in posting data.", error);
             });
@@ -161,95 +160,86 @@ const actions = {
         var ComponentStatus = state.ComponentStatus;
 
         console.log(response.data);
-        const responseBaseLayerInfo = response.data.base_layer_info;
-        const responseVectorData = response.data.overlay_layer_data;
+        const responseBaseLayerData = response.data.base_layer_data;
+        const responseTileLayerData = response.data.tile_layer_data;
+        const responseWMSTileLayerData = response.data.wms_tile_layer_data;
+        const responseVectorLayerData = response.data.vector_layer_data;
+        const responseImageLayerData = response.data.image_layer_data;
         const responseComponentInfo = response.data.component_info;
-        const responseRasterData = response.data.raster_layer_data;
-        const responseImageData = response.data.image_layer_data;
+
         var overlayLayerInfo = [];
 
-        if (responseBaseLayerInfo.length) {
+        if (responseBaseLayerData.length) {
             ComponentStatus.baseLayer = true;
-            commit("commitBaseLayerInfo", responseBaseLayerInfo);
+            commit("commitBaseLayerData", responseBaseLayerData);
         }
 
-        // const responseRasterData = [
-        //     {
-        //         id: "1qaz",
-        //         title: "raster 1",
-        //         description: "description raster 1",
-        //         url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",
-        //         bounds: [
-        //             [40.712216, -74.22655],
-        //             [40.773941, -74.12544],
-        //         ],
-        //         visible: true,
-        //     },
-        // ];
+        if (responseTileLayerData.length) {
+            ComponentStatus.tileLayer = true;
+            ComponentStatus.overlayLayer = true;
+            commit("commitTileLayerData", responseTileLayerData);
 
-        if (responseRasterData.length) {
-            ComponentStatus.rasterLayer = true;
-            commit("commitRasterData", responseRasterData);
-
-            responseRasterData.forEach(function(layerData) {
+            responseTileLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
-                    title: layerData.title,
+                    title: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
-                    bounds: layerData.bounds,
-                    color: "#123123",
-                    type: "raster",
+                    bounds: [],
+                    color: "#10B981",
                 });
             });
         }
 
-        if (responseImageData.length) {
+        if (responseWMSTileLayerData.length) {
+            ComponentStatus.wmstileLayer = true;
+            ComponentStatus.overlayLayer = true;
+            commit("commitWMSTileLayerData", responseWMSTileLayerData);
+
+            responseWMSTileLayerData.forEach(function (layerData) {
+                overlayLayerInfo.push({
+                    id: layerData.id,
+                    title: layerData.name,
+                    description: layerData.description,
+                    visible: layerData.visible,
+                    bounds: [],
+                    color: "#10B981",
+                });
+            });
+        }
+
+        if (responseImageLayerData.length) {
             ComponentStatus.imageLayer = true;
             ComponentStatus.overlayLayer = true;
-            commit("commitImageData", responseImageData);
+            commit("commitImageLayerData", responseImageLayerData);
 
-            responseImageData.forEach(function(layerData) {
+            responseImageLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
                     description: layerData.description,
                     visible: layerData.visible,
                     bounds: layerData.bounds,
-                    color: "#123123",
-                    type: "image",
+                    color: "#10B981",
                 });
             });
         }
 
-        if (responseVectorData.length) {
+        if (responseVectorLayerData.length) {
+            ComponentStatus.vectorLayer = true;
             ComponentStatus.overlayLayer = true;
-            commit("commitVectorData", responseVectorData);
+            commit("commitVectorLayerData", responseVectorLayerData);
 
-            let viewzoomInfo = [];
-            responseVectorData.forEach(function(layerData) {
+            responseVectorLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
                     description: layerData.description,
                     visible: layerData.visible,
-                    color: layerData.style.fillColor,
-                    type: "vector",
-                });
-                viewzoomInfo.push({
-                    id: layerData.id,
-                    viewzoom: layerData.viewzoom,
+                    bounds: layerData.bounds,
+                    color: "#10B981",
                 });
             });
-
-            // Commit zoom and view, 1st step just average the x,y and min of zoom.
-            // TODO Next based on the visible layers.
-            const viewzoom = [
-                average(viewzoomInfo.map((a) => a.viewzoom[0])),
-                average(viewzoomInfo.map((a) => a.viewzoom[1])),
-                Math.min(...viewzoomInfo.map((a) => a.viewzoom[2])),
-            ];
-            commit("commitViewZoom", viewzoom);
         }
 
         commit("commitOverlayLayerInfo", overlayLayerInfo);
@@ -281,7 +271,9 @@ const actions = {
                         dispatch("setAppInfo", { title: component.value });
                     }
                     if (component.name === "description") {
-                        dispatch("setAppInfo", { description: component.value });
+                        dispatch("setAppInfo", {
+                            description: component.value,
+                        });
                     }
                 }
             });
@@ -442,20 +434,23 @@ const mutations = {
     commitErrorModal: (state, data) => {
         state.ErrorModal = data;
     },
-    commitVectorData: (state, data) => {
-        state.VectorData = data;
+    commitVectorLayerData: (state, data) => {
+        state.VectorLayerData = data;
     },
-    commitBaseLayerInfo: (state, data) => {
-        state.BaseLayerInfo = data;
+    commitBaseLayerData: (state, data) => {
+        state.BaseLayerData = data;
+    },
+    commitTileLayerData: (state, data) => {
+        state.TileLayerData = data;
+    },
+    commitWMSTileLayerData: (state, data) => {
+        state.WMSTileLayerData = data;
     },
     commitOverlayLayerInfo: (state, data) => {
         state.OverlayLayerInfo = data;
     },
     commitInputMutation: (state, data) => {
         state.InputMutation = data;
-    },
-    commitViewZoom: (state, data) => {
-        state.ViewZoom = data;
     },
     commitChartEventData: (state, data) => {
         state.ChartEventData = data;
@@ -469,7 +464,7 @@ const mutations = {
         }
     },
     updateBaseLayerVisibility: (state, layerID) => {
-        state.BaseLayerInfo.forEach((layer) => {
+        state.BaseLayerData.forEach((layer) => {
             if (layer.id == layerID) {
                 layer.visible = true;
             } else {
@@ -494,15 +489,9 @@ const mutations = {
     commitDrawFeatureData: (state, data) => {
         state.DrawFeatureData = data;
     },
-    commitRasterData: (state, data) => {
-        state.RasterData = data;
+    commitImageLayerData: (state, data) => {
+        state.ImageLayerData = data;
     },
-    commitImageData: (state, data) => {
-        state.ImageData = data;
-    },
-    // commitRasterLayerInfo: (state, data) => {
-    //     state.RasterLayerInfo = data;
-    // },
 };
 
 export default {

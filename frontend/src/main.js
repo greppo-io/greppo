@@ -5,10 +5,6 @@ import store from "./store";
 // For unicons
 import "./components/utils/include-unicons.js";
 
-// For full screen : https://github.com/mirari/vue-fullscreen
-import VueFullscreen from "vue-fullscreen";
-Vue.use(VueFullscreen);
-
 // toggle-button : https://github.com/euvl/vue-js-toggle-button
 import { ToggleButton } from "vue-js-toggle-button";
 Vue.component("ToggleButton", ToggleButton);

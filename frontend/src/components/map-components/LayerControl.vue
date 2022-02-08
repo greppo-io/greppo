@@ -42,9 +42,9 @@
                 <div class="block overflow-auto max-h-72">
                     <span class="text-gray-700">Overlay layer control</span>
                     <overlay-layer-control
-                        v-for="vector in getOverlayLayerInfo"
-                        :key="vector.id"
-                        :layerData="vector"
+                        v-for="laterData in getOverlayLayerInfo"
+                        :key="laterData.id"
+                        :layerData="laterData"
                     />
                 </div>
             </div>

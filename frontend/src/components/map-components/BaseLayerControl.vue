@@ -6,7 +6,7 @@
             
         >
             <option
-                v-for="base in getBaseLayerInfo"
+                v-for="base in getBaseLayerData"
                 :key="base.id"
                 :value="base.id"
                 >{{ base.name }}</option
@@ -24,10 +24,10 @@ export default {
         ...mapActions(["setBaseLayerVisibility"]),
     },
     computed: {
-        ...mapGetters(["getBaseLayerInfo"]),
+        ...mapGetters(["getBaseLayerData"]),
         selectedBaseLayer: {
             get() {
-                return this.getBaseLayerInfo.find(
+                return this.getBaseLayerData.find(
                     (element) => element.visible == true
                 ).id;
             },
