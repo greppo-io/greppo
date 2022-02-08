@@ -3,9 +3,7 @@
         <div class="h-full relative">
             <!-- Center Container Content  -->
             <map-container
-                v-if="getComponentStatus.mapComponent"
-                :isFullScreen="isFullScreen"
-                @toggle-fullscreen="toggleFullScreen"
+                v-if="getComponentStatus.mapComponent"                
             />
 
             <div

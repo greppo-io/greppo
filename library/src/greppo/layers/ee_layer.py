@@ -14,14 +14,10 @@ class EarthEngineLayerComponent:
         visible: bool = True,
         vis_params: Dict = {},
         opacity: float = 1.0,
-        min_zoom: int = 0,
-        max_zoom: int = 24
     ):
         self.name = name
         self.visible = visible
         self.opacity = opacity
-        self.min_zoom = min_zoom
-        self.max_zoom = max_zoom
 
         if (
             isinstance(ee_object, ee.geometry.Geometry)
@@ -52,4 +48,4 @@ class EarthEngineLayerComponent:
         id = uuid.uuid4().hex
         map_id_dict = ee.Image(self.ee_object_image).getMapId(self.vis_params)
         url = map_id_dict["tile_fetcher"].url_format
-        return TileLayer(id=id, url=url, name=self.name, visible=self.visible, opacity=self.opacity, min_zoom=self.min_zoom, max_zoom=self.max_zoom)
+        return TileLayer(id=id, url=url, name=self.name, visible=self.visible, opacity=self.opacity)

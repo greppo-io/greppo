@@ -9,7 +9,11 @@
                 <p class="text-lg">{{ layerData.title }}</p>
             </div>
             <div class="flex-none pl-4">
-                <button @click="zoomToOverlay" class="mr-2">
+                <button
+                    v-if="layerData.bounds.length"
+                    @click="zoomToOverlay"
+                    class="mr-2"
+                >
                     <unicon
                         name="search-plus"
                         fill="black"
@@ -26,7 +30,7 @@
                 />
             </div>
         </div>
-        <p class="text-sm my-2">{{ layerData.description }}</p>        
+        <p class="text-sm my-2">{{ layerData.description }}</p>
     </div>
 </template>
 

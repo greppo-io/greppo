@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Union
 import uuid
 
 
@@ -12,7 +12,7 @@ class WMSTileLayerComponent:
         visible: bool = True,
         opacity: float = 1.0,
         layers: str = '',
-        subdomains: List[str] = '',
+        subdomains: Union[str, List[str]] = '',
         attribution: str = '',
         transparent: bool = True,
         format: str = 'image/jpeg',
@@ -40,7 +40,7 @@ class WMSTileLayer:
     layers: str
     visible: bool
     opacity: float
-    subdomains: List[str]
+    subdomains: Union[str, List[str]]
     attribution: str
     transparent: bool
     format: str

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { eventHub } from "src/event-hub";
 
-const average = (array) => array.reduce((a, b) => a + b) / array.length;
+// const average = (array) => array.reduce((a, b) => a + b) / array.length;
 
 // Status codes
 // 1: Created application
@@ -36,7 +36,6 @@ const state = {
     TileLayerData: null,
     WMSTileLayerData: null,
     OverlayLayerInfo: null,
-    ViewZoom: [0, 0, 3],
     ChartEventData: null,
     InputComponentInfo: null,
     DrawFeatureData: {
@@ -47,7 +46,7 @@ const state = {
         active: false,
         featuresDrawn: [],
     },
-    InputMutation: false,    
+    InputMutation: false,
 };
 
 const getters = {
@@ -61,7 +60,6 @@ const getters = {
     getTileLayerData: (state) => state.TileLayerData,
     getWMSTileLayerData: (state) => state.WMSTileLayerData,
     getOverlayLayerInfo: (state) => state.OverlayLayerInfo,
-    getViewZoom: (state) => state.ViewZoom,
     getChartEventData: (state) => state.ChartEventData,
     getLayerVisibility: (state) => (id) => {
         // To obtain the visibility of the specific layer passed as argument.
@@ -167,11 +165,10 @@ const actions = {
         const responseWMSTileLayerData = response.data.wms_tile_layer_data;
         const responseVectorLayerData = response.data.vector_layer_data;
         const responseImageLayerData = response.data.image_layer_data;
-        const responseComponentInfo = response.data.component_info;        
-        
+        const responseComponentInfo = response.data.component_info;
+
         var overlayLayerInfo = [];
 
-        console.log(responseBaseLayerData)
         if (responseBaseLayerData.length) {
             ComponentStatus.baseLayer = true;
             commit("commitBaseLayerData", responseBaseLayerData);
@@ -188,12 +185,12 @@ const actions = {
                     title: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
-                    bounds: layerData.bounds,
-                    color: "#123123",
+                    bounds: [],
+                    color: "#10B981",
                 });
             });
-        }        
-        
+        }
+
         if (responseWMSTileLayerData.length) {
             ComponentStatus.wmstileLayer = true;
             ComponentStatus.overlayLayer = true;
@@ -205,11 +202,11 @@ const actions = {
                     title: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
-                    bounds: layerData.bounds,
-                    color: "#123123",
+                    bounds: [],
+                    color: "#10B981",
                 });
             });
-        }               
+        }
 
         if (responseImageLayerData.length) {
             ComponentStatus.imageLayer = true;
@@ -223,7 +220,7 @@ const actions = {
                     description: layerData.description,
                     visible: layerData.visible,
                     bounds: layerData.bounds,
-                    color: "#123123",
+                    color: "#10B981",
                 });
             });
         }
@@ -233,29 +230,16 @@ const actions = {
             ComponentStatus.overlayLayer = true;
             commit("commitVectorLayerData", responseVectorLayerData);
 
-            let viewzoomInfo = [];
             responseVectorLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
                     description: layerData.description,
                     visible: layerData.visible,
-                    color: layerData.style.fillColor,
-                });
-                viewzoomInfo.push({
-                    id: layerData.id,
-                    viewzoom: layerData.viewzoom,
+                    bounds: layerData.bounds,
+                    color: "#10B981",
                 });
             });
-
-            // Commit zoom and view, 1st step just average the x,y and min of zoom.
-            // TODO Next based on the visible layers.
-            const viewzoom = [
-                average(viewzoomInfo.map((a) => a.viewzoom[0])),
-                average(viewzoomInfo.map((a) => a.viewzoom[1])),
-                Math.min(...viewzoomInfo.map((a) => a.viewzoom[2])),
-            ];
-            commit("commitViewZoom", viewzoom);
         }
 
         commit("commitOverlayLayerInfo", overlayLayerInfo);
@@ -467,9 +451,6 @@ const mutations = {
     },
     commitInputMutation: (state, data) => {
         state.InputMutation = data;
-    },
-    commitViewZoom: (state, data) => {
-        state.ViewZoom = data;
     },
     commitChartEventData: (state, data) => {
         state.ChartEventData = data;

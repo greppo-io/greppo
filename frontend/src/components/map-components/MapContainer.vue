@@ -1,7 +1,7 @@
 <template>
     <div class="h-full w-full">
         <!-- The map container will have the map components and the mail control of the application. -->
-        <l-map ref="lmap" :center="center" :zoom="zoom" maxZoom="25">
+        <l-map ref="lmap" :center="center" :zoom="zoom" :maxZoom="25">
             <base-layer v-if="getComponentStatus.baseLayer" />
             <div v-if="getComponentStatus.tileLayer">
                 <tile-layer
@@ -23,7 +23,7 @@
                     :key="vectorData.id"
                     :layerData="vectorData"
                 />
-            </div>            
+            </div>
             <div v-if="getComponentStatus.imageLayer">
                 <image-layer
                     v-for="imageData in getImageLayerData"
@@ -48,31 +48,6 @@
                     ></unicon>
                 </a>
             </l-control>
-            <l-control class="leaflet-bar" position="topleft">
-                <a
-                    class="control-icon"
-                    role="button"
-                    title="Full-screen toggle"
-                    @click="$emit('toggle-fullscreen', isFullScreen)"
-                >
-                    <unicon
-                        v-show="!isFullScreen"
-                        name="expand-arrows-alt"
-                        fill="black"
-                        width="19px"
-                        height="19px"
-                        class="align-middle"
-                    ></unicon>
-                    <unicon
-                        v-show="isFullScreen"
-                        name="compress-arrows"
-                        fill="black"
-                        width="19px"
-                        height="19px"
-                        class="align-middle"
-                    ></unicon>
-                </a>
-            </l-control>
             <draw-feature v-if="getComponentStatus.drawFeature" />
         </l-map>
     </div>
@@ -90,6 +65,8 @@ import DrawFeature from "./DrawFeature.vue";
 import ImageLayer from "./ImageLayer.vue";
 import { eventHub } from "src/event-hub";
 
+const average = (array) => array.reduce((a, b) => a + b) / array.length;
+
 export default {
     name: "CenterContainer",
     components: {
@@ -103,24 +80,32 @@ export default {
         ImageLayer,
         "wms-tile-layer": WMSTileLayer,
     },
-    props: {
-        isFullScreen: Boolean,
-    },
     data() {
         return {
             zoom: 3,
             center: [0, 0],
             layerData: null,
-            viewzoom: null,
         };
     },
     methods: {
         resetViewHandler() {
-            this.viewzoom = this.getViewZoom;
-            this.$refs.lmap.mapObject.setView(
-                [this.viewzoom[0], this.viewzoom[1]],
-                this.viewzoom[2]
-            );
+            var b00 = [];
+            var b01 = [];
+            var b10 = [];
+            var b11 = [];
+            this.getOverlayLayerInfo.forEach((layer) => {
+                if (layer.visible && layer.bounds.length) {
+                    b00.push(layer.bounds[0][0]);
+                    b01.push(layer.bounds[0][1]);
+                    b10.push(layer.bounds[1][0]);
+                    b11.push(layer.bounds[1][1]);
+                }
+            });
+            const layerBounds = [
+                [average(b00), average(b01)],
+                [average(b10), average(b11)],
+            ];
+            this.$refs.lmap.mapObject.fitBounds(layerBounds);
         },
         resetMapContainerSize() {
             setTimeout(() => this.$refs.lmap.mapObject.invalidateSize(), 10);
@@ -132,7 +117,7 @@ export default {
             "getWMSTileLayerData",
             "getVectorLayerData",
             "getImageLayerData",
-            "getViewZoom",
+            "getOverlayLayerInfo",
             "getComponentStatus",
         ]),
     },

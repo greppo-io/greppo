@@ -18,10 +18,8 @@ key_file: The path to a file containing the private key associated with
 
 key_data: Raw key data to use, if key_file is not specified.
 """
-email = 'greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com'
-key_file = '/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json'
-credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
-ee.Initialize(credentials)
+
+
 
 # # Compute the trend of night-time lights.
 
@@ -53,6 +51,13 @@ ee.Initialize(credentials)
 #     attribution='Map Data &copy; <a href="https://earthengine.google.com/">Google Earth Engine</a>',
 # )
 
+#############
+
+email = 'greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com'
+key_file = '/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json'
+credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
+ee.Initialize(credentials)
+
 dem = ee.Image('USGS/SRTMGL1_003')
 ee_image_object = dem.updateMask(dem.gt(0))
 vis_params = {
@@ -67,8 +72,8 @@ app.ee_layer(ee_object=ee_image_object,
 
 data_gdf_1 = gpd.read_file("tests/data/buildings.geojson")
 
-app.overlay_layer(
-    data_gdf_1,
+app.vector_layer(
+    data=data_gdf_1,
     title="Buildings",
     description="Buildings in Rivierenbuurt, Amsterdam",
     style={"fillColor": "#F87979"},
@@ -87,5 +92,4 @@ app.base_layer(
     attribution='&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 )
 
-app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi',
-                   name='Weather Data', format='image/png', layers='nexrad-n0r-900913', transparent=True)
+app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', name='Weather Data', format='image/png', layers='nexrad-n0r-900913')
