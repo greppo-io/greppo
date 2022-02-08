@@ -7,7 +7,7 @@ import uuid
 from io import BytesIO
 from typing import Any
 from typing import Dict
-from typing import List
+from typing import List, Union
 
 import numpy as np
 import rasterio
@@ -28,7 +28,8 @@ from .input_types import Number
 from .input_types import Select
 from .input_types import Text
 from .input_types import Display
-from .layers.base_layer import BaseLayer
+
+from .layers.base_layer import BaseLayerComponent, BaseLayer
 from .layers.tile_layer import TileLayer, TileLayerComponent
 from .layers.wms_tile_layer import WMSTileLayer, WMSTileLayerComponent
 from .layers.vector_layer import VectorLayer, VectorLayerComponent
@@ -86,6 +87,7 @@ class GreppoAppProxy(object):
         self.wms_tile_layers: List[WMSTileLayer] = []
         self.vector_layers: List[VectorLayer] = []
         self.image_layers: List[ImageLayer] = []
+        # TODO Cleanup raster temp
         self.raster_image_reference: List[bytes] = []
         self.registered_inputs: List[ComponentInfo] = []
 
@@ -149,16 +151,11 @@ class GreppoAppProxy(object):
 
     def base_layer(
         self,
-        name: str,
-        visible: bool,
-        url: str,
-        subdomains: List[str],
-        attribution: str,
+        **kwargs
     ):
-        id = uuid.uuid4().hex
-        self.base_layers.append(
-            BaseLayer(id, name, visible, url, subdomains, attribution)
-        )
+        base_layer_component = BaseLayerComponent(**kwargs)
+        base_layer_dataclass = base_layer_component.convert_to_dataclass()
+        self.base_layers.append(base_layer_dataclass)
 
     def vector_layer(self, **kwargs):
         vector_layer_component = VectorLayerComponent(**kwargs)
