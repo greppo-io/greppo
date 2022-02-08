@@ -1,4 +1,5 @@
 from greppo import app
+import geopandas as gpd
 
 import ee
 
@@ -55,9 +56,33 @@ ee.Initialize(credentials)
 dem = ee.Image('USGS/SRTMGL1_003')
 ee_image_object = dem.updateMask(dem.gt(0))
 vis_params = {
-  'min': 0,
-  'max': 4000,
-  'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
+    'min': 0,
+    'max': 4000,
+    'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
 name = 'DEM'
 print(vis_params)
-app.ee_layer(ee_object=ee_image_object, vis_params=vis_params, name=name)
+app.ee_layer(ee_object=ee_image_object,
+             vis_params=vis_params, name=name, visible=True)
+
+
+data_gdf_1 = gpd.read_file("tests/data/buildings.geojson")
+
+app.overlay_layer(
+    data_gdf_1,
+    title="Buildings",
+    description="Buildings in Rivierenbuurt, Amsterdam",
+    style={"fillColor": "#F87979"},
+    visible=True,
+)
+
+app.raster_layer(file_path="tests/data/rvrnbrt.TIF", title="DEM",
+                 description="Digital elevation mapping of Amsterdam", visible=True)
+
+
+app.base_layer(
+    name="CartoDB Light",
+    visible=True,
+    url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png",
+    subdomains=None,
+    attribution='&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+)

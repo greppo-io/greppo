@@ -20,16 +20,6 @@ export default {
     props: {
         imageData: Object,
     },
-    data() {
-        return {
-            // imageUrl:
-            //     "http://127.0.0.1:8000/raster",
-            // imageBounds: [
-            //     [52.32145194544034, 4.885192279157401],
-            //     [52.35012299897077, 4.899747081326474],
-            // ],
-        };
-    },
     computed: {
         ...mapGetters(["getLayerVisibility"]),
     },

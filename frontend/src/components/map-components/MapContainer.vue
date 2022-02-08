@@ -10,23 +10,16 @@
                     :layerData="tileData"
                 />
             </div>
-            <div v-if="getComponentStatus.overlayLayer">
+            <div v-if="getComponentStatus.vectorLayer">
                 <vector-layer
-                    v-for="vectorData in getVectorData"
+                    v-for="vectorData in getVectorLayerData"
                     :key="vectorData.id"
                     :layerData="vectorData"
                 />
-            </div>
-            <div v-if="getComponentStatus.rasterLayer">
-                <raster-layer
-                    v-for="rasterData in getRasterData"
-                    :key="rasterData.id"
-                    :rasterData="rasterData"
-                />
-            </div>
+            </div>            
             <div v-if="getComponentStatus.imageLayer">
                 <image-layer
-                    v-for="imageData in getImageData"
+                    v-for="imageData in getImageLayerData"
                     :key="imageData.id"
                     :imageData="imageData"
                 />
@@ -86,7 +79,6 @@ import BaseLayer from "./BaseLayer";
 import TileLayer from "./TileLayer";
 import { mapGetters } from "vuex";
 import DrawFeature from "./DrawFeature.vue";
-import RasterLayer from "./RasterLayer.vue";
 import ImageLayer from "./ImageLayer.vue";
 import { eventHub } from "src/event-hub";
 
@@ -100,7 +92,6 @@ export default {
         TileLayer,
         VectorLayer,
         DrawFeature,
-        RasterLayer,
         ImageLayer,
     },
     props: {
@@ -129,9 +120,8 @@ export default {
     computed: {
         ...mapGetters([
             "getTileLayerData",
-            "getVectorData",
-            "getRasterData",
-            "getImageData",
+            "getVectorLayerData",
+            "getImageLayerData",
             "getViewZoom",
             "getComponentStatus",
         ]),

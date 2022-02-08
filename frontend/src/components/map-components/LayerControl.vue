@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="getComponentStatus.baseLayer || getComponentStatus.overlayLayer || getComponentStatus.tileLayer"
+        v-if="getComponentStatus.baseLayer || getComponentStatus.overlayLayer"
         class="block my-5 border-2 rounded"
         :class="collapse ? 'border-white' : 'border-gray-100'"
     >

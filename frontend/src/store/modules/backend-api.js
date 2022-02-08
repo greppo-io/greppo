@@ -13,8 +13,8 @@ const state = {
     ComponentStatus: {
         baseLayer: false,
         tileLayer: false,
+        vectorLayer: false,
         overlayLayer: false,
-        rasterLayer: false,
         imageLayer: false,
         mapComponent: false,
         inputComponent: false,
@@ -29,8 +29,9 @@ const state = {
         status: false,
         message: "",
     },
-    VectorData: null,
-    BaseLayerInfo: null,
+    VectorLayerData: null,
+    ImageLayerData: null,
+    BaseLayerData: null,
     TileLayerData: null,
     OverlayLayerInfo: null,
     ViewZoom: [0, 0, 3],
@@ -44,10 +45,7 @@ const state = {
         active: false,
         featuresDrawn: [],
     },
-    InputMutation: false,
-    RasterData: null,
-    ImageData: null,
-    // RasterLayerInfo: null,
+    InputMutation: false,    
 };
 
 const getters = {
@@ -56,8 +54,8 @@ const getters = {
     getInfoModal: (state) => state.InfoModal,
     getErrorModal: (state) => state.ErrorModal,
     getComponentStatus: (state) => state.ComponentStatus,
-    getVectorData: (state) => state.VectorData,
-    getBaseLayerInfo: (state) => state.BaseLayerInfo,
+    getVectorLayerData: (state) => state.VectorLayerData,
+    getBaseLayerData: (state) => state.BaseLayerData,
     getTileLayerData: (state) => state.TileLayerData,
     getOverlayLayerInfo: (state) => state.OverlayLayerInfo,
     getViewZoom: (state) => state.ViewZoom,
@@ -73,9 +71,7 @@ const getters = {
     },
     getInputMutation: (state) => state.InputMutation,
     getDrawFeatureData: (state) => state.DrawFeatureData,
-    getRasterData: (state) => state.RasterData,
-    getImageData: (state) => state.ImageData,
-    // getRasterLayerInfo: (state) => state.RasterLayerInfo,
+    getImageLayerData: (state) => state.ImageLayerData,
 };
 
 const actions = {
@@ -163,48 +159,17 @@ const actions = {
         var ComponentStatus = state.ComponentStatus;
 
         console.log(response.data);
-        const responseBaseLayerInfo = response.data.base_layer_info;
-        const responseTileLayerData = response.data.tile_layer_info;
-        const responseVectorData = response.data.overlay_layer_data;
-        const responseComponentInfo = response.data.component_info;
-        const responseRasterData = response.data.raster_layer_data;
-        const responseImageData = response.data.image_layer_data;
+        const responseBaseLayerData = response.data.base_layer_data;
+        const responseTileLayerData = response.data.tile_layer_data;
+        const responseVectorLayerData = response.data.vector_layer_data;
+        const responseImageLayerData = response.data.image_layer_data;
+        const responseComponentInfo = response.data.component_info;        
+        
         var overlayLayerInfo = [];
 
-        if (responseBaseLayerInfo.length) {
+        if (responseBaseLayerData.length) {
             ComponentStatus.baseLayer = true;
-            commit("commitBaseLayerInfo", responseBaseLayerInfo);
-        }
-
-        // const responseRasterData = [
-        //     {
-        //         id: "1qaz",
-        //         title: "raster 1",
-        //         description: "description raster 1",
-        //         url: "http://www.lib.utexas.edu/maps/historical/newark_nj_1922.jpg",
-        //         bounds: [
-        //             [40.712216, -74.22655],
-        //             [40.773941, -74.12544],
-        //         ],
-        //         visible: true,
-        //     },
-        // ];
-
-        if (responseRasterData.length) {
-            ComponentStatus.rasterLayer = true;
-            commit("commitRasterData", responseRasterData);
-
-            responseRasterData.forEach(function (layerData) {
-                overlayLayerInfo.push({
-                    id: layerData.id,
-                    title: layerData.title,
-                    description: layerData.description,
-                    visible: layerData.visible,
-                    bounds: layerData.bounds,
-                    color: "#123123",
-                    type: "raster",
-                });
-            });
+            commit("commitBaseLayerData", responseBaseLayerData);
         }
 
         if (responseTileLayerData.length) {
@@ -217,37 +182,19 @@ const actions = {
                     id: layerData.id,
                     title: layerData.name,
                     description: layerData.description,
-                    visible: true,
+                    visible: layerData.visible,
                     bounds: [],
                     color: "#123123",
-                    type: "tile",
                 });
             });
-        }
+        }               
 
-        if (responseRasterData.length) {
-            ComponentStatus.rasterLayer = true;
-            commit("commitRasterData", responseRasterData);
-
-            responseRasterData.forEach(function (layerData) {
-                overlayLayerInfo.push({
-                    id: layerData.id,
-                    title: layerData.title,
-                    description: layerData.description,
-                    visible: layerData.visible,
-                    bounds: layerData.bounds,
-                    color: "#123123",
-                    type: "raster",
-                });
-            });
-        }
-
-        if (responseImageData.length) {
+        if (responseImageLayerData.length) {
             ComponentStatus.imageLayer = true;
             ComponentStatus.overlayLayer = true;
-            commit("commitImageData", responseImageData);
+            commit("commitImageLayerData", responseImageLayerData);
 
-            responseImageData.forEach(function (layerData) {
+            responseImageLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
@@ -255,24 +202,23 @@ const actions = {
                     visible: layerData.visible,
                     bounds: layerData.bounds,
                     color: "#123123",
-                    type: "image",
                 });
             });
         }
 
-        if (responseVectorData.length) {
+        if (responseVectorLayerData.length) {
+            ComponentStatus.vectorLayer = true;
             ComponentStatus.overlayLayer = true;
-            commit("commitVectorData", responseVectorData);
+            commit("commitVectorLayerData", responseVectorLayerData);
 
             let viewzoomInfo = [];
-            responseVectorData.forEach(function (layerData) {
+            responseVectorLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
                     title: layerData.title,
                     description: layerData.description,
                     visible: layerData.visible,
                     color: layerData.style.fillColor,
-                    type: "vector",
                 });
                 viewzoomInfo.push({
                     id: layerData.id,
@@ -334,8 +280,7 @@ const actions = {
         if (
             ComponentStatus.baseLayer ||
             ComponentStatus.overlayLayer ||
-            ComponentStatus.drawFeature || 
-            ComponentStatus.tileLayer
+            ComponentStatus.drawFeature
         ) {
             ComponentStatus.mapComponent = true;
         }
@@ -483,11 +428,11 @@ const mutations = {
     commitErrorModal: (state, data) => {
         state.ErrorModal = data;
     },
-    commitVectorData: (state, data) => {
-        state.VectorData = data;
+    commitVectorLayerData: (state, data) => {
+        state.VectorLayerData = data;
     },
-    commitBaseLayerInfo: (state, data) => {
-        state.BaseLayerInfo = data;
+    commitBaseLayerData: (state, data) => {
+        state.BaseLayerData = data;
     },
     commitTileLayerData: (state, data) => {
         state.TileLayerData = data;
@@ -513,7 +458,7 @@ const mutations = {
         }
     },
     updateBaseLayerVisibility: (state, layerID) => {
-        state.BaseLayerInfo.forEach((layer) => {
+        state.BaseLayerData.forEach((layer) => {
             if (layer.id == layerID) {
                 layer.visible = true;
             } else {
@@ -538,15 +483,9 @@ const mutations = {
     commitDrawFeatureData: (state, data) => {
         state.DrawFeatureData = data;
     },
-    commitRasterData: (state, data) => {
-        state.RasterData = data;
+    commitImageLayerData: (state, data) => {
+        state.ImageLayerData = data;
     },
-    commitImageData: (state, data) => {
-        state.ImageData = data;
-    },
-    // commitRasterLayerInfo: (state, data) => {
-    //     state.RasterLayerInfo = data;
-    // },
 };
 
 export default {

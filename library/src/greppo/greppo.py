@@ -32,7 +32,6 @@ from .layers.base_layer import BaseLayer
 from .layers.tile_layer import TileLayer, TileLayerComponent
 from .layers.image_layer import ImageLayer
 from .layers.overlay_layer import OverlayLayer
-from .layers.raster_layer import RasterLayer
 from .layers.ee_layer import EarthEngineLayerComponent
 
 
@@ -83,7 +82,6 @@ class GreppoAppProxy(object):
         self.base_layers: List[BaseLayer] = []
         self.tile_layers: List[TileLayer] = []
         self.overlay_layers: List[OverlayLayer] = []
-        self.raster_layers: List[RasterLayer] = []
         self.image_layers: List[ImageLayer] = []
         self.raster_image_reference: List[bytes] = []
         self.registered_inputs: List[ComponentInfo] = []
@@ -230,8 +228,8 @@ class GreppoAppProxy(object):
             (bounds_top, bounds_left) = transform * (width, height)
             bounds = [[bounds_left, bounds_bottom], [bounds_right, bounds_top]]
 
-            self.raster_layers.append(
-                RasterLayer(id, title, description, url, bounds, visible)
+            self.image_layers.append(
+                ImageLayer(id, title, description, url, bounds, visible)
             )
 
     def image_layer(self, file_path: str, title: str, description: str, visible: bool):
@@ -279,10 +277,10 @@ class GreppoAppProxy(object):
         """
 
         app_output = {
-            "base_layer_info": [],
-            "tile_layer_info": [],
-            "overlay_layer_data": [],
-            "raster_layer_data": [],
+            "base_layer_data": [],
+            "tile_layer_data": [],
+            "wms_tile_layer_data": [],
+            "vector_layer_data": [],
             "image_layer_data": [],
             "component_info": [],
         }
@@ -293,7 +291,7 @@ class GreppoAppProxy(object):
                 if k == "data":
                     _v = json.loads(v.to_json())
                 s[k] = _v
-            app_output["tile_layer_info"].append(s)
+            app_output["tile_layer_data"].append(s)
 
         for _base_layer in self.base_layers:
             s = {}
@@ -302,7 +300,7 @@ class GreppoAppProxy(object):
                 if k == "data":
                     _v = json.loads(v.to_json())
                 s[k] = _v
-            app_output["base_layer_info"].append(s)
+            app_output["base_layer_data"].append(s)
 
         for _overlay_layer in self.overlay_layers:
             s = {}
@@ -312,15 +310,7 @@ class GreppoAppProxy(object):
                     _v = json.loads(v.to_json())
                 s[k] = _v
 
-            app_output["overlay_layer_data"].append(s)
-
-        for _raster_layer in self.raster_layers:
-            s = {}
-            for k, v in _raster_layer.__dict__.items():
-                _v = v
-                s[k] = _v
-
-            app_output["raster_layer_data"].append(s)
+            app_output["vector_layer_data"].append(s)
 
         for _image_layer in self.image_layers:
             s = {}

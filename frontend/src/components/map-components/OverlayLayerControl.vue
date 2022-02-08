@@ -26,13 +26,7 @@
                 />
             </div>
         </div>
-        <p class="text-sm my-2">{{ layerData.description }}</p>
-        <div
-            class="absolute bottom-1 right-2"
-            style="font-size: 9px;"
-        >
-            <p>{{ layerData.type }}</p>
-        </div>
+        <p class="text-sm my-2">{{ layerData.description }}</p>        
     </div>
 </template>
 
