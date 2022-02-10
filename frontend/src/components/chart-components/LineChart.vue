@@ -1,6 +1,6 @@
 <template>
     <div class="my-10 mx-2">
-        <p class="text-xl my-1">{{ title }}</p>
+        <p class="text-xl my-1">{{ name }}</p>
         <p class="text-base my-1">{{ description }}</p>
         <p class="text-sm my-1" v-if="highlightStatus">
             Selected: {{ selectedData.dataLabel }},
@@ -30,7 +30,7 @@ export default {
     name: "LineChart",
     props: {
         id: String,
-        title: String,
+        name: String,
         description: String,
         chartData: Object,
     },

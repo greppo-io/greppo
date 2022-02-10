@@ -7,7 +7,7 @@ from geopandas import GeoDataFrame as gdf
 @dataclass
 class ImageLayer:
     id: str
-    title: str
+    name: str
     description: str
     url: str
     bounds: List[List]

@@ -11,11 +11,13 @@ class EarthEngineLayerComponent:
         self,
         ee_object: Union[ee.Image, ee.ImageCollection, ee.FeatureCollection, ee.Feature, ee.Geometry],
         name: str = '',
+        description: str = '',
         visible: bool = True,
         vis_params: Dict = {},
         opacity: float = 1.0,
     ):
         self.name = name
+        self.description = description
         self.visible = visible
         self.opacity = opacity
 
@@ -48,4 +50,4 @@ class EarthEngineLayerComponent:
         id = uuid.uuid4().hex
         map_id_dict = ee.Image(self.ee_object_image).getMapId(self.vis_params)
         url = map_id_dict["tile_fetcher"].url_format
-        return TileLayer(id=id, url=url, name=self.name, visible=self.visible, opacity=self.opacity)
+        return TileLayer(id=id, url=url, name=self.name, description=self.description, visible=self.visible, opacity=self.opacity)

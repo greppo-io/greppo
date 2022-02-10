@@ -6,7 +6,7 @@
     >
         <div class="flex">
             <div class="flex-grow">
-                <p class="text-lg">{{ layerData.title }}</p>
+                <p class="text-lg">{{ layerData.name }}</p>
             </div>
             <div class="flex-none pl-4">
                 <button

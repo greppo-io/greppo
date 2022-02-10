@@ -28,7 +28,7 @@ filter_gdf = building_gdf[building_gdf.building == filter_select[0]]
 
 app.overlay_layer(
     filter_gdf,
-    title="Communes",
+    name="Communes",
     description="Communes in Normandy, France",
     style={"fillColor": "#F87979"},
     visible=True,

@@ -182,7 +182,7 @@ const actions = {
             responseTileLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
-                    title: layerData.name,
+                    name: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
                     bounds: [],
@@ -199,7 +199,7 @@ const actions = {
             responseWMSTileLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
-                    title: layerData.name,
+                    name: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
                     bounds: [],
@@ -216,7 +216,7 @@ const actions = {
             responseImageLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
-                    title: layerData.title,
+                    name: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
                     bounds: layerData.bounds,
@@ -233,7 +233,7 @@ const actions = {
             responseVectorLayerData.forEach(function (layerData) {
                 overlayLayerInfo.push({
                     id: layerData.id,
-                    title: layerData.title,
+                    name: layerData.name,
                     description: layerData.description,
                     visible: layerData.visible,
                     bounds: layerData.bounds,

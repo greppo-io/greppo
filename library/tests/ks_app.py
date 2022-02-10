@@ -19,7 +19,7 @@ selected_image = image_files.loc[image_files['title'] == next_select]
 
 app.image_layer(
     file_path="tests/data/" + selected_image.iloc[0]['file'],
-    title=selected_image.iloc[0]['title'],
+    name=selected_image.iloc[0]['title'],
     description=selected_image.iloc[0]['description'],
     visible=True,
 )
@@ -36,7 +36,6 @@ for i in range(10, 0, -1):
 
 app.bar_chart(
     name="some-name",
-    title="some_title",
     description="some_chart",
     x=[i for i in range(10)],
     y=y,

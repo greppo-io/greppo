@@ -1,6 +1,6 @@
 <template>
     <l-geo-json
-        :name="layerData.title"
+        :name="layerData.name"
         :geojson="layerData.data"
         :options="options"
         :visible="getLayerVisibility.bind(this, layerData.id)()"

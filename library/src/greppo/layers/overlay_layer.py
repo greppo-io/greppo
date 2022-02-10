@@ -8,7 +8,7 @@ from geopandas import GeoDataFrame as gdf
 class OverlayLayer:
     id: str
     data: gdf
-    title: str
+    name: str
     description: str
     style: dict
     visible: bool

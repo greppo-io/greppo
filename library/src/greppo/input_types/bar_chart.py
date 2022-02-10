@@ -23,7 +23,6 @@ class BarChart:
     def __init__(
         self,
         name: str,
-        title: str,
         description: str,
         x: List,
         y: List,
@@ -31,7 +30,6 @@ class BarChart:
         input_updates: Dict[str, Any] = {},
     ):
         self.input_name = name
-        self.title = title
         self.description = description
         self.input_updates = input_updates
 
@@ -45,13 +43,11 @@ class BarChart:
     def convert_to_component_info(self):
         _id, name = self.input_name.split("_")
         _type = BarChart.__name__
-        title = self.title
 
         return BarChartComponentInfo(
             name=name,
             id=_id,
             type=_type,
-            title=self.title,
             description=self.description,
             chartdata=self.chartdata,
         )
@@ -72,6 +68,5 @@ class BarChartComponentInfo:
     name: str
     id: str
     type: str
-    title: str
     description: str
     chartdata: ChartData

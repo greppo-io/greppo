@@ -23,8 +23,7 @@ class ChartData:
 class LineChart:
     def __init__(
         self,
-        name: str,  # title and name should be the same
-        title: str,
+        name: str,
         description: Optional[str],
         x,  # TODO needs typing
         y,
@@ -32,12 +31,12 @@ class LineChart:
         input_updates: Dict[str, Any] = {},
     ):
         self.input_name = name
-        self.title = title
         self.description = description
         self.input_updates = input_updates
 
         # background is defaulted
-        dataset = Dataset(label=description, data=y, backgroundColor=backgroundColor)
+        dataset = Dataset(label=description, data=y,
+                          backgroundColor=backgroundColor)
         self.chartdata = ChartData(labels=x, datasets=[dataset])
 
     def get_value(self):
@@ -51,7 +50,6 @@ class LineChart:
             name=name,
             id=_id,
             type=_type,
-            title=self.title,
             description=self.description,
             chartdata=self.chartdata,
         )
@@ -72,6 +70,5 @@ class LineChartComponentInfo:
     name: str
     id: str
     type: str
-    title: str
     description: str
     chartdata: ChartData

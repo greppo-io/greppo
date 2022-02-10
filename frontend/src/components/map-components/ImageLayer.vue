@@ -1,6 +1,6 @@
 <template>
     <l-image-overlay
-        :name="imageData.title"
+        :name="imageData.name"
         :url="imageData.url"
         :bounds="imageData.bounds"
         :visible="getLayerVisibility.bind(this, imageData.id)()"

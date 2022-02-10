@@ -15,13 +15,14 @@ app.base_layer(
 app.tile_layer(
     name="Open Street Map",
     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    visible=False
+    visible=False,
+    description='A OSM tile layer'
 )
 
 data_gdf = gpd.read_file("tests/data/us-states.geojson")
 app.overlay_layer(
     data_gdf,
-    title="USA States",
+    name="USA States",
     description="Boundaries of States, USA",
     style={"fillColor": "#F87979"},
     visible=True,
@@ -34,73 +35,73 @@ text0 = """
 * Authenticate/Initialize
 * Perform EE operations
 * Get the `ee_object`
-* Pass hte `ee_object` to the `app.ee_layer()`
+* Pass the `ee_object` to the `app.ee_layer()`
 """
 app.display(value=text0, name="text0")
 
-# email = 'greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com'
-# key_file = '/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json'
-# credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
-# ee.Initialize(credentials)
+email = 'greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com'
+key_file = '/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json'
+credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
+ee.Initialize(credentials)
 
-# dem = ee.Image('USGS/SRTMGL1_003')
-# ee_image_object = dem.updateMask(dem.gt(0))
-# vis_params = {
-#     'min': 0,
-#     'max': 4000,
-#     'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
-# name = 'DEM'
-# print(vis_params)
-# app.ee_layer(ee_object=ee_image_object, vis_params=vis_params, name=name)
+dem = ee.Image('USGS/SRTMGL1_003')
+ee_image_object = dem.updateMask(dem.gt(0))
+vis_params = {
+    'min': 0,
+    'max': 4000,
+    'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
+name = 'DEM'
+print(vis_params)
+app.ee_layer(ee_object=ee_image_object, vis_params=vis_params, name=name, description='EE layer')
 
-# app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', name='Weather Data', format='image/png', layers='nexrad-n0r-900913')
-
-
-# text1 = """
-# ## Input APIs
-
-# - Number input: `app.number(value=10, name="Number input 1")`
-# - Text input: `app.text(value="here is a text", name="Text input 1")`
-# - Dropdown select: `app.select(name="First selector", options=["a", "b", "c"], default="a")`
-# - Multi-select: `app.multiselect(name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"])`
-# """
-# app.display(value=text1, name="text1")
-
-# number_1 = app.number(value=10, name="Number input 1")
-# text_1 = app.text(value="here is a text", name="Text input 1")
-# select1 = app.select(name="First selector", options=[
-#                      "a", "b", "c"], default="a")
-# multiselect1 = app.multiselect(
-#     name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"]
-# )
+app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', name='Weather Data', format='image/png', layers='nexrad-n0r-900913', description='Weather WMS tile layer')
 
 
-# text2 = """
-# ## The draw feature
+text1 = """
+## Input APIs
 
-# ```python
-# draw_features = gpd.read_file("data/features.geojson")
-# draw_feature_input = app.draw_feature(
-#     name="Draw random features", features=draw_features, geometry=["Point", "LineString", "Polygon"]
-# )
-# ```
-# """
-# app.display(value=text2, name="text2")
+- Number input: `app.number(value=10, name="Number input 1")`
+- Text input: `app.text(value="here is a text", name="Text input 1")`
+- Dropdown select: `app.select(name="First selector", options=["a", "b", "c"], default="a")`
+- Multi-select: `app.multiselect(name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"])`
+"""
+app.display(value=text1, name="text1")
+
+number_1 = app.number(value=10, name="Number input 1")
+text_1 = app.text(value="here is a text", name="Text input 1")
+select1 = app.select(name="First selector", options=[
+                     "a", "b", "c"], default="a")
+multiselect1 = app.multiselect(
+    name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"]
+)
+
+
+text2 = """
+## The draw feature
+
+```python
+draw_features = gpd.read_file("data/features.geojson")
+draw_feature_input = app.draw_feature(
+    name="Draw random features", features=draw_features, geometry=["Point", "LineString", "Polygon"]
+)
+```
+"""
+app.display(value=text2, name="text2")
 
 line_feature = gpd.read_file("tests/data/line.geojson")
 draw_feature_line = app.draw_feature(
     name="Draw line features", features=line_feature, geometry=["LineString"]
 )
 
-# point_feature = gpd.read_file("tests/data/point.geojson")
-# draw_feature_point = app.draw_feature(
-#     name="Draw point features", features=point_feature, geometry=["Point", "LineString"]
-# )
+point_feature = gpd.read_file("tests/data/point.geojson")
+draw_feature_point = app.draw_feature(
+    name="Draw point features", features=point_feature, geometry=["Point", "LineString"]
+)
 
-# polygon_feature = gpd.read_file("tests/data/polygon.geojson")
-# draw_feature_polygon = app.draw_feature(
-#     name="Draw polygon features", features=polygon_feature, geometry=["Polygon"]
-# )
+polygon_feature = gpd.read_file("tests/data/polygon.geojson")
+draw_feature_polygon = app.draw_feature(
+    name="Draw polygon features", features=polygon_feature, geometry=["Polygon"]
+)
 
 text3 = """
 ## Some charts to display
@@ -116,7 +117,6 @@ for i in range(10, 0, -1):
 
 app.line_chart(
     name="some-name",
-    title="some_title",
     description="some_chart",
     x=[i for i in range(10)],
     y=y,
@@ -129,7 +129,6 @@ for i in range(10, 0, -1):
 
 app.bar_chart(
     name="some-name",
-    title="some_title",
     description="some_chart",
     x=[i for i in range(10)],
     y=y,

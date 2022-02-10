@@ -3,14 +3,14 @@
         <bar-chart
             v-if="data.type == 'BarChart'"
             :id="data.id"
-            :title="data.title"
+            :name="data.name"
             :description="data.description"
             :chartData="data.chartdata"
         />
         <line-chart
             v-if="data.type == 'LineChart'"
             :id="data.id"
-            :title="data.title"
+            :name="data.name"
             :description="data.description"
             :chartData="data.chartdata"
         />

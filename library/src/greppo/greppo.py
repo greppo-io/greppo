@@ -48,8 +48,8 @@ class GreppoApp(object):
     can access via `self.number`.
     """
 
-    def __init__(self, title: str = "Untitled App"):
-        self.title: str = title
+    def __init__(self, name: str = "Untitled App"):
+        self.name: str = name
         self.display = Display
         self.select = Select
         self.multiselect = Multiselect
@@ -168,14 +168,14 @@ class GreppoAppProxy(object):
         self.vector_layers.append(vector_layer_dataclass)
 
     def overlay_layer(
-        self, data: gdf, title: str, description: str, style: dict, visible: bool
+        self, data: gdf, name: str, description: str, style: dict, visible: bool
     ):
         vector_layer_component = VectorLayerComponent(
-            data=data, title=title, description=description, style=style, visible=visible)
+            data=data, name=name, description=description, style=style, visible=visible)
         vector_layer_dataclass = vector_layer_component.convert_to_dataclass()
         self.vector_layers.append(vector_layer_dataclass)
 
-    def raster_layer(self, file_path: str, title: str, description: str, visible: bool):
+    def raster_layer(self, file_path: str, name: str, description: str, visible: bool):
         id = uuid.uuid4().hex
 
         src_dataset = rasterio.open(file_path)
@@ -237,10 +237,10 @@ class GreppoAppProxy(object):
             bounds = [[bounds_left, bounds_bottom], [bounds_right, bounds_top]]
 
             self.image_layers.append(
-                ImageLayer(id, title, description, url, bounds, visible)
+                ImageLayer(id, name, description, url, bounds, visible)
             )
 
-    def image_layer(self, file_path: str, title: str, description: str, visible: bool):
+    def image_layer(self, file_path: str, name: str, description: str, visible: bool):
         id = uuid.uuid4().hex
 
         file_ext = file_path.split(".")[-1].lower()
@@ -264,7 +264,7 @@ class GreppoAppProxy(object):
         ]
 
         self.image_layers.append(
-            ImageLayer(id, title, description, url, bounds, visible)
+            ImageLayer(id, name, description, url, bounds, visible)
         )
 
     def update_inputs(self, inputs: Dict[str, Any]):

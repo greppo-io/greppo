@@ -9,6 +9,7 @@ class WMSTileLayerComponent:
         self,
         url: str,
         name: str,
+        description: str = '',
         visible: bool = True,
         opacity: float = 1.0,
         layers: str = '',
@@ -19,6 +20,7 @@ class WMSTileLayerComponent:
     ):
         self.url = url
         self.name = name
+        self.description = description
         self.visible = visible
         self.opacity = opacity
         self.layers = layers,
@@ -29,7 +31,7 @@ class WMSTileLayerComponent:
 
     def convert_to_dataclass(self):
         id = uuid.uuid4().hex
-        return WMSTileLayer(id=id, url=self.url, name=self.name, visible=self.visible, opacity=self.opacity, layers=self.layers, subdomains=self.subdomains, attribution=self.attribution, transparent=self.transparent, format=self.format)
+        return WMSTileLayer(id=id, url=self.url, name=self.name, description=self.description, visible=self.visible, opacity=self.opacity, layers=self.layers, subdomains=self.subdomains, attribution=self.attribution, transparent=self.transparent, format=self.format)
 
 
 @dataclass()
@@ -37,6 +39,7 @@ class WMSTileLayer:
     id: str
     url: str
     name: str
+    description: str
     layers: str
     visible: bool
     opacity: float
