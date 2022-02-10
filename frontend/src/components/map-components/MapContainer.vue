@@ -157,7 +157,7 @@ export default {
     letter-spacing: 0.03em;
     font-weight: 400;
     padding: 3px 6px;
-    border-radius: 4px 0 0 0;
+    border-radius: 0 4px 0 0;
     color: #666666;
 }
 .control-icon {
