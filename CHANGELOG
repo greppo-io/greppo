@@ -1,0 +1,15 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.0.15] - 2021-02-11
+### Added
+- `app.tile_layer`, `app.wms_tile_layer`, `app.vector_layer`, `app.ee_layer`
+- Added support for Google Earth Engine.
+- Support for `app.base_layer` to use `geopandas/xyzservices`. 
+
+### Changed
+- `app.bar_chart`, `app.line_chart` will not have `title` argument anymore. Will only have `name` argument.
+
+### Removed
+- `title` argument to components are removed and will now will have only `name`

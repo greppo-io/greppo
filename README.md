@@ -38,7 +38,7 @@ buildings_gdf = gpd.read_file("./data/buildings.geojson")
 
 app.overlay_layer(
     buildings_gdf,
-    title="Buildings",
+    name="Buildings",
     description="Buildings in a neighbourhood in Amsterdam",
     style={"fillColor": "#F87979"},
     visible=True,
