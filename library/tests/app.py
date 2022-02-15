@@ -120,7 +120,7 @@ app.line_chart(
     description="some_chart",
     x=[i for i in range(10)],
     y=y,
-    backgroundColor="rgb(255, 99, 132)",
+    color="rgb(255, 99, 132)",
 )
 
 y = []
@@ -132,5 +132,5 @@ app.bar_chart(
     description="some_chart",
     x=[i for i in range(10)],
     y=y,
-    backgroundColor="rgb(200, 50, 150)",
+    color="rgb(200, 50, 150)",
 )

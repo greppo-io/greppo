@@ -1,18 +1,18 @@
 <template>
-    <div>
+    <div class="my-10 mx-2">
+        <p class="text-xl my-1">{{ data.name }}</p>
+        <p class="text-base my-1">{{ data.description }}</p>
         <bar-chart
             v-if="data.type == 'BarChart'"
             :id="data.id"
-            :name="data.name"
-            :description="data.description"
             :chartData="data.chartdata"
+            style="height: 250px"
         />
         <line-chart
             v-if="data.type == 'LineChart'"
             :id="data.id"
-            :name="data.name"
-            :description="data.description"
             :chartData="data.chartdata"
+            style="height: 250px"
         />
     </div>
 </template>
@@ -33,7 +33,7 @@ export default {
     data() {
         return {
             // Delete after implementing charts.
-            chartTetst1: {
+            chartTetst: {
                 labels: ["January", "February", "March", "April"],
                 datasets: [
                     {
@@ -48,23 +48,8 @@ export default {
                     },
                 ],
             },
-            chartTetst2: {
-                labels: ["May", "June", "July", "August"],
-                datasets: [
-                    {
-                        label: "Data Three",
-                        backgroundColor: "#f87979",
-                        data: [60, 80, 50, 20],
-                    },
-                    {
-                        label: "Data Four",
-                        backgroundColor: "#f87979",
-                        data: [10, 50, 30, 80],
-                    },
-                ],
-            },
         };
-    },    
+    },
 };
 </script>
 

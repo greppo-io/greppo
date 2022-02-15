@@ -36,7 +36,6 @@ const state = {
     TileLayerData: null,
     WMSTileLayerData: null,
     OverlayLayerInfo: null,
-    ChartEventData: null,
     InputComponentInfo: null,
     DrawFeatureData: {
         id: "draw-feature-id",
@@ -60,7 +59,6 @@ const getters = {
     getTileLayerData: (state) => state.TileLayerData,
     getWMSTileLayerData: (state) => state.WMSTileLayerData,
     getOverlayLayerInfo: (state) => state.OverlayLayerInfo,
-    getChartEventData: (state) => state.ChartEventData,
     getLayerVisibility: (state) => (id) => {
         // To obtain the visibility of the specific layer passed as argument.
         return state.OverlayLayerInfo.find((element) => element.id == id)
@@ -302,10 +300,6 @@ const actions = {
         commit("updateOverlayLayerVisibility", data);
     },
 
-    setChartEventData({ commit }, data) {
-        commit("commitChartEventData", data);
-    },
-
     setInputComponentData({ commit, state }, data) {
         if (!state.InputMutation) {
             commit("commitInputMutation", true);
@@ -451,9 +445,6 @@ const mutations = {
     },
     commitInputMutation: (state, data) => {
         state.InputMutation = data;
-    },
-    commitChartEventData: (state, data) => {
-        state.ChartEventData = data;
     },
     updateOverlayLayerVisibility: (state, layerVisibility) => {
         const index = state.OverlayLayerInfo.findIndex(

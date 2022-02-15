@@ -1,1 +1,0 @@
-// Utility functions used my the chart-components.

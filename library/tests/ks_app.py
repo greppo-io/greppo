@@ -1,6 +1,6 @@
 from greppo import app
 import geopandas as gpd
-import numpy as np 
+import numpy as np
 
 app.base_layer(
     name="CartoDB Light",
@@ -39,5 +39,5 @@ app.bar_chart(
     description="some_chart",
     x=[i for i in range(10)],
     y=y,
-    backgroundColor="rgb(200, 50, 150)",
+    color="rgb(200, 50, 150)",
 )

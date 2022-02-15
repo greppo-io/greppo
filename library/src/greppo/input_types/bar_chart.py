@@ -26,15 +26,15 @@ class BarChart:
         description: str,
         x: List,
         y: List,
-        backgroundColor: str = "#000000",
+        color: str = "#000000",
         input_updates: Dict[str, Any] = {},
     ):
         self.input_name = name
         self.description = description
         self.input_updates = input_updates
 
-        # background is defaulted
-        dataset = Dataset(label=description, data=y, backgroundColor=backgroundColor)
+        _, label = name.split("_")
+        dataset = Dataset(label=label, data=y, backgroundColor=color)
         self.chartdata = ChartData(labels=x, datasets=[dataset])
 
     def get_value(self):
