@@ -4,7 +4,7 @@ import { Doughnut } from "vue-chartjs";
 export default {
     extends: Doughnut,
     props: {
-        data: String,
+        chartData: Object,
     },
     data: () => ({
         chartdata: {
@@ -27,7 +27,7 @@ export default {
         },
     }),
 
-    mounted() {        
+    mounted() {
         this.renderChart(this.chartdata, this.options);
     },
 };

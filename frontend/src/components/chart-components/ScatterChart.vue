@@ -4,7 +4,7 @@ import { Scatter } from "vue-chartjs";
 export default {
     extends: Scatter,
     props: {
-        data: String,
+        chartData: Object,
     },
     data: () => ({
         chartdata: {

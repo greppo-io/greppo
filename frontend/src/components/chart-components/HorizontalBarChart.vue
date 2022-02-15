@@ -4,7 +4,7 @@ import { HorizontalBar } from "vue-chartjs";
 export default {
     extends: HorizontalBar,
     props: {
-        data: String,
+        chartData: Object,
     },
     data: () => ({
         chartdata: {

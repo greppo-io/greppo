@@ -4,7 +4,7 @@ import { Radar } from "vue-chartjs";
 export default {
     extends: Radar,
     props: {
-        data: String,
+        chartData: Object,
     },
     data: () => ({
         chartdata: {
