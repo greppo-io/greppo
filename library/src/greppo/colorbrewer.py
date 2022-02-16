@@ -1591,159 +1591,20 @@ palette = {
 }
 
 
+def get_palette(length: int, scheme: str = "Set1") -> str:
+    if scheme not in palette:
+        raise ValueError(
+            f'"{scheme}" is not a valid palette name in colorbrewer, refer to the documentation')
 
-# "YlGn": {
-#     "min": 3,
-#     "max": 9,        
-# },
-# "YlGnBu": {
-#     "min": 3,
-#     "max": 9,        
-# },
-# "GnBu": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "BuGn": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "PuBuGn": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "PuBu": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "BuPu": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "RdPu": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "PuRd": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "OrRd": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "YlOrRd": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "YlOrBr": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Purples": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Blues": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Greens": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Oranges": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Reds": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Greys": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "PuOr": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "BrBG": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "PRGn": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "PiYG": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "RdBu": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "RdGy": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "RdYlBu": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "Spectral": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "RdYlGn": {
-#     "min": 3,
-#     "max": 11,
-# },
-# "Accent": {
-#     "min": 3,
-#     "max": 8,
-# },
-# "Dark2": {
-#     "min": 3,
-#     "max": 8,
-# },
-# "Paired": {
-#     "min": 3,
-#     "max": 12,
-# },
-# "Pastel1": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Pastel2": {
-#     "min": 3,
-#     "max": 8,
-# },
-# "Set1": {
-#     "min": 3,
-#     "max": 9,
-# },
-# "Set2": { 
-#     "min": 3, 
-#     "max": 8, 
-# },
-# "Set3": { 
-#     "min": 3, 
-#     "max": 12,
-# },
-
-
-def getPalette(length: int, scheme: str = "Set1") -> str:
     min = palette[scheme]["min"]
     max = palette[scheme]["max"]
 
     if length < min:
-        returnPalette = palette[scheme][min]
+        return_palette = palette[scheme][min][:length]
     elif length > max:
-        returnPalette = palette[scheme][max]
-        returnPalette = returnPalette + int(length / max) * returnPalette
+        return_palette = palette[scheme][max]
+        return_palette = return_palette + (length - max)*[return_palette[max-1]]
     else:
-        returnPalette = palette[scheme][length]
+        return_palette = palette[scheme][length]
 
-    return returnPalette
+    return return_palette

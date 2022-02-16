@@ -20,6 +20,17 @@ export default {
     components: {
         LGeoJson,
     },
+    methods: {
+        getChoroplethColor(d) {
+            console.log(this.layerData.style.choropleth.bins);
+            const index = this.layerData.style.choropleth.bins.findIndex(
+                (item) => d > item
+            );
+            console.log(index);
+            const color = this.layerData.style.choropleth.palette[index];
+            return color;
+        },
+    },
     computed: {
         ...mapGetters(["getLayerVisibility"]),
         options() {
@@ -35,14 +46,29 @@ export default {
             };
         },
         styleFunction() {
-            return () => {
+            return (feature) => {
                 return {
-                    color: this.layerData.style.fillColor,
-                    opacity: 1,
-                    weight: 2,
-                    fillColor: this.layerData.style.fillColor,
-                    fillOpacity: 0.7,
-                    radius: 3,
+                    stroke: this.layerData.style.stroke || true,
+                    color:
+                        this.layerData.style.color ||
+                        this.layerData.style.fillColor,
+                    weight: this.layerData.style.weight || 2,
+                    opacity: this.layerData.style.opacity || 1,
+                    lineCap: this.layerData.style.lineCap || "round",
+                    lineJoin: this.layerData.style.lineJoin || "round",
+                    dashArray: this.layerData.style.dashArray || null,
+                    dashOffset: this.layerData.style.dashOffset || null,
+                    fill: this.layerData.style.fill || true,
+                    // fillColor:  this.layerData.style.fillColor,
+                    fillColor: this.layerData.style.choropleth
+                        ? this.getChoroplethColor(
+                              feature.properties[
+                                  this.layerData.style.choropleth.key_on
+                              ]
+                          )
+                        : this.layerData.style.fillColor,
+                    fillOpacity: this.layerData.style.fillOpacity || 0.8,
+                    radius: this.layerData.style.radius || 3,
                 };
             };
         },
@@ -60,7 +86,7 @@ export default {
                     }
                     bindContent += "</div>";
                     // Bind a popup
-                    // layer.bindPopup(bindContent);                    
+                    // layer.bindPopup(bindContent);
                     // Bind a tooltip
                     layer.bindTooltip(bindContent, {
                         permanent: false,

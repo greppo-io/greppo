@@ -24,7 +24,8 @@ app.overlay_layer(
     data_gdf,
     name="USA States",
     description="Boundaries of States, USA",
-    style={"fillColor": "#F87979"},
+    style={"color": "#eeeeee", "choropleth": {"key_on": 'density',
+                                              'bins': [1, 10, 20, 50, 100, 200, 500, 1000]}},
     visible=True,
 )
 
@@ -52,9 +53,11 @@ vis_params = {
     'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
 name = 'DEM'
 print(vis_params)
-app.ee_layer(ee_object=ee_image_object, vis_params=vis_params, name=name, description='EE layer')
+app.ee_layer(ee_object=ee_image_object, vis_params=vis_params,
+             name=name, description='EE layer')
 
-app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', name='Weather Data', format='image/png', layers='nexrad-n0r-900913', description='Weather WMS tile layer')
+app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', name='Weather Data',
+                   format='image/png', layers='nexrad-n0r-900913', description='Weather WMS tile layer')
 
 
 text1 = """
@@ -134,3 +137,6 @@ app.bar_chart(
     y=y,
     color="rgb(200, 50, 150)",
 )
+
+
+
