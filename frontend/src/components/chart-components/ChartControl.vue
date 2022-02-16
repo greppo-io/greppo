@@ -1,5 +1,5 @@
 <template>
-    <div class="my-10 mx-2">
+    <div class="my-10 mx-2" v-if="data.type === 'BarChart' || data.type === 'LineChart'" >
         <p class="text-xl my-1">{{ data.name }}</p>
         <p class="text-base my-1">{{ data.description }}</p>
         <bar-chart

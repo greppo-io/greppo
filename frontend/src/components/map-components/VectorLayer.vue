@@ -57,9 +57,7 @@ export default {
                     lineCap: this.layerData.style.lineCap || "round",
                     lineJoin: this.layerData.style.lineJoin || "round",
                     dashArray: this.layerData.style.dashArray || null,
-                    dashOffset: this.layerData.style.dashOffset || null,
-                    fill: this.layerData.style.fill || true,
-                    // fillColor:  this.layerData.style.fillColor,
+                    dashOffset: this.layerData.style.dashOffset || null,                    
                     fillColor: this.layerData.style.choropleth
                         ? this.getChoroplethColor(
                               feature.properties[
