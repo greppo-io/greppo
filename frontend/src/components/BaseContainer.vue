@@ -1,6 +1,7 @@
 <template>
     <div>
         <app-info-modal v-if="getAppInfo.modal" />
+        <error-modal v-if="getErrorInfo.modal"/>
         <div class="flex bg-gray-50">
             <!-- Left Side Bar  -->
             <left-container />
@@ -20,6 +21,7 @@ import LeftContainer from "./LeftContainer";
 import RightContainer from "./RightContainer";
 import { mapGetters } from "vuex";
 import AppInfoModal from "./functional-components/AppInfoModal.vue";
+import ErrorModal from './functional-components/ErrorModal.vue';
 
 export default {
     name: "BaseContainer",
@@ -28,9 +30,10 @@ export default {
         LeftContainer,
         RightContainer,
         AppInfoModal,
+        ErrorModal,
     },
     computed: {
-        ...mapGetters(["getComponentStatus", "getAppInfo"]),
+        ...mapGetters(["getComponentStatus", "getAppInfo", "getErrorInfo"]),
     },
 };
 </script>

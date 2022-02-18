@@ -26,9 +26,10 @@ const state = {
         title: null,
         description: null,
     },
-    ErrorModal: {
-        status: false,
-        message: "",
+    ErrorInfo: {
+        modal: false,
+        title: "Error: BackendError",
+        message: "Check the backend error log to fix the error.",
     },
     VectorLayerData: null,
     ImageLayerData: null,
@@ -37,14 +38,16 @@ const state = {
     WMSTileLayerData: null,
     OverlayLayerInfo: [],
     InputComponentInfo: null,
-    DrawFeatureData: [{
-        id: "draw-feature-id",
-        name: "Default features",
-        features: [],
-        mutation: false,
-        active: false,
-        featuresDrawn: [],
-    }],
+    DrawFeatureData: [
+        {
+            id: "draw-feature-id",
+            name: "Default features",
+            features: [],
+            mutation: false,
+            active: false,
+            featuresDrawn: [],
+        },
+    ],
     InputMutation: false,
 };
 
@@ -52,7 +55,7 @@ const getters = {
     getStatus: (state) => state.Status,
     getAppInfo: (state) => state.AppInfo,
     getInfoModal: (state) => state.InfoModal,
-    getErrorModal: (state) => state.ErrorModal,
+    getErrorInfo: (state) => state.ErrorInfo,
     getComponentStatus: (state) => state.ComponentStatus,
     getVectorLayerData: (state) => state.VectorLayerData,
     getBaseLayerData: (state) => state.BaseLayerData,
@@ -88,15 +91,15 @@ const actions = {
         commit("commitAppInfo", AppInfo);
     },
 
-    setErrorModal({ commit, state }, dataErrorModal) {
-        var ErrorModal = state.ErrorModal;
-        if ("status" in dataErrorModal) {
-            ErrorModal.status = dataErrorModal.status;
+    setErrorInfo({ commit, state }, dataErrorInfo) {
+        var ErrorInfo = state.ErrorInfo;
+        if ("modal" in dataErrorInfo) {
+            ErrorInfo.modal = dataErrorInfo.modal;
         }
-        if ("message" in dataErrorModal) {
-            ErrorModal.message = dataErrorModal.message;
+        if ("message" in dataErrorInfo) {
+            ErrorInfo.message = dataErrorInfo.message;
         }
-        commit("commitErrorModal", ErrorModal);
+        commit("commitErrorInfo", ErrorInfo);
     },
 
     async getAPI({ commit, dispatch }) {
@@ -105,8 +108,8 @@ const actions = {
             dispatch("commitResponseData", response);
             commit("commitStatus", 2);
         } catch (error) {
-            // TODO Frontend error logging
             console.log("Error in getting data.", error);
+            dispatch("setErrorInfo", { modal: true });
         }
     },
 
@@ -149,8 +152,13 @@ const actions = {
                 eventHub.$emit("reInitializeDrawFeature");
             })
             .catch(function (error) {
-                // TODO Frontend error logging
-                console.log("Error in posting data.", error);
+                console.log("Error running reevalution.", error);
+                dispatch("setErrorInfo", {
+                    modal: true,
+                    title: "Error: FrontendError",
+                    message:
+                        "Error in running the post request back to the server.",
+                });
             });
     },
 
@@ -427,8 +435,8 @@ const mutations = {
     commitAppInfo: (state, data) => {
         state.AppInfo = data;
     },
-    commitErrorModal: (state, data) => {
-        state.ErrorModal = data;
+    commitErrorInfo: (state, data) => {
+        state.ErrorInfo = data;
     },
     commitVectorLayerData: (state, data) => {
         state.VectorLayerData = data;
