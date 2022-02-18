@@ -35,16 +35,16 @@ const state = {
     BaseLayerData: null,
     TileLayerData: null,
     WMSTileLayerData: null,
-    OverlayLayerInfo: null,
+    OverlayLayerInfo: [],
     InputComponentInfo: null,
-    DrawFeatureData: {
+    DrawFeatureData: [{
         id: "draw-feature-id",
         name: "Default features",
         features: [],
         mutation: false,
         active: false,
         featuresDrawn: [],
-    },
+    }],
     InputMutation: false,
 };
 
@@ -157,7 +157,9 @@ const actions = {
     commitResponseData({ commit, state, dispatch }, response) {
         var ComponentStatus = state.ComponentStatus;
 
-        console.log(response.data);
+        if (process.env.NODE_ENV === "development") {
+            console.log(response.data);
+        }
         const responseBaseLayerData = response.data.base_layer_data;
         const responseTileLayerData = response.data.tile_layer_data;
         const responseWMSTileLayerData = response.data.wms_tile_layer_data;

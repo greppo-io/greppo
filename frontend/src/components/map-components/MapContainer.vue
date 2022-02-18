@@ -125,8 +125,10 @@ export default {
         this.$nextTick(() => {
             this.$refs.lmap.mapObject.attributionControl.setPosition(
                 "bottomleft"
-            );
-            this.resetViewHandler();
+            );        
+            if (this.getOverlayLayerInfo.length) {
+                this.resetViewHandler();
+            }
         });
     },
     created() {
