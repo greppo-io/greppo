@@ -1,14 +1,14 @@
 <template>
     <l-wms-tile-layer
         :base-url="layerData.url"
-        :layers="layerData.layers"
+        :layers="layerData.layers[0]"
         :visible="layerData.visible"
         :opacity="layerData.opacity"
         :subdomains="layerData.subdomains"
         :name="layerData.name"
-        :attribution="layerData.attribution"
-        :transparent="layerData.transparent"
-        :format="layerData.format"
+        :attribution="layerData.attribution[0]"
+        :transparent="layerData.transparent[0]"
+        :format="layerData.format[0]"
         layer-type="overlay"
     >
     </l-wms-tile-layer>

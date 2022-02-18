@@ -21,12 +21,10 @@ export default {
         LGeoJson,
     },
     methods: {
-        getChoroplethColor(d) {
-            console.log(this.layerData.style.choropleth.bins);
+        getChoroplethColor(d) {            
             const index = this.layerData.style.choropleth.bins.findIndex(
                 (item) => d > item
             );
-            console.log(index);
             const color = this.layerData.style.choropleth.palette[index];
             return color;
         },
