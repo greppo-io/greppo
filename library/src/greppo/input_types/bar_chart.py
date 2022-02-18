@@ -1,14 +1,18 @@
 from dataclasses import dataclass
 from typing import Any
 from typing import Dict
-from typing import List
+from typing import List, Union
+
+num = Union[int, float]
+num_list = List[num]
+num_num_list = Union[num, num_list]
 
 
 @dataclass
 class Dataset:
+    data: List[num_num_list]
     label: str
     backgroundColor: str
-    data: List[Any]
 
 
 @dataclass
@@ -17,16 +21,16 @@ class ChartData:
     datasets: List[Dataset]
 
 
-# TODO doesn't handle multiple datasets.
+# TODO handle multiple datasets.
 @dataclass
 class BarChart:
     def __init__(
         self,
         name: str,
-        description: str,
-        x: List,
-        y: List,
-        color: str = "#000000",
+        x: List[num_num_list],
+        y: List[num_num_list],
+        color: str = "#CCCCCC",
+        description: str = '',
         input_updates: Dict[str, Any] = {},
     ):
         self.input_name = name
@@ -34,7 +38,7 @@ class BarChart:
         self.input_updates = input_updates
 
         _, label = name.split("_")
-        dataset = Dataset(label=label, data=y, backgroundColor=color)
+        dataset = Dataset(label=label, data=y,backgroundColor=color)
         self.chartdata = ChartData(labels=x, datasets=[dataset])
 
     def get_value(self):

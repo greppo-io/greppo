@@ -2,10 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.20] - 2022-02-18
+## [0.0.21] - 2022-02-18
+- Fix lineand bar chart typing and settings.
 - Add app.map method for map settings. 
-
-## [0.0.19] - 2022-02-18
 - Fix reevaluate error.
 - Add error modal to the frontend. 
 
