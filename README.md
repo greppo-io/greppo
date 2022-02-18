@@ -67,6 +67,12 @@ To view the app that is being served, enter this address of the localhost `local
 
 Do you have questions? Ideas? Want to share your project? Join us on discord [Invite Link](https://discord.gg/RNJBjgh8gz).
 
+## Under the hood
+
+Greppo is open-source and is built on open-source. Under the hood it uses [Starlette](https://github.com/encode/starlette), [Vue](https://github.com/vuejs/vue), [Leaflet](https://github.com/Leaflet/Leaflet), [ChartJS](https://github.com/chartjs/Chart.js), [TailwindCSS](https://github.com/tailwindlabs/tailwindcss) to name a few. A detailed list of the open-source projects used is listed [here](http://127.0.0.1:8000/under-the-hood.html).
+
+Greppo is our contribution back to the geospatial community. We want to make the development of geosaptial apps easy, to make it easy for data-scientists to showcase their work. 
+
 ## License
 
 Greppo is licensed under Apache V2.
