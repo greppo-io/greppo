@@ -1,7 +1,13 @@
 <template>
     <div class="h-full w-full">
         <!-- The map container will have the map components and the mail control of the application. -->
-        <l-map ref="lmap" :center="center" :zoom="zoom" :maxZoom="25">
+        <l-map
+            ref="lmap"
+            :center="getMapSettingsData.center"
+            :zoom="getMapSettingsData.zoom"
+            :maxZoom="getMapSettingsData.maxZoom"
+            :minZoom="getMapSettingsData.minZoom"
+        >
             <base-layer v-if="getComponentStatus.baseLayer" />
             <div v-if="getComponentStatus.tileLayer">
                 <tile-layer
@@ -113,6 +119,7 @@ export default {
     },
     computed: {
         ...mapGetters([
+            "getMapSettingsData",
             "getTileLayerData",
             "getWMSTileLayerData",
             "getVectorLayerData",
@@ -125,7 +132,7 @@ export default {
         this.$nextTick(() => {
             this.$refs.lmap.mapObject.attributionControl.setPosition(
                 "bottomleft"
-            );        
+            );
             if (this.getOverlayLayerInfo.length) {
                 this.resetViewHandler();
             }

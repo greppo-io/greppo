@@ -31,6 +31,7 @@ const state = {
         title: "Error: BackendError",
         message: "Check the backend error log to fix the error.",
     },
+    MapSettingsData: {},
     VectorLayerData: null,
     ImageLayerData: null,
     BaseLayerData: null,
@@ -57,6 +58,7 @@ const getters = {
     getInfoModal: (state) => state.InfoModal,
     getErrorInfo: (state) => state.ErrorInfo,
     getComponentStatus: (state) => state.ComponentStatus,
+    getMapSettingsData: (state) => state.MapSettingsData,
     getVectorLayerData: (state) => state.VectorLayerData,
     getBaseLayerData: (state) => state.BaseLayerData,
     getTileLayerData: (state) => state.TileLayerData,
@@ -168,6 +170,7 @@ const actions = {
         if (process.env.NODE_ENV === "development") {
             console.log(response.data);
         }
+        const responseMapSettingsData = response.data.map.settings;
         const responseBaseLayerData = response.data.base_layer_data;
         const responseTileLayerData = response.data.tile_layer_data;
         const responseWMSTileLayerData = response.data.wms_tile_layer_data;
@@ -176,6 +179,10 @@ const actions = {
         const responseComponentInfo = response.data.component_info;
 
         var overlayLayerInfo = [];
+
+        if (responseMapSettingsData) {
+            commit("commitMapSettingsData", responseMapSettingsData);
+        }
 
         if (responseBaseLayerData.length) {
             ComponentStatus.baseLayer = true;
@@ -437,6 +444,9 @@ const mutations = {
     },
     commitErrorInfo: (state, data) => {
         state.ErrorInfo = data;
+    },
+    commitMapSettingsData: (state, data) => {
+        state.MapSettingsData = data;
     },
     commitVectorLayerData: (state, data) => {
         state.VectorLayerData = data;

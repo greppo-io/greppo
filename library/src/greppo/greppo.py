@@ -82,6 +82,7 @@ class GreppoAppProxy(object):
 
     def __init__(self):
         # Map component data
+        self.map_data: Dict = {'settings': {'zoom': 3, 'center': [0, 0], 'maxZoom': 18, 'minZoom': 0}}
         self.base_layers: List[BaseLayer] = []
         self.tile_layers: List[TileLayer] = []
         self.wms_tile_layers: List[WMSTileLayer] = []
@@ -133,6 +134,16 @@ class GreppoAppProxy(object):
         line_chart = LineChart(**kwargs)
         self.register_input(line_chart)
         return line_chart
+
+    def map(self, **kwargs):        
+        if 'zoom' in kwargs:
+            self.map_data['settings']['zoom'] = kwargs.get('zoom')
+        if 'center' in kwargs:
+            self.map_data['settings']['center'] = kwargs.get('center')
+        if 'max_zoom' in kwargs:
+            self.map_data['settings']['maxZoom'] = kwargs.get('max_zoom')
+        if 'min_zoom' in kwargs:
+            self.map_data['settings']['minZoom'] = kwargs.get('min_zoom')
 
     def ee_layer(self, **kwargs):
         ee_layer_component = EarthEngineLayerComponent(**kwargs)
@@ -291,7 +302,10 @@ class GreppoAppProxy(object):
             "vector_layer_data": [],
             "image_layer_data": [],
             "component_info": [],
+            "map": {},
         }
+        app_output["map"] = self.map_data
+        
         for _tile_layer in self.tile_layers:
             s = {}
             for k, v in _tile_layer.__dict__.items():
