@@ -2,11 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.16] - 2021-02-16
+## [0.0.19] - 2022-02-18
+- Fix reevaluate error.
+- Add error modal to the frontend. 
+
+## [0.0.16] - 2022-02-16
 - Added `choropleth` for the `vector_layer`
 - Added support for `color` for the charts.
 
-## [0.0.15] - 2021-02-11
+## [0.0.15] - 2022-02-11
 - Added `app.tile_layer`, `app.wms_tile_layer`, `app.vector_layer`, `app.ee_layer`
 - Added support for Google Earth Engine.
 - Added support for `app.base_layer` to use `geopandas/xyzservices`. 
