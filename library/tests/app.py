@@ -1,8 +1,10 @@
+import ee
 import geopandas as gpd
 import numpy as np
 import pandas as pd
 from greppo import app
-import ee
+
+# TODO fix relative link for key file and data files
 
 app.base_layer(
     name="CartoDB Light",
@@ -16,7 +18,7 @@ app.tile_layer(
     name="Open Street Map",
     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     visible=False,
-    description='A OSM tile layer'
+    description="A OSM tile layer",
 )
 
 data_gdf = gpd.read_file("tests/data/us-states.geojson")
@@ -24,8 +26,13 @@ app.overlay_layer(
     data_gdf,
     name="USA States",
     description="Boundaries of States, USA",
-    style={"color": "#eeeeee", "choropleth": {"key_on": 'density',
-                                              'bins': [1, 10, 20, 50, 100, 200, 500, 1000]}},
+    style={
+        "color": "#eeeeee",
+        "choropleth": {
+            "key_on": "density",
+            "bins": [1, 10, 20, 50, 100, 200, 500, 1000],
+        },
+    },
     visible=True,
 )
 
@@ -40,24 +47,31 @@ text0 = """
 """
 app.display(value=text0, name="text0")
 
-email = 'greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com'
-key_file = '/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json'
+email = "greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com"
+key_file = "/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json"
 credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
 ee.Initialize(credentials)
 
-dem = ee.Image('USGS/SRTMGL1_003')
+dem = ee.Image("USGS/SRTMGL1_003")
 ee_image_object = dem.updateMask(dem.gt(0))
 vis_params = {
-    'min': 0,
-    'max': 4000,
-    'palette': ['006633', 'E5FFCC', '662A00', 'D8D8D8', 'F5F5F5']}
-name = 'DEM'
+    "min": 0,
+    "max": 4000,
+    "palette": ["006633", "E5FFCC", "662A00", "D8D8D8", "F5F5F5"],
+}
+name = "DEM"
 print(vis_params)
-app.ee_layer(ee_object=ee_image_object, vis_params=vis_params,
-             name=name, description='EE layer')
+app.ee_layer(
+    ee_object=ee_image_object, vis_params=vis_params, name=name, description="EE layer"
+)
 
-app.wms_tile_layer(url='http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi', name='Weather Data',
-                   format='image/png', layers='nexrad-n0r-900913', description='Weather WMS tile layer')
+app.wms_tile_layer(
+    url="http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
+    name="Weather Data",
+    format="image/png",
+    layers="nexrad-n0r-900913",
+    description="Weather WMS tile layer",
+)
 
 
 text1 = """
@@ -72,8 +86,7 @@ app.display(value=text1, name="text1")
 
 number_1 = app.number(value=10, name="Number input 1")
 text_1 = app.text(value="here is a text", name="Text input 1")
-select1 = app.select(name="First selector", options=[
-                     "a", "b", "c"], default="a")
+select1 = app.select(name="First selector", options=["a", "b", "c"], default="a")
 multiselect1 = app.multiselect(
     name="Second selector", options=["Asia", "Africa", "Europe"], default=["Asia"]
 )
@@ -137,6 +150,3 @@ app.bar_chart(
     y=y,
     color="rgb(200, 50, 150)",
 )
-
-
-

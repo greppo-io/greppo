@@ -16,7 +16,6 @@ from typing import Any, Dict
 
 from greppo import GreppoAppProxy
 from .input_types import GreppoInputsNames, GreppoChartNames
-from meta.asttools import print_ast, dump_python_source
 
 logger = logging.getLogger('user_script_utils')
 
@@ -213,23 +212,21 @@ def run_script(script_name, input_updates, hex_token_generator):
 
         ast.fix_missing_locations(user_code)
 
-        #logger.debug('\n\n------ Code Transform ------\n')
-        #logger.debug(dump_python_source(user_code))
-        #logger.debug('\n----------------------------\n\n')
-
         gpo_app = GreppoAppProxy()
 
         locals_copy = locals().copy()
         locals_copy['app'] = gpo_app
+        locals_copy[hash_prefix + "_app"] = gpo_app
 
-        # TODO maybe have a fresh locals obj?
-        locals()[hash_prefix + "_app"] = gpo_app
+        logger.debug('\n\n------ Code Transform ------\n')
+        logger.debug(ast.unparse(user_code))
+        logger.debug('\n----------------------------\n\n')
 
-        exec(compile(user_code, script_name, "exec"), globals(), locals())
+        exec(compile(user_code, script_name, "exec"), locals_copy, locals_copy)
 
-        raster_reference_payload = locals().get("gpo_raster_reference_payload", None)
+        raster_reference_payload = locals_copy.get("gpo_raster_reference_payload", None)
 
-        return locals()["gpo_payload"], raster_reference_payload
+        return locals_copy["gpo_payload"], raster_reference_payload
 
 
 async def script_task(
@@ -241,6 +238,8 @@ async def script_task(
     async task that runs a user_script in a Greppo context (`gpo_send_data`) and generates payload for front-end
     consumption.
     """
+    # logger.setLevel(logging.DEBUG)
+
     logging.info("Loading Greppo App at: " + script_name)
 
     with redirect_stdout(io.StringIO()) as loop_out:
@@ -250,12 +249,10 @@ async def script_task(
             hex_token_generator=hex_token_generator,
         )
 
-    logger.setLevel(logging.DEBUG)
-
-    # logger.info("-------------")
-    # logger.info("stdout from process")
-    # logger.info("===")
-    # logger.info(loop_out.getvalue())
-    # logger.info("===")
+    logger.debug("-------------")
+    logger.debug("stdout from process")
+    logger.debug("===")
+    logger.debug(loop_out.getvalue())
+    logger.debug("===")
 
     return payload
