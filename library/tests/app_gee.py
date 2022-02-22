@@ -42,8 +42,6 @@ ee.Initialize(credentials)
 ##--------------------------------------------------------------------------------------##
 
 # Adds a band containing image date as years since 1991.
-
-
 def create_time_band(img):
     year = ee.Date(img.get("system:time_start")).get("year").subtract(1991)
     return ee.Image(year).byte().addBands(img)
