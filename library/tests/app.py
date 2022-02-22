@@ -1,7 +1,7 @@
 import ee
+import os
 import geopandas as gpd
 import numpy as np
-import pandas as pd
 from greppo import app
 
 # TODO fix relative link for key file and data files
@@ -47,8 +47,8 @@ text0 = """
 """
 app.display(value=text0, name="text0")
 
-email = "greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com"
-key_file = "/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json"
+email = os.environ['EE_EMAIL']
+key_file = os.environ['EE_KEY_FILE']
 credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
 ee.Initialize(credentials)
 

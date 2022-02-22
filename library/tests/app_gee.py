@@ -17,8 +17,8 @@ key_file: The path to a file containing the private key associated with
 key_data: Raw key data to use, if key_file is not specified.
 """
 
-email = "greppo-ee-test@greppo-earth-engine.iam.gserviceaccount.com"
-key_file = "/Users/adithya/.env_keys/greppo-earth-engine-448aa3afbbdb.json"
+email = os.environ['EE_EMAIL']
+key_file = os.environ['EE_KEY_FILE']
 credentials = ee.ServiceAccountCredentials(email=email, key_file=key_file)
 ee.Initialize(credentials)
 
