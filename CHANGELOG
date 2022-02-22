@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.22] - 2022-02-22
+- Fix import errors in locals. (import ee error)
+
 ## [0.0.21] - 2022-02-18
 - Fix lineand bar chart typing and settings.
 - Add app.map method for map settings. 
