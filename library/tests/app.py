@@ -3,6 +3,9 @@ import os
 import geopandas as gpd
 import numpy as np
 from greppo import app
+from relative.realtive2 import k
+
+assert k == 10, "relative imports should work"
 
 # TODO fix relative link for key file and data files
 
