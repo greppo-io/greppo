@@ -222,14 +222,11 @@ def run_script(script_name, input_updates, hex_token_generator):
         locals_copy['app'] = gpo_app
         locals_copy[hash_prefix + "_app"] = gpo_app
 
-        logger.debug('\n\n------ Code Transform ------\n')
-        logger.debug(ast.unparse(user_code))
-        logger.debug('\n----------------------------\n\n')
+        #logger.debug('\n\n------ Code Transform ------\n')
+        #logger.debug(ast.unparse(user_code))
+        #logger.debug('\n----------------------------\n\n')
 
-        # Add path and then pop later to handle relative imports within the user script.
-        sys.path.append(script_dir)
         exec(compile(user_code, script_name, "exec"), locals_copy, locals_copy)
-        sys.path.remove(script_dir)
 
         raster_reference_payload = locals_copy.get("gpo_raster_reference_payload", None)
 
