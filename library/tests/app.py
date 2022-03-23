@@ -125,9 +125,12 @@ text3 = """
 """
 app.display(value=text3, name="text3")
 
-y = []
-for i in range(10, 0, -1):
-    y.append(np.random.randint(0, 100))
+y_2d = []
+for j in range(2):
+    y = []
+    for i in range(10, 0, -1):
+        y.append(np.random.randint(0, 100))
+    y_2d.append(y)
 
 app.line_chart(
     name="some-name",
@@ -137,9 +140,22 @@ app.line_chart(
     color="rgb(255, 99, 132)",
 )
 
-y = []
-for i in range(10, 0, -1):
-    y.append(np.random.randint(0, 100))
+app.line_chart(
+    name="some-name",
+    description="some_chart",
+    x=[i for i in range(10)],
+    y=y_2d,
+    label=['line 1', "line 2"],
+    color=["rgb(255, 99, 132)", "rgb(155, 99, 132)"],
+)
+
+y_2d = []
+for j in range(2):
+    y = []
+    for i in range(10, 0, -1):
+        y.append(np.random.randint(0, 100))
+    y_2d.append(y)
+
 
 app.bar_chart(
     name="some-name",
@@ -147,4 +163,13 @@ app.bar_chart(
     x=[i for i in range(10)],
     y=y,
     color="rgb(200, 50, 150)",
+)
+
+app.bar_chart(
+    name="some-name",
+    description="some_chart",
+    x=[i for i in range(10)],
+    y=y_2d,
+    label=['bar 1', "bar 2"],
+    color=["rgb(200, 50, 150)", "rgb(100, 50, 150)"],
 )

@@ -25,6 +25,10 @@ build-frontend:
 build-package:	
 	cd library && python -m build
 
+.PHONY: upload-package
+upload-package: 
+	cd library && twine upload -u "__token__" -p "$(PYPI_BARFI_API)" --skip-existing --verbose dist/*
+
 .PHONY: run-unit-tests
 run-unit-tests:
 	pytest library/tests/unit_tests
