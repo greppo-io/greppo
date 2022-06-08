@@ -23,48 +23,48 @@ app.base_layer(
 #     visible=True,
 # )
 
-file_path = 'tests/data/rvrnbrt.TIF'
-src_dataset = rasterio.open(file_path)
-dst_crs = "EPSG:4326"
+# file_path = 'tests/data/rvrnbrt.TIF'
+# src_dataset = rasterio.open(file_path)
+# dst_crs = "EPSG:4326"
 
-transform, width, height = calculate_default_transform(
-    src_dataset.crs,
-    dst_crs,
-    src_dataset.width,
-    src_dataset.height,
-    *src_dataset.bounds
-)
+# transform, width, height = calculate_default_transform(
+#     src_dataset.crs,
+#     dst_crs,
+#     src_dataset.width,
+#     src_dataset.height,
+#     *src_dataset.bounds
+# )
 
-dst_bands = []
-for band_n_1 in range(src_dataset.count):
-    src_band = rasterio.band(src_dataset, band_n_1 + 1)
-    dst_band = reproject(src_band, dst_crs=dst_crs)
-    dst_bands.append(dst_band)
+# dst_bands = []
+# for band_n_1 in range(src_dataset.count):
+#     src_band = rasterio.band(src_dataset, band_n_1 + 1)
+#     dst_band = reproject(src_band, dst_crs=dst_crs)
+#     dst_bands.append(dst_band)
 
-(bounds_bottom, bounds_right) = transform * (0, 0)
-(bounds_top, bounds_left) = transform * (width, height)
-bounds = [[bounds_left, bounds_bottom], [bounds_right, bounds_top]]
-
-app.raster_layer(
-    data=dst_bands[0][0][0],
-    bounds=bounds,
-    name='This name',
-    description='Some description',
-    visible=True,
-)
-
-
-# image = np.zeros((61, 61))
-# image[0, :] = 1.0
-# image[60, :] = 1.0
-# image[:, 0] = 1.0
-# image[:, 60] = 1.0
+# (bounds_bottom, bounds_right) = transform * (0, 0)
+# (bounds_top, bounds_left) = transform * (width, height)
+# bounds = [[bounds_left, bounds_bottom], [bounds_right, bounds_top]]
 
 # app.raster_layer(
-#     data=image,
-#     bounds=[[0, -60], [60, 60]],
-#     colormap=lambda x: (1, 0, 0, x),
+#     data=dst_bands[0][0][0],
+#     bounds=bounds,
 #     name='This name',
 #     description='Some description',
 #     visible=True,
 # )
+
+band = np.zeros((61, 61))
+band[0, :] = 1.0
+band[60, :] = 1.0
+band[:, 0] = 1.0
+band[:, 60] = 1.0
+
+app.raster_layer(
+    data=band,
+    bounds=[[0, -60], [60, 60]],
+    colormap=lambda x: (1, 0, 0, x),
+    name='Rectangle',
+    description='A large red rectangle on a map.',
+    visible=True,
+)
+
