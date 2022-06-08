@@ -54,10 +54,10 @@ class ImageLayer:
 
 
 def _image_to_url(image):
-    '''
+    """
     Adopted from Folium 
     https://github.com/python-visualization/folium/blob/551b2420150ab56b71dcf14c62e5f4b118caae32/folium/raster_layers.py#L187
-    '''
+    """
     if isinstance(image, str) and not _is_url(image):
         img_ext = os.path.splitext(image)[-1][1:]
         assert img_ext in [

@@ -54,7 +54,7 @@ def append_send_data_method(code):
 
     return code
 
-
+# TODO Cleanup of raster
 def append_raster_reference(code):
     code.body.append(
         Assign(
@@ -207,7 +207,7 @@ def run_script(script_name, input_updates, hex_token_generator):
         )
 
         user_code = append_send_data_method(user_code)
-        user_code = append_raster_reference(user_code)
+        # user_code = append_raster_reference(user_code)
 
         # Transform gpo for locals() injection
         hash_prefix = hex_token_generator(nbytes=4)

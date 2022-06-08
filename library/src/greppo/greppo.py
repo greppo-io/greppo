@@ -1,40 +1,28 @@
-import base64
-import copy
 import dataclasses
 import json
 import logging
-import uuid
-from io import BytesIO
 from typing import Any
 from typing import Dict
-from typing import List, Union
+from typing import List
 
-import numpy as np
-import rasterio
-from geopandas import GeoDataFrame as gdf
-from greppo import osm
-from PIL import Image
-from rasterio.io import MemoryFile
-from rasterio.warp import calculate_default_transform
-from rasterio.warp import reproject
+from .input_types import ComponentInfo
+from .input_types import GreppoInputs
 
 from .input_types import BarChart
-from .input_types import ComponentInfo
-from .input_types import DrawFeature
-from .input_types import GreppoInputs
 from .input_types import LineChart
 from .input_types import Multiselect
 from .input_types import Number
 from .input_types import Select
 from .input_types import Text
 from .input_types import Display
+from .input_types import DrawFeature
 
 from .layers.base_layer import BaseLayerComponent, BaseLayer
 from .layers.tile_layer import TileLayer, TileLayerComponent
 from .layers.wms_tile_layer import WMSTileLayer, WMSTileLayerComponent
 from .layers.vector_layer import VectorLayer, VectorLayerComponent
 from .layers.image_layer import ImageLayer, ImageLayerComponent
-from .layers.overlay_layer import OverlayLayer
+from .layers.raster_layer import RasterLayerComponent
 from .layers.ee_layer import EarthEngineLayerComponent
 
 
@@ -90,7 +78,7 @@ class GreppoAppProxy(object):
         self.vector_layers: List[VectorLayer] = []
         self.image_layers: List[ImageLayer] = []
         # TODO Cleanup raster temp
-        self.raster_image_reference: List[bytes] = []
+        # self.raster_image_reference: List[bytes] = []
         self.registered_inputs: List[ComponentInfo] = []
 
         # Input updates
@@ -179,76 +167,13 @@ class GreppoAppProxy(object):
         image_layer_dataclass = image_layer_component.convert_to_dataclass()
         self.image_layers.append(image_layer_dataclass)
 
-    def raster_layer(self, file_path: str, name: str, description: str, visible: bool):
-        id = uuid.uuid4().hex
+    def raster_layer(self, **kwargs):
+        raster_layer_component = RasterLayerComponent(**kwargs)
+        image_layer_dataclass = raster_layer_component.convert_to_dataclass()
+        self.image_layers.append(image_layer_dataclass)
 
-        src_dataset = rasterio.open(file_path)
-        dst_crs = "EPSG:4326"
-
-        transform, width, height = calculate_default_transform(
-            src_dataset.crs,
-            dst_crs,
-            src_dataset.width,
-            src_dataset.height,
-            *src_dataset.bounds
-        )
-
-        dst_bands = []
-        for band_n_1 in range(src_dataset.count):
-            src_band = rasterio.band(src_dataset, band_n_1 + 1)
-            dst_band = reproject(src_band, dst_crs=dst_crs)
-            dst_bands.append(dst_band)
-
-        if src_dataset.count != 3:
-            for i in range(len(dst_bands), src_dataset.count):
-                dst_bands.append(rasterio.band(src_dataset, 1))
-
-        alpha = np.where(dst_bands[0][0] > 1e8, 0, 1)
-        alpha_band = list(copy.deepcopy(dst_bands[0]))
-        alpha_band[0] = alpha.astype("uint8")
-        dst_bands.append(tuple(alpha_band))
-
-        png_kwargs = src_dataset.meta.copy()
-        png_kwargs.update(
-            {
-                "crs": dst_crs,
-                "width": width,
-                "height": height,
-                "driver": "PNG",
-                "dtype": rasterio.uint8,
-                "transform": transform,
-                "count": len(dst_bands),
-            }
-        )
-
-        with MemoryFile() as png_memfile:
-            with png_memfile.open(**png_kwargs) as dst_file:
-                for i_1, dst_band in enumerate(dst_bands):
-                    dst_file.write(dst_band[0][0], i_1 + 1)
-
-                    dst_file.write_colormap(
-                        i_1 + 1, {0: (255, 0, 0, 255), 255: (0, 0, 0, 255)}
-                    )
-
-                self.raster_image_reference.append(png_memfile.read())
-
-            url = (
-                "data:image/png;base64," +
-                base64.b64encode(png_memfile.read()).decode()
-            )
-            (bounds_bottom, bounds_right) = transform * (0, 0)
-            (bounds_top, bounds_left) = transform * (width, height)
-            bounds = [[bounds_left, bounds_bottom], [bounds_right, bounds_top]]
-
-            self.image_layers.append(
-                ImageLayer(id, name, description, url, bounds, visible)
-            )
-
-    def overlay_layer(
-        self, data: gdf, name: str, description: str, style: dict, visible: bool
-    ):
-        vector_layer_component = VectorLayerComponent(
-            data=data, name=name, description=description, style=style, visible=visible)
+    def overlay_layer(self, **kwargs):
+        vector_layer_component = VectorLayerComponent(**kwargs)
         vector_layer_dataclass = vector_layer_component.convert_to_dataclass()
         self.vector_layers.append(vector_layer_dataclass)
 
@@ -326,11 +251,11 @@ class GreppoAppProxy(object):
 
         return app_output
 
-    def gpo_reference_data(self):
-        """ Only return one reference image for testing. """
-        if len(self.raster_image_reference) == 0:
-            return None
-        return self.raster_image_reference[0]
+    # def gpo_reference_data(self):
+    #     """ Only return one reference image for testing. """
+    #     if len(self.raster_image_reference) == 0:
+    #         return None
+    #     return self.raster_image_reference[0]
 
 
 app = GreppoApp()
