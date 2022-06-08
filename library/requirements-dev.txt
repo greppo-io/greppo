@@ -49,7 +49,7 @@ parso==0.8.2
 pep517==0.12.0
 pexpect==4.8.0
 pickleshare==0.7.5
-Pillow==8.4.0
+Pillow==9.0.1
 platformdirs==2.4.0
 pluggy==1.0.0
 pre-commit==2.15.0
