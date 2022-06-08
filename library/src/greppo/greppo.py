@@ -33,7 +33,7 @@ from .layers.base_layer import BaseLayerComponent, BaseLayer
 from .layers.tile_layer import TileLayer, TileLayerComponent
 from .layers.wms_tile_layer import WMSTileLayer, WMSTileLayerComponent
 from .layers.vector_layer import VectorLayer, VectorLayerComponent
-from .layers.image_layer import ImageLayer
+from .layers.image_layer import ImageLayer, ImageLayerComponent
 from .layers.overlay_layer import OverlayLayer
 from .layers.ee_layer import EarthEngineLayerComponent
 
@@ -82,7 +82,8 @@ class GreppoAppProxy(object):
 
     def __init__(self):
         # Map component data
-        self.map_data: Dict = {'settings': {'zoom': 3, 'center': [0, 0], 'maxZoom': 18, 'minZoom': 0}}
+        self.map_data: Dict = {'settings': {'zoom': 3,
+                                            'center': [0, 0], 'maxZoom': 18, 'minZoom': 0}}
         self.base_layers: List[BaseLayer] = []
         self.tile_layers: List[TileLayer] = []
         self.wms_tile_layers: List[WMSTileLayer] = []
@@ -135,7 +136,7 @@ class GreppoAppProxy(object):
         self.register_input(line_chart)
         return line_chart
 
-    def map(self, **kwargs):        
+    def map(self, **kwargs):
         if 'zoom' in kwargs:
             self.map_data['settings']['zoom'] = kwargs.get('zoom')
         if 'center' in kwargs:
@@ -173,18 +174,10 @@ class GreppoAppProxy(object):
         vector_layer_dataclass = vector_layer_component.convert_to_dataclass()
         self.vector_layers.append(vector_layer_dataclass)
 
-    def vector_layer(self, **kwargs):
-        vector_layer_component = VectorLayerComponent(**kwargs)
-        vector_layer_dataclass = vector_layer_component.convert_to_dataclass()
-        self.vector_layers.append(vector_layer_dataclass)
-
-    def overlay_layer(
-        self, data: gdf, name: str, description: str, style: dict, visible: bool
-    ):
-        vector_layer_component = VectorLayerComponent(
-            data=data, name=name, description=description, style=style, visible=visible)
-        vector_layer_dataclass = vector_layer_component.convert_to_dataclass()
-        self.vector_layers.append(vector_layer_dataclass)
+    def image_layer(self, **kwargs):
+        image_layer_component = ImageLayerComponent(**kwargs)
+        image_layer_dataclass = image_layer_component.convert_to_dataclass()
+        self.image_layers.append(image_layer_dataclass)
 
     def raster_layer(self, file_path: str, name: str, description: str, visible: bool):
         id = uuid.uuid4().hex
@@ -251,32 +244,13 @@ class GreppoAppProxy(object):
                 ImageLayer(id, name, description, url, bounds, visible)
             )
 
-    def image_layer(self, file_path: str, name: str, description: str, visible: bool):
-        id = uuid.uuid4().hex
-
-        file_ext = file_path.split(".")[-1].lower()
-        assert file_ext in [
-            "png",
-            "jpg",
-            "jpeg",
-        ], "Image input extension should be png, jpg or jpeg for image_layer"
-
-        buffered = BytesIO()
-        image = Image.open(file_path)
-        image.save(buffered, format="JPEG")
-        image_string = base64.b64encode(buffered.getvalue()).decode()
-
-        url = "data:image/png;base64," + image_string
-
-        bounds = [[0, 0], [100, 100]]
-        bounds = [
-            [14.760840184106792, 77.97900023926854],
-            [14.763995704693206, 77.98389492733145],
-        ]
-
-        self.image_layers.append(
-            ImageLayer(id, name, description, url, bounds, visible)
-        )
+    def overlay_layer(
+        self, data: gdf, name: str, description: str, style: dict, visible: bool
+    ):
+        vector_layer_component = VectorLayerComponent(
+            data=data, name=name, description=description, style=style, visible=visible)
+        vector_layer_dataclass = vector_layer_component.convert_to_dataclass()
+        self.vector_layers.append(vector_layer_dataclass)
 
     def update_inputs(self, inputs: Dict[str, Any]):
         self.inputs = inputs
@@ -305,7 +279,7 @@ class GreppoAppProxy(object):
             "map": {},
         }
         app_output["map"] = self.map_data
-        
+
         for _tile_layer in self.tile_layers:
             s = {}
             for k, v in _tile_layer.__dict__.items():

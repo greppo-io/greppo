@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import List, Union
 import uuid
-from click import style
 from geopandas import GeoDataFrame as gdf
 from numpy import arange
 from ..colorbrewer import get_palette

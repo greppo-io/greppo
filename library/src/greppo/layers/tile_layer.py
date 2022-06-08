@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 import uuid
 
 
@@ -7,8 +6,8 @@ import uuid
 class TileLayerComponent:
     def __init__(
         self,
-        url: str = '',
-        name: str = '',
+        url: str,
+        name: str,
         description: str = '',
         visible: bool = True,
         opacity: float = 1.0,
