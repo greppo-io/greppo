@@ -6,11 +6,12 @@ from greppo import app
 
 app.base_layer(
     name="CartoDB Light",
-    visible=True,
+    # visible=True,
     url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png",
     subdomains=None,
     attribution='&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 )
+
 
 app.tile_layer(
     name="Open Street Map",
@@ -21,7 +22,7 @@ app.tile_layer(
 
 data_gdf = gpd.read_file("tests/data/us-states.geojson")
 app.overlay_layer(
-    data_gdf,
+    data=data_gdf,
     name="USA States",
     description="Boundaries of States, USA",
     style={

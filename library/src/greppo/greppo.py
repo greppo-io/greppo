@@ -149,10 +149,7 @@ class GreppoAppProxy(object):
         wms_tile_layer_dataclass = wms_tile_layer_component.convert_to_dataclass()
         self.wms_tile_layers.append(wms_tile_layer_dataclass)
 
-    def base_layer(
-        self,
-        **kwargs
-    ):
+    def base_layer(self,**kwargs):
         base_layer_component = BaseLayerComponent(**kwargs)
         base_layer_dataclass = base_layer_component.convert_to_dataclass()
         self.base_layers.append(base_layer_dataclass)

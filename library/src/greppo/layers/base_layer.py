@@ -10,7 +10,7 @@ class BaseLayerComponent:
         self,
         provider: Union[str, xyzservices.TileProvider] = '',
         name: str = '',
-        visible: bool = False,
+        visible: bool = True,
         url: str = '',
         attribution: str = '',
         subdomains: Union[str, List[str]] = '',
