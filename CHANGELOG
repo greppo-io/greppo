@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.33] - 2022-02-22
+- Added raster_layer and image_layer api.
+- Change port and host setting options in cli.
+
 ## [0.0.25] - 2022-02-22
 - Added multi-line and multi-bar for the visualizations. 
 

@@ -27,7 +27,7 @@ build-package:
 
 .PHONY: upload-package
 upload-package: 
-	cd library && twine upload -u "__token__" -p "$(PYPI_BARFI_API)" --skip-existing --verbose dist/*
+	cd library && twine upload -u "__token__" -p "$(PYPI_GREPPO_API)" --skip-existing --verbose dist/*
 
 .PHONY: run-unit-tests
 run-unit-tests:
