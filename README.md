@@ -22,7 +22,7 @@ $ pip install greppo
 
 We suggest you use a virtual environment to manage your packages for this project. For more infromation and troubleshooting visit the [Installation Guide](https://docs.greppo.io).
 
-**Windows users**: Installation of Fiona (one of Greppo's dependencies) on Windows machines usually doesn't work by default. A manual installation with e.g. [wheel files by Christoph Gohlke](https://www.lfd.uci.edu/~gohlke/pythonlibs/) the  would be a work around.
+**Windows users**: Installation of Fiona (one of Greppo's dependencies) on Windows machines usually doesn't work by default. A manual installation with e.g. [wheel files by Christoph Gohlke](https://www.lfd.uci.edu/~gohlke/pythonlibs/)  would be a work around.
 
 ## A simple example
 
