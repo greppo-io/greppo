@@ -29,7 +29,7 @@ idna==3.3
 imagesize==1.2.0
 iniconfig==1.1.1
 ipykernel==6.5.0
-ipython==7.29.0
+ipython==8.10.0
 jedi==0.18.0
 Jinja2==3.0.2
 jupyter-client==7.0.6
