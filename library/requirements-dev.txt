@@ -78,7 +78,7 @@ sphinxcontrib-htmlhelp==2.0.0
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
-starlette==0.16.0
+starlette==0.25.0
 toml==0.10.2
 tomli==1.2.1
 tornado==6.1
