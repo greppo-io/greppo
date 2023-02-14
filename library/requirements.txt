@@ -39,7 +39,7 @@ Shapely==1.7.1
 six==1.16.0
 sniffio==1.2.0
 snuggs==1.4.7
-starlette==0.16.0
+starlette==0.25.0
 toml==0.10.2
 tomli==1.2.2
 uvicorn==0.15.0
