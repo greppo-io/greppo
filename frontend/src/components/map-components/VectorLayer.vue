@@ -1,16 +1,24 @@
 <template>
+  <wrapped-component :wrap="clustered">
+    <l-marker-cluster :options="clusterOptions" #wrapper>
+    </l-marker-cluster>
     <l-geo-json
-        :name="layerData.name"
-        :geojson="layerData.data"
-        :options="options"
-        :visible="getLayerVisibility.bind(this, layerData.id)()"
-        layer-type="overlay"
+          :name="layerData.name"
+          :geojson="layerData.data"
+          :options="options"
+          :visible="getLayerVisibility.bind(this, layerData.id)()"
+          layer-type="overlay"
     ></l-geo-json>
+  </wrapped-component>
 </template>
 
 <script>
-import { LGeoJson } from "vue2-leaflet";
-import { mapGetters } from "vuex";
+import {LGeoJson} from "vue2-leaflet";
+import Vue2LeafletMarkercluster from 'vue2-leaflet-markercluster';
+import WrappedComponent from 'vue-wrapped-component';
+import {mapGetters} from "vuex";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 export default {
     name: "VectorLayer",
@@ -18,10 +26,12 @@ export default {
         layerData: Object,
     },
     components: {
-        LGeoJson,
+        'l-geo-json': LGeoJson,
+        'l-marker-cluster': Vue2LeafletMarkercluster,
+        'wrapped-component':  WrappedComponent,
     },
     methods: {
-        getChoroplethColor(d) {            
+        getChoroplethColor(d) {
             const index = this.layerData.style.choropleth.bins.findIndex(
                 (item) => d > item
             );
@@ -31,6 +41,15 @@ export default {
     },
     computed: {
         ...mapGetters(["getLayerVisibility"]),
+        clustered() {
+          return this.layerData.style.clustered;
+        },
+        clusterOptions() {
+          return {
+            disableClusteringAtZoom: this.layerData.style.clusterDisableClusteringAtZoom ?? 15,
+            removeOutsideVisibleBounds: true
+          };
+        },
         options() {
             return {
                 onEachFeature: this.onEachFeatureFunction,
@@ -55,7 +74,7 @@ export default {
                     lineCap: this.layerData.style.lineCap || "round",
                     lineJoin: this.layerData.style.lineJoin || "round",
                     dashArray: this.layerData.style.dashArray || null,
-                    dashOffset: this.layerData.style.dashOffset || null,                    
+                    dashOffset: this.layerData.style.dashOffset || null,
                     fillColor: this.layerData.style.choropleth
                         ? this.getChoroplethColor(
                               feature.properties[
